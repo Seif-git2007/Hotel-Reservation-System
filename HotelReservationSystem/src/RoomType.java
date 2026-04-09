@@ -1,2 +1,2 @@
-public class RoomType {
+public class RoomType implements Manageable{
 }

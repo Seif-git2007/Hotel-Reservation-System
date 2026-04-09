@@ -1,2 +1,2 @@
-public class Invoice {
+public class Invoice implements Payable{
 }

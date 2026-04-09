@@ -1,2 +1,2 @@
-public class Amenity {
+public class Amenity implements Manageable{
 }
