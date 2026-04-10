@@ -52,4 +52,6 @@ public class Guest extends User {
         this.prefered = r;
         HotelDataBase.users.add(this);
     }
+
+
 }

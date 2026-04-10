@@ -4,10 +4,15 @@ public abstract class User {
     private String username;
     private String password;
     private LocalDate dateOfBirth;
-    public enum Gender{MALE,FEMALE};
+
+    public enum Gender {MALE, FEMALE}
+
+    ;
     Gender gender;
-    User(){
+
+    User() {
     }
+
     public User(String username, String password, LocalDate dateOfBirth) {
         this.username = username;
         this.password = password;
@@ -39,7 +44,20 @@ public abstract class User {
     }
 
 
-    public void Login(){
+    public static User Login(String username, String password) throws InvalidInputException {
 
+        for (User u : HotelDataBase.users) {
+
+            if (u.getUsername().equals(username)) {
+                if (u.getPassword().equals(password)) {
+                    System.out.println("Login Successful");
+                    return u;
+                }
+            }
+
+
+        }
+        throw new InvalidInputException("Account not found");
     }
-}
+    }
+
