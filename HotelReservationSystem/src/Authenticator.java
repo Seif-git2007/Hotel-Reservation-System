@@ -26,6 +26,14 @@ public class Authenticator {
             throw new InvalidInputException("Gender must be exactly MALE or FEMALE.");
         }
     }
+    public static String validateView(String v) throws InvalidInputException {
+        String view= v.toUpperCase();
+        if (view.equals(roomPreferences.view.CITY.toString()) || view.equals(roomPreferences.view.SEA.toString())||view.equals(roomPreferences.view.POOL.toString())) {
+            return view;
+        } else {
+            throw new InvalidInputException("View can only be CITY,SEA and POOL");
+        }
+    }
 
     public static double  validateBalance(double balance) throws InvalidInputException {
         if (balance < 0) {

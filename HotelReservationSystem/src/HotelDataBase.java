@@ -12,6 +12,8 @@ public class HotelDataBase {
           users.add(admin);
           Receptionist receptionist=new Receptionist("2","2",LocalDate.parse("2002-10-03"),10);
           users.add(receptionist);
+          roomPreferences prefer=new roomPreferences(5);
+          Guest guest =new Guest();
      }
 
 

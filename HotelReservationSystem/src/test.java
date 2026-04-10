@@ -62,12 +62,17 @@ public class test {
         roomPreferences perfer = new roomPreferences();
         System.out.println("enter preferred floor: ");
         perfer.setFloor(input.nextInt());
-        System.out.println("enter preferred view: ");
-        System.out.println("1.SEA\n2.POOL\n3.CITY");
-        int choice = input.nextInt();
-        while (choice<1||choice>3){
-            System.out.println("invalid choice, please enter a valid number: ");
-            perfer.setView(choice);
+        while (true){
+            try{
+            System.out.println("enter preferred view(SEA - POOL - CITY): ");
+            String view=input.nextLine();
+            Authenticator.validateView(view);
+            perfer.setView(view);
+            break;
+            }
+            catch (InvalidInputException e){
+                System.out.println(e.getMessage());
+            }
         }
         guest.Register(name,password,gender,balance,date, address, perfer);
         System.out.println("Registration Successful!");
