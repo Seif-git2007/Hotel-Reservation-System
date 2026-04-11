@@ -7,8 +7,6 @@ public class Guest extends User {
 
     public Guest() {}
 
-
-
     public Guest(String username, String password, LocalDate dateOfBirth, double balance, roomPreferences prefered, String address) {
         super(username, password, dateOfBirth);
         this.balance = balance;
@@ -40,8 +38,6 @@ public class Guest extends User {
         this.address = address;
     }
 
-
-
     public void Register(String name,String password,String gender,double balance,LocalDate date, String address, roomPreferences r) {
         this.setUsername(name);
         this.setPassword(password);
@@ -52,6 +48,4 @@ public class Guest extends User {
         this.prefered = r;
         HotelDataBase.users.add(this);
     }
-
-
 }

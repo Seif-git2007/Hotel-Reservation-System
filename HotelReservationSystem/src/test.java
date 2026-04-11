@@ -8,6 +8,7 @@ public class test {
         String name;
         String password;
         String gender;
+        String view;
         double balance;
         while (true) {
             try {
@@ -62,11 +63,12 @@ public class test {
         roomPreferences perfer = new roomPreferences();
         System.out.println("enter preferred floor: ");
         perfer.setFloor(input.nextInt());
+        input.nextLine();
         while (true){
             try{
             System.out.println("enter preferred view(SEA - POOL - CITY): ");
-            String view=input.nextLine();
-            Authenticator.validateView(view);
+
+            view=Authenticator.validateView(input.nextLine());
             perfer.setView(view);
             break;
             }
@@ -98,7 +100,6 @@ public class test {
     public static void main(String[] args) {
         User user=null;
         Scanner input=new Scanner(System.in);
-        HotelDataBase.dummyData();
         System.out.println("Welcome to Kempinski Hotel");
         while(true) {
             System.out.println("1.Register\n2.Login\n0.Exit");
@@ -120,12 +121,15 @@ public class test {
                 user=callLogin(user);
                 if(user instanceof Guest){
                     System.out.println("Welcome Guest "+user.getUsername());
+                    //guest menu
                 }
                 else if(user instanceof Admin){
                     System.out.println("Welcome Admin "+user.getUsername());
+                    //admin menu
                 }
                 else if(user instanceof Receptionist ){
                     System.out.println("Welcome Receptionist "+user.getUsername());
+                    //Receptionist menu
                 }
             }
             if(choice==1){
@@ -134,7 +138,6 @@ public class test {
             if(choice==0){
                 break;
             }
-
         }
     }
     }

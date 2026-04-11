@@ -28,7 +28,7 @@ public class Authenticator {
     }
     public static String validateView(String v) throws InvalidInputException {
         String view= v.toUpperCase();
-        if (view.equals(roomPreferences.view.CITY.toString()) || view.equals(roomPreferences.view.SEA.toString())||view.equals(roomPreferences.view.POOL.toString())) {
+        if (view.equals(Room.view.CITY.toString()) || view.equals(Room.view.SEA.toString())||view.equals(Room.view.POOL.toString())) {
             return view;
         } else {
             throw new InvalidInputException("View can only be CITY,SEA and POOL");

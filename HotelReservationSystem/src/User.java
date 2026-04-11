@@ -60,4 +60,3 @@ public abstract class User {
         throw new InvalidInputException("Account not found");
     }
     }
-

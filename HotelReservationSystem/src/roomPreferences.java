@@ -1,16 +1,21 @@
 public class roomPreferences {
 
     private int floor;
-    public enum view{SEA,POOL,CITY};
-    view View;
+
+    Room.view View;
     public roomPreferences(){}
-    public roomPreferences(int floor) {
+    public roomPreferences(int floor,Room.view View) {
         this.floor = floor;
+        this.View=View;
     }
 
     public void setView(String s) {
-        View=view.valueOf(s);
+        View=Room.view.valueOf(s);
 
+    }
+
+    public Room.view getView() {
+        return View;
     }
 
     public int getFloor() {
