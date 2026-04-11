@@ -1,2 +1,50 @@
 public class RoomType implements Manageable{
+    String size;//single double etc..
+    double basePrice;//amenity prices will be added
+    int capacity;
+
+    public RoomType(String size, double basePrice, int capacity) {
+        this.size = size;
+        this.basePrice = basePrice;
+        this.capacity = capacity;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public double getBasePrice() {
+        return basePrice;
+    }
+
+    public void setBasePrice(double basePrice) {
+        this.basePrice = basePrice;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    @Override
+    public void create() {
+
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public void delete() {
+
+    }
 }
