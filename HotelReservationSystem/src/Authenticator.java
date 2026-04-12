@@ -41,4 +41,11 @@ public class Authenticator {
         }
         return balance;
     }
+    public static int validateInteger(String input) throws InvalidInputException {
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            throw new InvalidInputException("Please enter a valid number");
+        }
+    }
 }
