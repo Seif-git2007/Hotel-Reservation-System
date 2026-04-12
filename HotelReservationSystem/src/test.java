@@ -2,8 +2,9 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 public class test {
+    static Scanner input = new Scanner(System.in);
     public static void callRegister(){
-        Scanner input = new Scanner(System.in);
+
         Guest guest = new Guest();
         String name;
         String password;
@@ -97,6 +98,90 @@ public class test {
             }
         return user;
         }
+        public static void guestMenu(Guest guest){
+            int choice;
+            System.out.println("Welcome Guest " + guest.getUsername());
+            while(true) {
+                System.out.println("1.View Rooms\n2.Make Reservation\n3.View Reservations\n4.Cancel Reservation\n5.CheckOut\n0.Log Out");
+                while (true) {
+                    try {
+                        System.out.println("Enter choice: ");
+                        choice = Authenticator.validateInteger(input.nextLine());
+                        if (choice < 0 || choice > 5) {
+                            throw new InvalidInputException("Invalid choice");
+                        }
+                        break;
+                    } catch (InvalidInputException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+                if (choice == 1) {
+                    guest.viewAvailableRooms();
+                }
+                if (choice == 2) {
+                    LocalDate checkInDate;
+                    LocalDate checkOutDate;
+                    int x = guest.viewAvailableRooms();
+                    if (x == -1) {
+                        continue;
+                    }
+                    System.out.println("Choose a Room");
+                    while (true) {
+                        try {
+                            System.out.println("Enter choice: ");
+                            choice = Authenticator.validateInteger(input.nextLine());
+                            if (choice <= 0 || choice > HotelDataBase.getAvailableRooms().size()) {
+                                throw new InvalidInputException("Invalid choice");
+                            }
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                    while(true) {
+                        try{
+                            System.out.println("Enter check in date: ");
+                            checkInDate=LocalDate.parse(input.nextLine());
+                            System.out.println("Enter check out date");
+                            checkOutDate=LocalDate.parse(input.nextLine());
+                            guest.makeReservation(HotelDataBase.getAvailableRooms().get(choice - 1),checkInDate,checkOutDate);
+                            break;
+                        }catch (InvalidInputException e){
+                            System.out.println(e.getMessage());
+                        }
+
+                    }
+                }
+                if (choice == 3) {
+                    guest.viewReservations();
+                }
+                if (choice == 4) {
+                    guest.viewPendingReservations();
+                    System.out.println("Choose a Room");
+                    while (true) {
+                        try {
+                            System.out.println("Enter choice: ");
+                            choice = Authenticator.validateInteger(input.nextLine());
+                            if (choice <= 0 || choice > HotelDataBase.getPendingReservations().size()) {
+                                throw new InvalidInputException("Invalid choice");
+                            }
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                    guest.cancelReservation(HotelDataBase.getPendingReservations().get(choice-1));
+
+                }
+                if(choice==5){
+                    //checkout&pay
+                }
+                if(choice==0){
+                    break;
+                }
+            }
+
+        }
     public static void main(String[] args) {
         User user=null;
         Scanner input=new Scanner(System.in);
@@ -121,7 +206,8 @@ public class test {
                 user=callLogin(user);
                 if(user instanceof Guest){
                     System.out.println("Welcome Guest "+user.getUsername());
-                    //guest menu
+                    guestMenu((Guest) user);
+
                 }
                 else if(user instanceof Admin){
                     System.out.println("Welcome Admin "+user.getUsername());

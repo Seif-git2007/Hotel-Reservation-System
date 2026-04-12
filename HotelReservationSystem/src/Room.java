@@ -80,4 +80,8 @@ public class Room implements Manageable{
     public void delete() {
 
     }
+    @Override
+    public String toString() {
+        return "Room " + roomNumber + " | " + type.getSize() + " | Floor " + floor + " | $" + type.getBasePrice() + "/night" + " | View: " + View + " | Amenities: " + amenities;
+    }
 }
