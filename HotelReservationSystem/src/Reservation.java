@@ -58,11 +58,11 @@ public class Reservation {
 
     @Override
     public String toString() {
-        return "Reservation |" +
+        return "Reservation| " +
                 "name: " + guest.getUsername() +
-                "| room :" + room.getRoomNumber() +
-                "| checkInDate:" + checkInDate +
-                "| checkOutDate:" + checkOutDate +
-                "| status:" + status ;
+                "|room: " + room.getRoomNumber() +
+                "|From: " + checkInDate +
+                " To: " + checkOutDate +
+                "|status:" + status ;
     }
 }
