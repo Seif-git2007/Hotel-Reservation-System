@@ -15,18 +15,18 @@ public class HotelDataBase {
           Receptionist receptionist=new Receptionist("2","2",LocalDate.parse("2002-10-03"),10);
           users.add(receptionist);
           roomPreferences prefer=new roomPreferences(5,Room.view.POOL);
-          Guest guest =new Guest("3","3",LocalDate.parse("2000-12-16"),100000,prefer,"1st street");
+          Guest guest =new Guest("3","3",LocalDate.parse("2000-12-16"),500,prefer,"1st street");
           users.add(guest);
           RoomType type=new RoomType("Single",200,2);
           roomTypes.add(type);
-          Room room=new Room(type,amenities,true,911,3, Room.view.SEA);
+          Room room=new Room(type,amenities,911,3, Room.view.SEA);
           rooms.add(room);
      }
 
-     public static ArrayList<Room> getAvailableRooms() {
+     public static ArrayList<Room> getAvailableRooms(LocalDate checkInDate,LocalDate checkOutDate) {
           ArrayList<Room> available = new ArrayList<>();
           for (Room r : rooms) {
-               if (r.isAvailable()) {
+               if (r.isAvailable(checkInDate,checkOutDate)) {
                     available.add(r);
                }
           }

@@ -1,18 +1,17 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Room implements Manageable{
     private RoomType type;
     private ArrayList<Amenity> amenities=new ArrayList<>(); // used amenities in current room
-    private boolean isAvailable;
     private int roomNumber;
     private int floor;
     public enum view{SEA,POOL,CITY};
     private view View;
 
-    public Room(RoomType type, ArrayList<Amenity> amenities, boolean isAvailable, int roomNumber, int floor, Room.view view) {
+    public Room(RoomType type, ArrayList<Amenity> amenities, int roomNumber, int floor, Room.view view) {
         this.type = type;
         this.amenities = amenities;
-        this.isAvailable = isAvailable;
         this.roomNumber = roomNumber;
         this.floor = floor;
         View = view;
@@ -58,13 +57,19 @@ public class Room implements Manageable{
         this.amenities = amenities;
     }
 
-    public boolean isAvailable() {
-        return isAvailable;
+    public boolean isAvailable(LocalDate checkInDate,LocalDate checkOutDate) {
+        for(Reservation r:HotelDataBase.reservations){
+            if(r.getRoom()==this&&(r.getStatus()== Reservation.Status.PENDING||r.getStatus()== Reservation.Status.CONFIRMED)){
+                if((checkInDate.isAfter(r.getCheckInDate())&&checkInDate.isBefore(r.getCheckOutDate()))||(checkOutDate.isAfter(r.getCheckInDate())&&checkOutDate.isBefore(r.getCheckOutDate()))){
+                    return false;
+                }
+            }
+
+        }
+        return true;
     }
 
-    public void setAvailable(boolean available) {
-        isAvailable = available;
-    }
+
 
     @Override
     public void create() {

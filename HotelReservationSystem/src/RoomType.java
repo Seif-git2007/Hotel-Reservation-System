@@ -1,7 +1,7 @@
 public class RoomType implements Manageable{
-    String size;//single double etc..
-    double basePrice;//amenity prices will be added
-    int capacity;
+    private String size;//single double etc..
+    private double basePrice;//amenity prices will be added
+    private int capacity;
 
     public RoomType(String size, double basePrice, int capacity) {
         this.size = size;

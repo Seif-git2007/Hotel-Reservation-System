@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Guest extends User {
     private double balance;
@@ -48,19 +49,22 @@ public class Guest extends User {
         this.prefered = r;
         HotelDataBase.users.add(this);
     }
-    public int viewAvailableRooms(){
-
-        if(HotelDataBase.getAvailableRooms().isEmpty()){
-            System.out.println("No rooms available\nHotel is fully Booked");
-            return -1;
-        }
+    public void viewRooms(){
         int cnt=1;
-        for (Room r:HotelDataBase.getAvailableRooms()){
-            System.out.println(cnt+". "+r);//waiting until override toString() in Room class to be done
+        for (Room r:HotelDataBase.rooms){
+            System.out.println(cnt+". "+r);
             cnt++;
         }
-        return 0;
-
+    }
+    public void viewAvailableRooms(LocalDate checkInDate,LocalDate checkOutDate)throws InvalidInputException{
+        if(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate).isEmpty()){
+            throw new InvalidInputException("No available rooms in this duration");
+        }
+        int cnt=1;
+        for (Room r:HotelDataBase.getAvailableRooms(checkInDate,checkOutDate)){
+            System.out.println(cnt+". "+r);
+            cnt++;
+        }
     }
     public void makeReservation(Room room,LocalDate checkInDate,LocalDate checkOutDate)throws InvalidInputException{
         if(checkOutDate.isBefore(checkInDate)){
@@ -72,7 +76,7 @@ public class Guest extends User {
             }
         }
         Reservation reservation=new Reservation(this,room,checkInDate,checkOutDate);
-        room.setAvailable(false);
+//        reservation.setStatus(Reservation.Status.CONFIRMED); //will be deleted when Receptionist check in function is made
         HotelDataBase.reservations.add(reservation);
         System.out.println("Reservation is made successfully");
     }
@@ -90,18 +94,49 @@ public class Guest extends User {
         for(Reservation r:HotelDataBase.getPendingReservations()){
             if(r.getGuest()==this){
                 System.out.println(cnt+". "+r);
+                cnt++;
             }
         }
     }
     public void cancelReservation(Reservation r){
         r.setStatus(Reservation.Status.CANCELLED);
-        r.getRoom().setAvailable(true);
         System.out.println("Reservation Cancelled");
     }
-//    public Invoice checkOut(){
-//    }
-    public void pay(Invoice invoice){
-
+    public Invoice checkOut()throws InvalidInputException{
+        Reservation confirmed=null;
+        double total=0;
+        double amenityTotal=0;
+        long daysStayed=0;
+        for (Reservation r:HotelDataBase.reservations){
+            if(r.getGuest()==this&&r.getStatus()== Reservation.Status.CONFIRMED){
+                confirmed=r;
+                break;
+            }
+        }
+        if(confirmed==null){
+            throw new InvalidInputException("You are not checked in");
+        }
+        for (Amenity a: confirmed.getRoom().getAmenities()){
+            amenityTotal+=a.getPrice();
+        }
+        daysStayed=ChronoUnit.DAYS.between(confirmed.getCheckInDate(),confirmed.getCheckOutDate());
+        total= (daysStayed*confirmed.getRoom().getType().getBasePrice())+amenityTotal;
+        Invoice invoice=new Invoice(this,confirmed,total);
+        HotelDataBase.invoices.add(invoice);
+        return invoice;
+    }
+    public void pay(Invoice invoice,Invoice.paymentMethod method) throws InvalidInputException{
+        if(method==Invoice.paymentMethod.ONLINE){
+            if(balance<invoice.getTotal()){
+                throw new InvalidInputException("Insufficient balance , Please choose another method");
+            }
+            this.balance-=invoice.getTotal();
+        }
+        invoice.setPaymentDate(LocalDate.now());
+        invoice.setPaid(true);
+        invoice.setMethod(method);
+        System.out.println("Payment Done Successfully");
+        System.out.println("Awaiting Receptionist Confirmation");
     }
     @Override
     public String toString() {

@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 public class Authenticator {
     public static String validateName(String name) throws InvalidInputException {
         if (name == null || name.trim().isEmpty()) {
@@ -47,5 +49,17 @@ public class Authenticator {
         } catch (NumberFormatException e) {
             throw new InvalidInputException("Please enter a valid number");
         }
+    }
+    public static LocalDate validateDate(String dateStr) throws InvalidInputException {
+        LocalDate date;
+        try {
+            date = LocalDate.parse(dateStr);
+        } catch (Exception e) {
+            throw new InvalidInputException("Invalid date format, please use YYYY-MM-DD");
+        }
+//        if (date.isBefore(LocalDate.now())) {
+//            throw new InvalidInputException("Date cannot be in the past");
+//        }
+        return date;
     }
 }
