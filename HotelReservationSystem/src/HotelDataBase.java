@@ -41,5 +41,13 @@ public class HotelDataBase {
           }
           return pending;
      }
+     public static User searchUser(String name){
+            for(User u:users){
+                 if(u.getUsername().equals(name)){
+                        return u;
+                 }
+            }
+            return null;
+     }
 
 }
