@@ -43,20 +43,12 @@ public abstract class User {
         this.dateOfBirth = dateOfBirth;
     }
 
-
     public static User Login(String username, String password) throws InvalidInputException {
-
-        for (User u : HotelDataBase.users) {
-
-            if (u.getUsername().equals(username)) {
-                if (u.getPassword().equals(password)) {
-                    System.out.println("Login Successful");
-                    return u;
-                }
-            }
-
-
+        User u =HotelDataBase.searchUser(username);
+        if (u!=null&&u.getPassword().equals(password)) {
+            System.out.println("Login Successful");
+            return u;
         }
         throw new InvalidInputException("Account not found");
     }
-    }
+}
