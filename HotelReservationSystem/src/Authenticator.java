@@ -5,11 +5,13 @@ public class Authenticator {
         if (name == null || name.trim().isEmpty()) {
             throw new InvalidInputException("Username cannot be empty.");
         }
-        for (User u : HotelDataBase.users) {
-            if (u.getUsername().equals(name)) {
+        User u = HotelDataBase.searchUser(name);
+        if(u==null){
+            return name;
+        }
+        if (u.getUsername().equals(name)) {
                 throw new InvalidInputException("Username already exists.");
             }
-        }
         return name;
     }
 
