@@ -1,8 +1,9 @@
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Invoice {
     private Guest guest;
-    private Reservation reservation;
+    private ArrayList<Reservation> reservation;
     private double total;
     private LocalDate paymentDate;
     public enum paymentMethod{CREDIT,CASH,ONLINE}
@@ -10,7 +11,7 @@ public class Invoice {
     private boolean isPaid;
 
 
-    public Invoice(Guest guest, Reservation reservation, double total) {
+    public Invoice(Guest guest, ArrayList<Reservation> reservation, double total) {
         this.guest = guest;
         this.reservation = reservation;
         this.total = total;
@@ -25,11 +26,11 @@ public class Invoice {
         this.guest = guest;
     }
 
-    public Reservation getReservation() {
+    public ArrayList<Reservation> getReservation() {
         return reservation;
     }
 
-    public void setReservation(Reservation reservation) {
+    public void setReservation(ArrayList<Reservation> reservation) {
         this.reservation = reservation;
     }
 
