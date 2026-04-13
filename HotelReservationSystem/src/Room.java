@@ -71,7 +71,7 @@ public class Room implements Manageable{
         }
         return true;
     }
-    //hi
+    //hi 5elo
 
 
     @Override
@@ -107,10 +107,17 @@ public class Room implements Manageable{
                 throw new InvalidInputException("No Modifications Are Preformed");
             }
         }
+        for(Reservation res : HotelDataBase.reservations){
+            if(res.getRoom().equals(this) && res.getStatus() == Reservation.Status.PENDING || res.getStatus() == Reservation.Status.CONFIRMED ){
+                throw new InvalidInputException("Can't Modify Room While It's In Use");
+            }
+        }
         this.type = modifiedRoom.getType();
         this.floor = modifiedRoom.getFloor();
         this.View = modifiedRoom.getView();
         this.amenities = modifiedRoom.getAmenities();
+        System.out.println("Room Has Been Modified Successfully");
+
     }
 
     @Override
