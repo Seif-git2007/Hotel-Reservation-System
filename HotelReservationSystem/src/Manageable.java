@@ -1,4 +1,4 @@
 public interface Manageable {
      void read();
-     void delete();
+     void delete(int index);
 }

@@ -73,7 +73,8 @@ public class Room implements Manageable{
 
 
 
-    public void create() {
+    public void create(RoomType roomType, int roomNumber, int floor, view View, Amenity amenities) {
+
 
     }
     @Override
@@ -86,7 +87,7 @@ public class Room implements Manageable{
     }
 
     @Override
-    public void delete() {
+    public void delete(int index) {
 
     }
     @Override
