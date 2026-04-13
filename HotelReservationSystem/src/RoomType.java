@@ -46,7 +46,7 @@ public class RoomType implements Manageable{
     }
 
     @Override
-    public void delete() {
+    public void delete(int index) {
 
     }
 }
