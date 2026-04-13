@@ -10,6 +10,8 @@ public class Room implements Manageable{
     public enum view{SEA,POOL,CITY};
     private view View;
 
+
+
     public Room(RoomType type, ArrayList<Amenity> amenities, int roomNumber, int floor, Room.view view) {
         this.type = type;
         this.amenities = amenities;
