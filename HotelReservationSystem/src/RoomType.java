@@ -33,12 +33,14 @@ public class RoomType implements Manageable{
         this.capacity = capacity;
     }
 
-    @Override
     public void create() {
 
     }
-
     @Override
+    public void read(){
+
+    }
+
     public void update() {
 
     }
