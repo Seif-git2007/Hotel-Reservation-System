@@ -23,14 +23,14 @@ public class Amenity implements Manageable{
         this.price = price;
     }
 
-    @Override
     public void create() {
 
     }
-
-
-
     @Override
+    public void read(){
+
+    }
+
     public void update() {
 
     }
