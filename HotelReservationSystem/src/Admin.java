@@ -12,14 +12,21 @@ public class Admin extends Staff{
 
 
     public void viewRooms(){
+        Room.read();
     }
 
        public void viewRoomTypes(){
-
+        RoomType.read();
     }
 
     public void addRoom(int roomNo, int floor, Room.view view, RoomType type, ArrayList<Amenity> amenities) throws InvalidInputException {
-
+        Room r = new Room(type, amenities,roomNo,floor,view);
+        try {
+            Room.create(r);
+        }
+        catch (Exception e){
+            throw new InvalidInputException("Can't Add This Room");
+        }
     }
 
     public void removeRoom(int roomNo){
