@@ -16,4 +16,6 @@ public abstract class Staff extends User{
     public void setWorkingHours(int workingHours) {
         this.workingHours = workingHours;
     }
+
+
 }
