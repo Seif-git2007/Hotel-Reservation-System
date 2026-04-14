@@ -77,7 +77,7 @@ public class RoomType {
                 throw new InvalidInputException("Can't Delete RoomType While It's In Use");
             }
         }
-        HotelDataBase.rooms.remove(index);
+        HotelDataBase.roomTypes.remove(index);
         System.out.println("RoomType Has Been Deleted Successfully");
     }
 
