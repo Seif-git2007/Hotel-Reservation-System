@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 
 public class Guest extends User {
     private double balance;
@@ -103,24 +104,32 @@ public class Guest extends User {
         System.out.println("Reservation Cancelled");
     }
     public Invoice checkOut()throws InvalidInputException{
-        Reservation confirmed=null;
+         ArrayList<Reservation> confirmed=new ArrayList<>();
         double total=0;
         double amenityTotal=0;
         long daysStayed=0;
+
         for (Reservation r:HotelDataBase.reservations){
             if(r.getGuest()==this&&r.getStatus()== Reservation.Status.CONFIRMED){
-                confirmed=r;
-                break;
+                confirmed.add(r);
+
             }
         }
-        if(confirmed==null){
+        if(confirmed.isEmpty()){
             throw new InvalidInputException("You are not checked in");
         }
-        for (Amenity a: confirmed.getRoom().getAmenities()){
-            amenityTotal+=a.getPrice();
+        for(Reservation r:confirmed){
+            if(r.getCheckOutDate().isAfter(LocalDate.now())){
+                throw new InvalidInputException("You can't check out before your check out date");
+            }
         }
-        daysStayed=ChronoUnit.DAYS.between(confirmed.getCheckInDate(),confirmed.getCheckOutDate());
-        total= (daysStayed*confirmed.getRoom().getType().getBasePrice())+amenityTotal;
+        for(Reservation r:confirmed) {
+            for (Amenity a : r.getRoom().getAmenities()) {
+                amenityTotal += a.getPrice();
+            }
+            daysStayed=ChronoUnit.DAYS.between(r.getCheckInDate(),r.getCheckOutDate());
+            total+= ((daysStayed*r.getRoom().getType().getBasePrice())+amenityTotal);
+        }
         Invoice invoice=new Invoice(this,confirmed,total);
         HotelDataBase.invoices.add(invoice);
         return invoice;
