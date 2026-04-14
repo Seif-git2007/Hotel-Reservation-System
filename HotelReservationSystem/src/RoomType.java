@@ -1,6 +1,6 @@
 import java.util.Objects;
 
-public class RoomType implements Manageable{
+public class RoomType {
     private String size;//single double etc..
     private double basePrice;//amenity prices will be added
     private int capacity;
@@ -45,8 +45,8 @@ public class RoomType implements Manageable{
         System.out.println("RoomType Has Been Successfully Added");
 
     }
-    @Override
-    public void read(){
+
+    public static void read(){
         System.out.println("ALl RoomType Details");
         for(RoomType r : HotelDataBase.roomTypes){
             System.out.println(r.toString());
@@ -71,7 +71,6 @@ public class RoomType implements Manageable{
         System.out.println("RoomType Has Been Modified Successfully");
     }
 
-    @Override
     public void delete(int index) throws InvalidInputException {
         for(Reservation res : HotelDataBase.reservations){
             if(res.getRoom().getType().equals(HotelDataBase.rooms.get(index).getType()) && (res.getStatus() == Reservation.Status.PENDING || res.getStatus() == Reservation.Status.CONFIRMED )){

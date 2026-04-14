@@ -1,6 +1,6 @@
 import java.util.Objects;
 
-public class Amenity implements Manageable{
+public class Amenity{
     private String name;
     private double price;
 
