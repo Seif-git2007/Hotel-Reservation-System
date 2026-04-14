@@ -88,18 +88,37 @@ public class Admin extends Staff{
     //Amenities methods
 
     public void viewAmenities() {
+        Amenity.read();
 
     }
 
-    public void addAmenity(String name, double price) {
-
+    public void addAmenity(String name, double price) throws InvalidInputException {
+        Amenity am = new Amenity(name, price);
+        try{
+            Amenity.create(am);
+        }
+        catch (Exception e){
+            throw e;
+        }
     }
 
-    public void removeAmenity(String name) {
-
+    public void removeAmenity(int index) throws InvalidInputException{
+        try {
+            HotelDataBase.amenities.get(index).delete(index);
+        }
+        catch(Exception e) {
+            throw e;
+        }
     }
 
-    public void updateAmenityPrice(String name, double newPrice) {
+    public void updateAmenityPrice(String name, double newPrice, int index) throws InvalidInputException{
+        Amenity am = new Amenity(name, newPrice);
+        try{
+            HotelDataBase.amenities.get(index).update(am);
+        }
+        catch (Exception e){
+            throw e;
+        }
 
     }
 }
