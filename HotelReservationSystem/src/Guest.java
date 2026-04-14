@@ -77,7 +77,7 @@ public class Guest extends User {
             }
         }
         Reservation reservation=new Reservation(this,room,checkInDate,checkOutDate);
-        reservation.setStatus(Reservation.Status.CONFIRMED); //will be deleted when Receptionist check in function is made
+//        reservation.setStatus(Reservation.Status.CONFIRMED); //will be deleted when Receptionist check in function is made
         HotelDataBase.reservations.add(reservation);
         System.out.println("Reservation is made successfully");
     }

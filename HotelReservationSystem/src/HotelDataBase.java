@@ -49,5 +49,37 @@ public class HotelDataBase {
             }
             return null;
      }
+     public static ArrayList<Guest> getPendingGuests() {// printed in main for receptionist to choose
+          ArrayList<Guest> guests = new ArrayList<>();
+          for (Reservation r : HotelDataBase.reservations) {
+               if (r.getStatus() == Reservation.Status.PENDING && Receptionist.isToday(r.getCheckInDate())&&!guests.contains(r.getGuest())) {
+                    guests.add(r.getGuest());
+               }
+          }
+          return guests;
+     }
+
+     public static ArrayList<Reservation> getGuestReservation(Guest guest) {
+          ArrayList<Reservation> reservations = new ArrayList<>();
+          for (Reservation r : HotelDataBase.reservations) {
+               if (r.getGuest() == guest
+                       && r.getStatus() == Reservation.Status.PENDING
+                       && Receptionist.isToday(r.getCheckInDate())) {
+                    reservations.add(r);
+               }
+          }
+          return reservations;
+     }
+     public static ArrayList<Guest> checktodayinvoices() {
+          ArrayList<Guest> guests = new ArrayList<>();
+// de hatshof lw el guest mawgowd lw msh mawgod add
+          for (Invoice inv : HotelDataBase.invoices) {
+               if (Receptionist.isToday(inv.getPaymentDate()) && !guests.contains(inv.getGuest())) {
+                    guests.add(inv.getGuest());
+               }
+          }
+          return guests;
+     }
+
 
 }
