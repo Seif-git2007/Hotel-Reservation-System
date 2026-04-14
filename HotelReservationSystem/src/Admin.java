@@ -23,6 +23,7 @@ public class Admin extends Staff{
         catch (Exception e){
             throw e;
         }
+
     }
 
     public void removeRoom(int index) throws InvalidInputException{
