@@ -258,6 +258,7 @@ public class testseif {
                 }
                 else if(user instanceof Receptionist ){
                     System.out.println("Welcome Receptionist "+user.getUsername());
+
                     //Receptionist menu called here (DON'T DELETE THIS COMMENT)
                 }
             }
