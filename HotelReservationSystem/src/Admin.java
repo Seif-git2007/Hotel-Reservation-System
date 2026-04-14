@@ -11,17 +11,14 @@ public class Admin extends Staff{
     }
 
 
-    public void viewRooms(ArrayList<Amenity> amenities , RoomType roomType, int roomNumber, int floor, Room.view View){
-        Room r = new Room(roomType, amenities,roomNumber,floor, View);
-        r.read();
+    public void viewRooms(){
     }
 
        public void viewRoomTypes(){
 
-
     }
 
-    public void addRoom(int roomNo, int floor, Room.view view, RoomType type) throws InvalidInputException {
+    public void addRoom(int roomNo, int floor, Room.view view, RoomType type, ArrayList<Amenity> amenities) throws InvalidInputException {
 
     }
 
