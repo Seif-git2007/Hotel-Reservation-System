@@ -63,9 +63,11 @@ public class Room implements Manageable{
     public boolean isAvailable(LocalDate checkInDate,LocalDate checkOutDate) {
         for(Reservation r:HotelDataBase.reservations){
             if(r.getRoom()==this&&(r.getStatus()== Reservation.Status.PENDING||r.getStatus()== Reservation.Status.CONFIRMED)){
-                if((checkInDate.isAfter(r.getCheckInDate())&&checkInDate.isBefore(r.getCheckOutDate()))||(checkOutDate.isAfter(r.getCheckInDate())&&checkOutDate.isBefore(r.getCheckOutDate()))){
+                if(!( checkOutDate.isBefore(r.getCheckInDate()) || checkOutDate.equals(r.getCheckInDate())
+                        || checkInDate.isAfter(r.getCheckOutDate()) || checkInDate.equals(r.getCheckOutDate()) )){
                     return false;
                 }
+
             }
 
         }
@@ -91,10 +93,12 @@ public class Room implements Manageable{
             }
         }
         HotelDataBase.rooms.add(newRoom);
+        System.out.println("Room Has Been Created Successfully");
     }
 
     @Override
     public void read(){
+        System.out.println("All Rooms Details");
         for(Room R : HotelDataBase.rooms){
             System.out.println(R.toString());
         }
@@ -108,7 +112,7 @@ public class Room implements Manageable{
             }
         }
         for(Reservation res : HotelDataBase.reservations){
-            if(res.getRoom().equals(this) && res.getStatus() == Reservation.Status.PENDING || res.getStatus() == Reservation.Status.CONFIRMED ){
+            if(res.getRoom().equals(this) && (res.getStatus() == Reservation.Status.PENDING || res.getStatus() == Reservation.Status.CONFIRMED )){
                 throw new InvalidInputException("Can't Modify Room While It's In Use");
             }
         }
@@ -128,7 +132,7 @@ public class Room implements Manageable{
             }
         }
         HotelDataBase.rooms.remove(index);
-        System.out.println("Room Has Deleted Successfully");
+        System.out.println("Room Has Been Deleted Successfully");
     }
 
 }
