@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 
 public class Guest extends User {
     private double balance;
@@ -8,11 +9,12 @@ public class Guest extends User {
 
     public Guest() {}
 
-    public Guest(String username, String password, LocalDate dateOfBirth, double balance, roomPreferences prefered, String address) {
-        super(username, password, dateOfBirth);
+    public Guest(String username, String password, LocalDate dateOfBirth, double balance, roomPreferences prefered, String address,User.Gender gender) {
+        super(username, password, dateOfBirth,gender);
         this.balance = balance;
         this.prefered = prefered;
         this.address = address;
+
     }
 
     public double getBalance() {
@@ -103,24 +105,32 @@ public class Guest extends User {
         System.out.println("Reservation Cancelled");
     }
     public Invoice checkOut()throws InvalidInputException{
-        Reservation confirmed=null;
+         ArrayList<Reservation> confirmed=new ArrayList<>();
         double total=0;
         double amenityTotal=0;
         long daysStayed=0;
+
         for (Reservation r:HotelDataBase.reservations){
             if(r.getGuest()==this&&r.getStatus()== Reservation.Status.CONFIRMED){
-                confirmed=r;
-                break;
+                confirmed.add(r);
+
             }
         }
-        if(confirmed==null){
+        if(confirmed.isEmpty()){
             throw new InvalidInputException("You are not checked in");
         }
-        for (Amenity a: confirmed.getRoom().getAmenities()){
-            amenityTotal+=a.getPrice();
+        for(Reservation r:confirmed){
+            if(r.getCheckOutDate().isAfter(JumpInTime.now)){
+                throw new InvalidInputException("You can't check out before your check out date");
+            }
         }
-        daysStayed=ChronoUnit.DAYS.between(confirmed.getCheckInDate(),confirmed.getCheckOutDate());
-        total= (daysStayed*confirmed.getRoom().getType().getBasePrice())+amenityTotal;
+        for(Reservation r:confirmed) {
+            for (Amenity a : r.getRoom().getAmenities()) {
+                amenityTotal += a.getPrice();
+            }
+            daysStayed=ChronoUnit.DAYS.between(r.getCheckInDate(),r.getCheckOutDate());
+            total+= ((daysStayed*r.getRoom().getType().getBasePrice())+amenityTotal);
+        }
         Invoice invoice=new Invoice(this,confirmed,total);
         HotelDataBase.invoices.add(invoice);
         return invoice;
@@ -132,7 +142,7 @@ public class Guest extends User {
             }
             this.balance-=invoice.getTotal();
         }
-        invoice.setPaymentDate(LocalDate.now());
+        invoice.setPaymentDate(JumpInTime.now);
         invoice.setPaid(true);
         invoice.setMethod(method);
         System.out.println("Payment Done Successfully");
@@ -140,11 +150,10 @@ public class Guest extends User {
     }
     @Override
     public String toString() {
-        return "Guest| " +
-                "name: "+getUsername()+
-                "balance: " + balance +
-                "| prefered: " + prefered +
-                "| address: " + address  +
-                "| gender=" + gender ;
+        return "Guest: " + getUsername()+
+                " | balance: " + balance +"$"+
+                " | prefered: " + prefered +
+                " | address: " + address  +
+                " | gender:" + gender ;
     }
 }

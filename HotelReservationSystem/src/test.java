@@ -188,12 +188,14 @@ public class test {
 
                 }
                 if (choice == 5) {
-                    try {
-                        invoice = guest.checkOut();
-                    } catch (InvalidInputException e) {
-                        System.out.println(e.getMessage());
-                    }
+
                         while (true) {
+                            try {
+                                invoice = guest.checkOut();
+                            } catch (InvalidInputException e) {
+                                System.out.println(e.getMessage());
+                                break;
+                            }
                             System.out.println("Enter payment Method\n1.Cash\n2.Credit Card\n3.Online Balance");
                             try {
                                 System.out.println("Enter choice: ");
