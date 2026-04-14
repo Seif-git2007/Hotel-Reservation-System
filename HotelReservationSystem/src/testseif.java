@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class testseif {
@@ -326,6 +327,516 @@ public class testseif {
             }
         }
     }
+    public static void adminMenu(Admin admin) {
+        int choice;
+        Amenity amenity = new Amenity("spa", 200);
+        Amenity amenity1 = new Amenity("wifi", 20);
+        HotelDataBase.amenities.add(amenity1);
+        HotelDataBase.amenities.add(amenity);
+        while (true) {
+            System.out.println("Admin menu\n 1. View all rooms\n 2. Add room\n 3. Remove room\n 4. Update room\n 5. View all room types \n 6. Add room type \n 7. Remove room type \n 8. Update room type \n 9. View all amenities \n10. Add amenity \n11. Remove amenity\n12. Update amenity\n13. View all guests\n14. View all reservations\n0. logout");
+            while (true) {
+                try {
+                    System.out.println("Enter choice: ");
+                    choice = Authenticator.validateInteger(input.nextLine());
+                    if (choice < 0 || choice > 14) {
+                        throw new InvalidInputException("Invalid choice! Please enter a number between 0 and 14.");
+                    }
+                    break;
+                } catch (InvalidInputException e) {
+                    System.out.println(e.getMessage());
+                }
+            }//Validating choice input
+
+//            RoomType roomtype = new RoomType("10", 20, 4);
+//            Room room = new Room(roomtype, amenity,1, 1, Room.view.SEA);
+            switch (choice) {
+                case 0 -> {
+                    System.out.println("Logging out!");
+                    return;
+                }
+                case 1 -> {
+                    if (HotelDataBase.rooms.isEmpty()) {
+                        System.out.println("No rooms available!");
+                        continue;
+                    }
+                    admin.viewRooms();
+                }
+                case 2 -> {
+                    int roomNo, floor;
+                    Room.view view;
+                    RoomType type;
+                    ArrayList<Amenity> amenities = new ArrayList<>();
+                    while (true) {
+                        try {
+                            System.out.print("Please enter room number ");
+                            roomNo = Authenticator.validateInteger(input.nextLine());
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+
+                    while (true) {
+                        try {
+                            System.out.print("Please enter floor number");
+                            floor = Authenticator.validateInteger(input.nextLine());
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+
+                    while (true) {
+                        try {
+                            System.out.print("Enter view (SEA / POOL / CITY): ");
+                            String validatingView = Authenticator.validateView(input.nextLine());
+                            view = Room.view.valueOf(validatingView);//converting string to enum to use authenticator
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+
+                    System.out.println("Available room types:");
+                    for (int i = 0; i < HotelDataBase.roomTypes.size(); i++) {
+                        System.out.println((i + 1) + ". " + HotelDataBase.roomTypes.get(i));
+                    }
+                    int typeChoice;
+                    while (true) {
+                        try {
+                            System.out.print("Choose room type number: ");
+                            typeChoice = Authenticator.validateInteger(input.nextLine());
+                            if (typeChoice < 1 || typeChoice > HotelDataBase.roomTypes.size())
+                                throw new InvalidInputException("Invalid choice.");
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                    type = HotelDataBase.roomTypes.get(typeChoice - 1);
+                    System.out.println("Available Amenities: ");
+                    ArrayList<Amenity> currentamenities = new ArrayList<>(HotelDataBase.amenities);
+                    ;
+                    while (true) {
+                        int cnt = 1;
+                        for (Amenity a : currentamenities) {
+                            System.out.println(cnt + ". " + a.toString());
+                            cnt++;
+                        }
+                        System.out.println("0. Don't Add");
+                        while (true) {
+                            try {
+                                System.out.print("Choose Amenity number: ");
+                                typeChoice = Authenticator.validateInteger(input.nextLine());
+                                if (typeChoice < 0 || typeChoice > currentamenities.size())
+                                    throw new InvalidInputException("Invalid choice.");
+                                break;
+                            } catch (InvalidInputException e) {
+                                System.out.println(e.getMessage());
+                            }
+                        }
+                        if (typeChoice == 0) {
+                            break;
+                        }
+                        amenities.add(currentamenities.get(typeChoice - 1));
+                        currentamenities.remove(typeChoice - 1);
+                        if (currentamenities.isEmpty()) {
+                            break;
+                        }
+                    }
+
+
+                    try {
+                        admin.addRoom(roomNo, floor, view, type, amenities);
+                        System.out.println("Room added successfully!");
+                    } catch (InvalidInputException e) {
+                        System.out.println(e.getMessage());
+                    }
+
+
+                }
+                case 3 -> {
+
+                    admin.viewRooms();
+                    int roomNo = 0;
+
+                    while (true) {
+                        try {
+                            System.out.print("Please enter room you would like to remove(0 to exit) ");
+                            roomNo = Authenticator.validateInteger(input.nextLine());
+                            if (roomNo < 0 || roomNo > HotelDataBase.rooms.size()) {
+                                throw new InvalidInputException("Invalid Choice");
+                            }
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
+                        if (roomNo == 0) {
+                            break;
+                        }
+                        try {
+                            admin.removeRoom(roomNo - 1);
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+
+                    System.out.println("Room removed successfully!");
+                }
+
+                case 4 -> {
+                    int roomNo, floor;
+                    Room.view view;
+                    RoomType type;
+                    ArrayList<Amenity> amenities = new ArrayList<>();
+                    int roomchoice = 0;
+                    admin.viewRooms();
+                    while (true) {
+                        try {
+                            System.out.print("Please enter room you would like to update(0 to exit) ");
+                            roomchoice = Authenticator.validateInteger(input.nextLine());
+                            if (roomchoice < 0 || roomchoice > HotelDataBase.rooms.size()) {
+                                throw new InvalidInputException("Invalid Choice");
+                            }
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
+                        if (roomchoice == 0) {
+                            break;
+                        }
+
+                    }
+
+
+                    while (true) {
+                        try {
+                            System.out.print("Please enter floor number");
+                            floor = Authenticator.validateInteger(input.nextLine());
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+
+                    while (true) {
+                        try {
+                            System.out.print("Enter view (SEA / POOL / CITY): ");
+                            String validatingView = Authenticator.validateView(input.nextLine());
+                            view = Room.view.valueOf(validatingView);//converting string to enum to use authenticator
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+
+                    System.out.println("Available room types:");
+                    for (int i = 0; i < HotelDataBase.roomTypes.size(); i++) {
+                        System.out.println((i + 1) + ". " + HotelDataBase.roomTypes.get(i));
+                    }
+                    int typeChoice;
+                    while (true) {
+                        try {
+                            System.out.print("Choose room type number: ");
+                            typeChoice = Authenticator.validateInteger(input.nextLine());
+                            if (typeChoice < 1 || typeChoice > HotelDataBase.roomTypes.size())
+                                throw new InvalidInputException("Invalid choice.");
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                    type = HotelDataBase.roomTypes.get(typeChoice - 1);
+                    System.out.println("Available Amenities: ");
+                    ArrayList<Amenity> currentamenities = new ArrayList<>(HotelDataBase.amenities);
+                    ;
+                    while (true) {
+                        int cnt = 1;
+                        for (Amenity a : currentamenities) {
+                            System.out.println(cnt + ". " + a.toString());
+                            cnt++;
+                        }
+                        System.out.println("0. Don't Add");
+                        while (true) {
+                            try {
+                                System.out.print("Choose Amenity number: ");
+                                typeChoice = Authenticator.validateInteger(input.nextLine());
+                                if (typeChoice < 0 || typeChoice > currentamenities.size())
+                                    throw new InvalidInputException("Invalid choice.");
+                                break;
+                            } catch (InvalidInputException e) {
+                                System.out.println(e.getMessage());
+                            }
+                        }
+                        if (typeChoice == 0) {
+                            break;
+                        }
+                        amenities.add(currentamenities.get(typeChoice - 1));
+                        currentamenities.remove(typeChoice - 1);
+                        if (currentamenities.isEmpty()) {
+                            break;
+                        }
+                    }
+
+
+                    try {
+                        admin.updateRoom(HotelDataBase.rooms.get(roomchoice - 1).getRoomNumber(), floor, view, type, amenities, roomchoice - 1);
+                        System.out.println("Room Updated successfully!");
+                    } catch (InvalidInputException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+                case 5 -> {
+                    if (HotelDataBase.amenities.isEmpty()) {
+                        System.out.println("No room types available!");
+                        continue;
+                    }
+                    admin.viewRoomTypes();
+                }
+                case 6 -> {
+                    String size;
+                    int capacity;
+                    double basePrice;
+                    while (true) {
+                        try {
+                            System.out.print("Please enter room Capacity ");
+                            capacity = Authenticator.validateInteger(input.nextLine());
+                            if (capacity < 0 || capacity > 5) {
+                                throw new InvalidInputException("Invalid room Capacity , Max is 4");
+                            }
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                    while (true) {
+                        try {
+                            System.out.println("enter room's base Price:");
+                            double b = input.nextDouble();
+                            input.nextLine();
+                            basePrice = Authenticator.validateBalance(b);
+                            break;
+                        } catch (Exception e) {
+                            System.out.println("Invalid base price");
+
+                        }
+                    }
+                    System.out.println("enter room size(Single,Double,etc..)");
+                    size = input.nextLine();
+                    try {
+                        admin.addRoomType(size, basePrice, capacity);
+                    } catch (InvalidInputException e) {
+                        System.out.println(e.getMessage());
+                    }
+
+                }
+                case 7 -> {
+                    admin.viewRoomTypes();
+
+                    int roomTypeNo = 0;
+
+                    while (true) {
+                        try {
+                            System.out.print("Please enter room type you would like to remove(0 to exit) ");
+                            roomTypeNo = Authenticator.validateInteger(input.nextLine());
+                            if (roomTypeNo < 0 || roomTypeNo > HotelDataBase.roomTypes.size()) {
+                                throw new InvalidInputException("Invalid Choice");
+                            }
+
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                            continue;
+                        }
+                        if (roomTypeNo == 0) {
+                            break;
+                        }
+                        try {
+                            admin.removeRoomType(roomTypeNo - 1);
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+
+
+                }
+                case 8 ->{
+                    String size;
+                    int capacity;
+                    double basePrice;
+                    int roomTypechoice=0;
+                    while (true) {
+                        admin.viewRoomTypes();
+                        try {
+                            System.out.print("Please enter room type you would like to update(0 to exit) ");
+                            roomTypechoice = Authenticator.validateInteger(input.nextLine());
+                            if (roomTypechoice < 0 || roomTypechoice > HotelDataBase.roomTypes.size()) {
+                                throw new InvalidInputException("Invalid Choice");
+                            }
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
+                        if (roomTypechoice == 0) {
+                            break;
+                        }
+                    }
+                    while (true){
+                        try {
+                            System.out.print("Please enter room Capacity ");
+                            capacity = Authenticator.validateInteger(input.nextLine());
+                            if (capacity < 0 || capacity > 5) {
+                                throw new InvalidInputException("Invalid room Capacity , Max is 4");
+                            }
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }}
+                    while (true) {
+                        try {
+                            System.out.println("enter room's base Price:");
+                            double b = input.nextDouble();
+                            input.nextLine();
+                            basePrice = Authenticator.validateBalance(b);
+                            break;
+                        } catch (Exception e) {
+                            System.out.println("Invalid base price");
+
+                        }
+                    }
+                    System.out.println("enter room size(Single,Double,etc..)");
+                    size = input.nextLine();
+                    try {
+                        admin.updateRoomTypes(size, basePrice, capacity,roomTypechoice-1);
+                    } catch (InvalidInputException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+                case 9 -> {
+                    if (HotelDataBase.amenities.isEmpty()) {
+                        System.out.println("No amenties available!");
+                        continue;
+                    }
+                    admin.viewAmenities();
+                }
+                case 10 -> {
+                    System.out.println("Enter Amenity Name :");
+                    String name = input.nextLine();
+                    double price = 0;
+                    while (true) {
+                        try {
+                            System.out.println("enter Amenity Price:");
+                            double b = input.nextDouble();
+                            input.nextLine();
+                            price = Authenticator.validateBalance(b);
+                            break;
+                        } catch (Exception e) {
+                            System.out.println("Invalid base price");
+
+                        }
+                    }
+                    try {
+                        admin.addAmenity(name, price);
+                    }
+                    catch (InvalidInputException e){
+                        System.out.println(e.getMessage());
+                    }
+
+                }
+
+                case 11 -> {
+
+
+                    int roomTypeNo = 0;
+
+                    while (true) {
+                        try {
+                            admin.viewAmenities();
+                            System.out.print("Please enter room type you would like to remove(0 to exit) ");
+                            roomTypeNo = Authenticator.validateInteger(input.nextLine());
+                            if (roomTypeNo < 0 || roomTypeNo > HotelDataBase.roomTypes.size()) {
+                                throw new InvalidInputException("Invalid Choice");
+                            }
+
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                            continue;
+                        }
+                        if (roomTypeNo == 0) {
+                            break;
+                        }
+                        try {
+                            admin.removeAmenity(roomTypeNo - 1);
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+
+                }
+
+                case 12 -> {
+                    String name;
+                    double price=0;
+                    int amenitChoice=0;
+                    while (true) {
+                        admin.viewAmenities();
+                        try {
+                            System.out.print("Please enter amenity you would like to update(0 to exit) ");
+                            amenitChoice = Authenticator.validateInteger(input.nextLine());
+                            if (amenitChoice< 0 || amenitChoice> HotelDataBase.amenities.size()) {
+                                throw new InvalidInputException("Invalid Choice");
+                            }
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
+                        if (amenitChoice == 0) {
+                            break;
+                        }
+                    }
+
+
+                    System.out.println("enter Amenity name:");
+                    name = input.nextLine();
+
+                    while (true) {
+                        try {
+                            System.out.println("enter Amenity Price:");
+                            double b = input.nextDouble();
+                            input.nextLine();
+                            price = Authenticator.validateBalance(b);
+                            break;
+                        } catch (Exception e) {
+                            System.out.println("Invalid price");
+
+                        }
+                    }
+                    try {
+                        admin.updateAmenityPrice(name, price,amenitChoice-1);
+                    } catch (InvalidInputException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+                case 13 -> {
+
+                    if (HotelDataBase.filterGuest().isEmpty()) {
+                        System.out.println("No Guests available!");
+                        continue;
+                    }
+                    admin.viewGuest();
+                }
+                case 14 -> {
+                    if (HotelDataBase.reservations.isEmpty()) {
+                        System.out.println("No Reservations available!");
+                        continue;
+                    }
+                    admin.viewReservations();
+                }
+            }
+        }
+    }
     public static void main(String[] args) {
         User user=null;
         Scanner input=new Scanner(System.in);
@@ -356,6 +867,7 @@ public class testseif {
                 }
                 else if(user instanceof Admin){
                     System.out.println("Welcome Admin "+user.getUsername());
+                    adminMenu((Admin) user);
                     //admin menu called here (DON'T DELETE THIS COMMENT)
                 }
                 else if(user instanceof Receptionist ){

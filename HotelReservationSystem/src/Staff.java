@@ -16,6 +16,21 @@ public abstract class Staff extends User{
     public void setWorkingHours(int workingHours) {
         this.workingHours = workingHours;
     }
+    public void viewReservations(){
+        int cnt=1;
+        for(Reservation r:HotelDataBase.reservations){
+                System.out.println(cnt+"."+r);
+                cnt++;
+        }
+    }
+    public void viewGuest(){
+        int cnt=1;
+        for(Guest u:HotelDataBase.filterGuest()){
+                System.out.println(cnt+"."+u);
+                cnt++;
+            }
+        }
+
 
 
 }
