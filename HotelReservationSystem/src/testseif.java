@@ -10,6 +10,8 @@ public class testseif {
         String gender;
         String view;
         double balance;
+        LocalDate date;
+        roomPreferences perfer = new roomPreferences();
         while (true) {
             try {
                 System.out.println("enter name:");
@@ -56,13 +58,31 @@ public class testseif {
 
             }
         }
-        System.out.println("enter date (YYYY-MM-DD):");
-        LocalDate date = LocalDate.parse(input.nextLine());
+
         System.out.println("enter address:");
         String address = input.nextLine();
-        roomPreferences perfer = new roomPreferences();
-        System.out.println("enter preferred floor: ");
-        perfer.setFloor(input.nextInt());
+        while (true) {
+            try {
+                System.out.println("enter date (YYYY-MM-DD):");
+                date = Authenticator.validateDate(input.nextLine());
+                break;
+            } catch (InvalidInputException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        while (true) {
+            try {
+                System.out.println("enter preferred floor: ");
+                perfer.setFloor(Authenticator.validateInteger(input.nextLine()));
+                if(perfer.getFloor()<0){
+                    throw new InvalidInputException("Floor cannot be negative");
+                }
+                break;
+            } catch (InvalidInputException e) {
+                System.out.println(e.getMessage());
+            }
+        }
         input.nextLine();
         while (true){
             try{
@@ -225,9 +245,91 @@ public class testseif {
         }
 
     }
+    public static void receptionistMenu(Receptionist receptionist) {
+        int choice;
+        while (true) {
+            System.out.println("1.Check In Guest\n2.Check Out Guest\n0.Log Out");
+            while (true) {
+                try {
+                    System.out.println("Enter choice: ");
+                    choice = Authenticator.validateInteger(input.nextLine());
+                    if (choice < -1 || choice > 2) {
+                        throw new InvalidInputException("Invalid choice");
+                    }
+                    break;
+                } catch (InvalidInputException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+            if (choice == 1) {
+                while (true) {
+                    try {
+                        receptionist.viewCheckingInGuests();
+                        while (true) {
+                            try {
+                                System.out.println("Enter choice: ");
+                                choice = Authenticator.validateInteger(input.nextLine());
+                                if (choice <= 0 || choice > HotelDataBase.getPendingGuests().size()) {
+                                    throw new InvalidInputException("Invalid choice");
+                                }
+                                break;
+                            } catch (InvalidInputException e) {
+                                System.out.println(e.getMessage());
+                            }
+                        }
+                        receptionist.checkIn(HotelDataBase.getPendingGuests().get(choice - 1));
+                        break;
+                    } catch (InvalidInputException e) {
+                        System.out.println(e.getMessage());
+                        break;
+                    }
+                }
+            }
+            if (choice == 2) {
+                while (true) {
+                    try {
+                        receptionist.viewCheckingOutGuests();
+                        while (true) {
+                            try {
+                                System.out.println("Enter choice: ");
+                                choice = Authenticator.validateInteger(input.nextLine());
+                                if (choice <= 0 || choice > HotelDataBase.checktodayinvoices().size()) {
+                                    throw new InvalidInputException("Invalid choice");
+                                }
+                                break;
+                            } catch (InvalidInputException e) {
+                                System.out.println(e.getMessage());
+                            }
+                        }
+                        receptionist.checkOut(HotelDataBase.checktodayinvoices().get(choice - 1));
+                        break;
+                    } catch (InvalidInputException e) {
+                        System.out.println(e.getMessage());
+                        break;
+                    }
+                }
+            }
+            if(choice==-1) {
+                while (true){
+                try {
+                    System.out.println("Enter simulated date (YYYY-MM-DD):");
+                    JumpInTime.now = Authenticator.validateDate(input.nextLine());
+                    System.out.println("Time set to: " + JumpInTime.now);
+                    break;
+                } catch (InvalidInputException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+            }
+            if (choice == 0) {
+                break;
+            }
+        }
+    }
     public static void main(String[] args) {
         User user=null;
         Scanner input=new Scanner(System.in);
+
         System.out.println("Welcome to Kempinski Hotel");
         while(true) {
             System.out.println("1.Register\n2.Login\n0.Exit");
@@ -235,7 +337,7 @@ public class testseif {
             while (true){//validate choice
                 try {
                     System.out.println("Enter choice: ");
-                    choice =input.nextInt();
+                    choice = Authenticator.validateInteger(input.nextLine());
                     if(choice<0||choice>2){
                         throw new InvalidInputException("Invalid choice");
                     }
@@ -258,6 +360,7 @@ public class testseif {
                 }
                 else if(user instanceof Receptionist ){
                     System.out.println("Welcome Receptionist "+user.getUsername());
+                    receptionistMenu((Receptionist) user);
                     //Receptionist menu called here (DON'T DELETE THIS COMMENT)
                 }
             }

@@ -13,10 +13,11 @@ public abstract class User {
     User() {
     }
 
-    public User(String username, String password, LocalDate dateOfBirth) {
+    public User(String username, String password, LocalDate dateOfBirth,Gender gender) {
         this.username = username;
         this.password = password;
         this.dateOfBirth = dateOfBirth;
+        this.gender=gender;
     }
 
     public String getUsername() {

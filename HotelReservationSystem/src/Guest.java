@@ -9,11 +9,12 @@ public class Guest extends User {
 
     public Guest() {}
 
-    public Guest(String username, String password, LocalDate dateOfBirth, double balance, roomPreferences prefered, String address) {
-        super(username, password, dateOfBirth);
+    public Guest(String username, String password, LocalDate dateOfBirth, double balance, roomPreferences prefered, String address,User.Gender gender) {
+        super(username, password, dateOfBirth,gender);
         this.balance = balance;
         this.prefered = prefered;
         this.address = address;
+
     }
 
     public double getBalance() {
@@ -77,7 +78,7 @@ public class Guest extends User {
             }
         }
         Reservation reservation=new Reservation(this,room,checkInDate,checkOutDate);
-        reservation.setStatus(Reservation.Status.CONFIRMED); //will be deleted when Receptionist check in function is made
+//        reservation.setStatus(Reservation.Status.CONFIRMED); //will be deleted when Receptionist check in function is made
         HotelDataBase.reservations.add(reservation);
         System.out.println("Reservation is made successfully");
     }
@@ -119,7 +120,7 @@ public class Guest extends User {
             throw new InvalidInputException("You are not checked in");
         }
         for(Reservation r:confirmed){
-            if(r.getCheckOutDate().isAfter(LocalDate.now())){
+            if(r.getCheckOutDate().isAfter(JumpInTime.now)){
                 throw new InvalidInputException("You can't check out before your check out date");
             }
         }
@@ -141,7 +142,7 @@ public class Guest extends User {
             }
             this.balance-=invoice.getTotal();
         }
-        invoice.setPaymentDate(LocalDate.now());
+        invoice.setPaymentDate(JumpInTime.now);
         invoice.setPaid(true);
         invoice.setMethod(method);
         System.out.println("Payment Done Successfully");
@@ -149,11 +150,10 @@ public class Guest extends User {
     }
     @Override
     public String toString() {
-        return "Guest| " +
-                "name: "+getUsername()+
-                "balance: " + balance +
-                "| prefered: " + prefered +
-                "| address: " + address  +
-                "| gender=" + gender ;
+        return "Guest: " + getUsername()+
+                " | balance: " + balance +"$"+
+                " | prefered: " + prefered +
+                " | address: " + address  +
+                " | gender:" + gender ;
     }
 }
