@@ -19,7 +19,11 @@ public class HotelDataBase {
           users.add(guest);
           RoomType type=new RoomType("Single",200,2);
           roomTypes.add(type);
-          Room room=new Room(type,amenities,911,3, Room.view.SEA);
+          Amenity a =new Amenity("jaccuzi",200);
+          amenities.add(a);
+          ArrayList<Amenity> amenity1=new ArrayList<Amenity>();
+          amenity1.add(a);
+          Room room=new Room(type,amenity1,911,3, Room.view.SEA);
           rooms.add(room);
      }
 
@@ -82,6 +86,15 @@ public class HotelDataBase {
                }
           }
           return guests;
+     }
+     public static ArrayList<Guest> filterGuest() {
+          ArrayList<Guest> filtered = new ArrayList<>();
+          for (User u : users) {
+               if (u instanceof Guest) {
+                    filtered.add((Guest) u);
+               }
+          }
+          return filtered;
      }
 
 
