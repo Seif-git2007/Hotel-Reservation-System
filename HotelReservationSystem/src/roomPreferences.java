@@ -25,4 +25,12 @@ public class roomPreferences {
     public void setFloor(int floor) {
         this.floor = floor;
     }
+
+    @Override
+    public String toString() {
+        return "roomPreferences[" +
+                "floor: " + floor +
+                " View: " + View +"]"
+                ;
+    }
 }
