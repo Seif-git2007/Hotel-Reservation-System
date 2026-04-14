@@ -44,7 +44,7 @@ public class Amenity{
         HotelDataBase.amenities.add(a);
         System.out.println("Amenity " + a.getName() + " added successfully.");
     }
-    @Override
+
     public void read() {
         for (Amenity a : HotelDataBase.amenities) {
             System.out.println("Amenity: " + a.getName() + " | Price: $" + a.getPrice());
@@ -69,7 +69,7 @@ public class Amenity{
         System.out.println("Amenity updated successfully to: " + name + " ,  $" + price);
     }
 
-    @Override
+
     public void delete(int index) throws InvalidInputException {
         Amenity a = HotelDataBase.amenities.get(index);
 
