@@ -45,7 +45,7 @@ public class Amenity{
         System.out.println("Amenity " + a.getName() + " added successfully.");
     }
 
-    public void read() {
+    public static void read() {
         for (Amenity a : HotelDataBase.amenities) {
             System.out.println("Amenity: " + a.getName() + " | Price: $" + a.getPrice());
         }
