@@ -10,12 +10,12 @@ public class HotelDataBase {
      static ArrayList<Amenity> amenities =new ArrayList<>(); //all available amenities
 
      static {
-          Admin admin=new Admin("1","1", LocalDate.parse("2000-12-05"),8);
+          Admin admin=new Admin("1","1", LocalDate.parse("2000-12-05"),8, User.Gender.MALE);
           users.add(admin);
-          Receptionist receptionist=new Receptionist("2","2",LocalDate.parse("2002-10-03"),10);
+          Receptionist receptionist=new Receptionist("2","2",LocalDate.parse("2002-10-03"),10, User.Gender.MALE);
           users.add(receptionist);
           roomPreferences prefer=new roomPreferences(5,Room.view.POOL);
-          Guest guest =new Guest("3","3",LocalDate.parse("2000-12-16"),500,prefer,"1st street");
+          Guest guest =new Guest("3","3",LocalDate.parse("2000-12-16"),500,prefer,"1st street",User.Gender.MALE);
           users.add(guest);
           RoomType type=new RoomType("Single",200,2);
           roomTypes.add(type);
@@ -74,8 +74,11 @@ public class HotelDataBase {
           ArrayList<Guest> guests = new ArrayList<>();
 // de hatshof lw el guest mawgowd lw msh mawgod add
           for (Invoice inv : HotelDataBase.invoices) {
-               if (Receptionist.isToday(inv.getPaymentDate()) && !guests.contains(inv.getGuest())) {
-                    guests.add(inv.getGuest());
+               for(Reservation r:inv.getReservation()) {
+                    if (Receptionist.isToday(r.getCheckOutDate())&& !guests.contains(inv.getGuest())&&r.getStatus()!= Reservation.Status.COMPLETED) {
+                         guests.add(inv.getGuest());
+                         break;
+                    }
                }
           }
           return guests;
