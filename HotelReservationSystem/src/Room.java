@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Room implements Manageable{
     private RoomType type;
@@ -8,6 +9,8 @@ public class Room implements Manageable{
     private int floor;
     public enum view{SEA,POOL,CITY};
     private view View;
+
+
 
     public Room(RoomType type, ArrayList<Amenity> amenities, int roomNumber, int floor, Room.view view) {
         this.type = type;
@@ -68,29 +71,64 @@ public class Room implements Manageable{
         }
         return true;
     }
-    //hi
+    //hi 5elo
 
-
-
-
-    public void create() {
-
-    }
-    @Override
-    public void read(){
-
-    }
-
-    public void update() {
-
-    }
 
     @Override
-    public void delete() {
-
+    public boolean equals(Object o) {
+        if (!(o instanceof Room room)) return false;
+        return roomNumber == room.roomNumber && floor == room.floor && Objects.equals(type, room.type) && Objects.equals(amenities, room.amenities) && View == room.View;
     }
     @Override
     public String toString() {
         return "Room " + roomNumber + " | " + type.getSize() + " | Floor " + floor + " | $" + type.getBasePrice() + "/night" + " | View: " + View + " | Amenities: " + amenities;
     }
+
+    public static void create(Room newRoom) throws InvalidInputException {
+        for(Room R : HotelDataBase.rooms){
+            if(R.equals(newRoom)){
+                throw new InvalidInputException("Room Already Exists");
+            }
+        }
+        HotelDataBase.rooms.add(newRoom);
+    }
+
+    @Override
+    public void read(){
+        for(Room R : HotelDataBase.rooms){
+            System.out.println(R.toString());
+        }
+    }
+
+
+    public void update(Room modifiedRoom) throws InvalidInputException {
+        for(Room R : HotelDataBase.rooms){
+            if(R.equals(modifiedRoom)){
+                throw new InvalidInputException("No Modifications Are Preformed");
+            }
+        }
+        for(Reservation res : HotelDataBase.reservations){
+            if(res.getRoom().equals(this) && res.getStatus() == Reservation.Status.PENDING || res.getStatus() == Reservation.Status.CONFIRMED ){
+                throw new InvalidInputException("Can't Modify Room While It's In Use");
+            }
+        }
+        this.type = modifiedRoom.getType();
+        this.floor = modifiedRoom.getFloor();
+        this.View = modifiedRoom.getView();
+        this.amenities = modifiedRoom.getAmenities();
+        System.out.println("Room Has Been Modified Successfully");
+
+    }
+
+    @Override
+    public void delete(int index) throws InvalidInputException {
+        for(Reservation res : HotelDataBase.reservations){
+            if(res.getRoom().equals(HotelDataBase.rooms.get(index)) && (res.getStatus() == Reservation.Status.PENDING || res.getStatus() == Reservation.Status.CONFIRMED )){
+                throw new InvalidInputException("Can't Delete Room While It's In Use");
+            }
+        }
+        HotelDataBase.rooms.remove(index);
+        System.out.println("Room Has Deleted Successfully");
+    }
+
 }
