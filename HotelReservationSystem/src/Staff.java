@@ -29,8 +29,8 @@ public abstract class Staff extends User{
                 System.out.println(cnt+"."+u);
                 cnt++;
             }
-        }
 
+    }
 
 
 }

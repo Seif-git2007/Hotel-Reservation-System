@@ -52,4 +52,11 @@ public abstract class User {
         }
         throw new InvalidInputException("Account not found");
     }
+    public void viewRooms(){
+        int cnt=1;
+        for (Room r:HotelDataBase.rooms){
+            System.out.println(cnt+". "+r);
+            cnt++;
+        }
+    }
 }

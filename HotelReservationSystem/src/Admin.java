@@ -10,40 +10,24 @@ public class Admin extends Staff{
         super.setWorkingHours(hours);
     }
 
-    // Rooms Methods
-    public void viewRooms(){
-        Room.read();
-    }
 
     public void addRoom(int roomNo, int floor, Room.view view, RoomType type, ArrayList<Amenity> amenities) throws InvalidInputException {
         Room r = new Room(type, amenities,roomNo,floor,view);
-        try {
-            Room.create(r);
-        }
-        catch (Exception e){
-            throw e;
-        }
+        Room.create(r);
+
 
     }
 
     public void removeRoom(int index) throws InvalidInputException{
-        try{
-            HotelDataBase.rooms.get(index).delete(index);
-        }
-        catch (Exception e){
-            throw e;
-        }
+        HotelDataBase.rooms.get(index).delete(index);
+
 
     }
 
     public void updateRoom(int roomNo, int floor, Room.view view, RoomType type, ArrayList<Amenity> amenities, int index) throws InvalidInputException{
         Room r = new Room(type, amenities,roomNo,floor,view);
-        try {
-            HotelDataBase.rooms.get(index).update(r);
-        }
-        catch (Exception e){
-            throw e;
-        }
+        HotelDataBase.rooms.get(index).update(r);
+
     }
 
 
@@ -55,32 +39,19 @@ public class Admin extends Staff{
 
     public void addRoomType(String size, double basePrice, int capacity) throws InvalidInputException{
         RoomType rt = new RoomType(size, basePrice, capacity);
-        try {
-            RoomType.create(rt);
-        }
-        catch (Exception e){
-            throw e;
-        }
+        RoomType.create(rt);
+
     }
 
     public void removeRoomType(int index) throws InvalidInputException{
-        try{
-            HotelDataBase.roomTypes.get(index).delete(index);
-        }
-        catch (Exception e){
-            throw e;
-        }
+        HotelDataBase.roomTypes.get(index).delete(index);
 
     }
 
     public void updateRoomTypes(String size , double basePrice, int capacity, int index) throws InvalidInputException{
          RoomType rt = new RoomType(size, basePrice,capacity);
-         try{
-             HotelDataBase.roomTypes.get(index).update(rt);
-         }
-         catch(Exception e){
-             throw e;
-         }
+         HotelDataBase.roomTypes.get(index).update(rt);
+
 
     }
 
@@ -94,31 +65,19 @@ public class Admin extends Staff{
 
     public void addAmenity(String name, double price) throws InvalidInputException {
         Amenity am = new Amenity(name, price);
-        try{
-            Amenity.create(am);
-        }
-        catch (Exception e){
-            throw e;
-        }
+        Amenity.create(am);
+
     }
 
     public void removeAmenity(int index) throws InvalidInputException{
-        try {
-            HotelDataBase.amenities.get(index).delete(index);
-        }
-        catch(Exception e) {
-            throw e;
-        }
+        HotelDataBase.amenities.get(index).delete(index);
+
     }
 
     public void updateAmenityPrice(String name, double newPrice, int index) throws InvalidInputException{
         Amenity am = new Amenity(name, newPrice);
-        try{
-            HotelDataBase.amenities.get(index).update(am);
-        }
-        catch (Exception e){
-            throw e;
-        }
+        HotelDataBase.amenities.get(index).update(am);
+
 
     }
 }
