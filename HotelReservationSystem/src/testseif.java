@@ -140,10 +140,11 @@ public class testseif {
             if (choice == 1) {
                 guest.viewRooms();
             }
-            if (choice == 2) {
+             if (choice == 2) {
                 LocalDate checkInDate;
                 LocalDate checkOutDate;
-                while (true) {
+                boolean reserved = false;
+                while (!reserved) {
                     try {
                         while (true) {
                             try {
@@ -163,14 +164,16 @@ public class testseif {
                                 System.out.println(e.getMessage());
                             }
                         }
+                        Authenticator.validateReservationDates(checkInDate, checkOutDate);
 
-                        guest.viewAvailableRooms(checkInDate, checkOutDate);
-                        System.out.println("Choose a Room");
+                        System.out.println("Would you like to filter by your room preferences(1.Yes , 2.No , 0.Back)");
+                        ArrayList<Room> rooms = new ArrayList<>();
+                        int filterChoice;
                         while (true) {
                             try {
                                 System.out.println("Enter choice: ");
-                                choice = Authenticator.validateInteger(input.nextLine());
-                                if (choice <= 0 || choice > HotelDataBase.getAvailableRooms(checkInDate, checkOutDate).size()) {
+                                filterChoice = Authenticator.validateInteger(input.nextLine());
+                                if (filterChoice < 0 || filterChoice > 2) {
                                     throw new InvalidInputException("Invalid choice");
                                 }
                                 break;
@@ -178,83 +181,112 @@ public class testseif {
                                 System.out.println(e.getMessage());
                             }
                         }
-                        guest.makeReservation(HotelDataBase.getAvailableRooms(checkInDate, checkOutDate).get(choice - 1), checkInDate, checkOutDate);
-                        break;
+                        if (filterChoice == 0) break;
+
+                        if (filterChoice == 1) {
+                            guest.viewAvailableRooms(checkInDate, checkOutDate, guest.getPrefered());
+                            rooms = HotelDataBase.filterRooms(HotelDataBase.getAvailableRooms(checkInDate, checkOutDate), guest.getPrefered());
+                        }
+                        if (filterChoice == 2) {
+                            guest.viewAvailableRooms(checkInDate, checkOutDate);
+                            rooms = HotelDataBase.getAvailableRooms(checkInDate, checkOutDate);
+                        }
+
+                        if (rooms.isEmpty()) {
+                            System.out.println("No available rooms for these dates, please try different dates.");
+                            continue;
+                        }
+
+                        System.out.println("Choose a Room");
+                        while (true) {
+                            try {
+                                System.out.println("Enter choice: ");
+                                choice = Authenticator.validateInteger(input.nextLine());
+                                if (choice <= 0 || choice > rooms.size()) {
+                                    throw new InvalidInputException("Invalid choice");
+                                }
+                                break;
+                            } catch (InvalidInputException e) {
+                                System.out.println(e.getMessage());
+                            }
+                        }
+                        guest.makeReservation(rooms.get(choice - 1), checkInDate, checkOutDate);
+                        reserved = true;
+
                     } catch (InvalidInputException e) {
                         System.out.println(e.getMessage());
                     }
-
                 }
             }
             if (choice == 3) {
-                guest.viewReservations();
-            }
+                    guest.viewReservations();
+                }
             if (choice == 4) {
-                guest.viewPendingReservations();
-                System.out.println("Choose a Room");
-                while (true) {
-                    try {
-                        System.out.println("Enter choice: ");
-                        choice = Authenticator.validateInteger(input.nextLine());
-                        if (choice <= 0 || choice > HotelDataBase.getPendingReservations().size()) {
-                            throw new InvalidInputException("Invalid choice");
+                    guest.viewPendingReservations();
+                    System.out.println("Choose a Room");
+                    while (true) {
+                        try {
+                            System.out.println("Enter choice: ");
+                            choice = Authenticator.validateInteger(input.nextLine());
+                            if (choice <= 0 || choice > HotelDataBase.getPendingReservations().size()) {
+                                throw new InvalidInputException("Invalid choice");
+                            }
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
                         }
-                        break;
-                    } catch (InvalidInputException e) {
-                        System.out.println(e.getMessage());
+                    }
+                    guest.cancelReservation(HotelDataBase.getPendingReservations().get(choice - 1));
+
+                }
+                if (choice == 5) {
+
+                    while (true) {
+                        try {
+                            invoice = guest.checkOut();
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                            break;
+                        }
+                        System.out.println("Enter payment Method\n1.Cash\n2.Credit Card\n3.Online Balance");
+                        try {
+                            System.out.println("Enter choice: ");
+                            choice = Authenticator.validateInteger(input.nextLine());
+                            if (choice < 1 || choice > 3) {
+                                throw new InvalidInputException("Invalid choice");
+                            }
+                            if (choice == 1) {
+                                method = Invoice.paymentMethod.CASH;
+                            }
+                            if (choice == 2) {
+                                method = Invoice.paymentMethod.CREDIT;
+                            }
+                            if (choice == 3) {
+                                method = Invoice.paymentMethod.ONLINE;
+                            }
+
+                            guest.pay(invoice, method);
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
                     }
                 }
-                guest.cancelReservation(HotelDataBase.getPendingReservations().get(choice - 1));
-
-            }
-            if (choice == 5) {
-
-                while (true) {
-                    try {
-                        invoice = guest.checkOut();
-                    } catch (InvalidInputException e) {
-                        System.out.println(e.getMessage());
-                        break;
-                    }
-                    System.out.println("Enter payment Method\n1.Cash\n2.Credit Card\n3.Online Balance");
-                    try {
-                        System.out.println("Enter choice: ");
-                        choice = Authenticator.validateInteger(input.nextLine());
-                        if (choice < 1 || choice > 3) {
-                            throw new InvalidInputException("Invalid choice");
-                        }
-                        if (choice == 1) {
-                            method = Invoice.paymentMethod.CASH;
-                        }
-                        if (choice == 2) {
-                            method = Invoice.paymentMethod.CREDIT;
-                        }
-                        if (choice == 3) {
-                            method = Invoice.paymentMethod.ONLINE;
-                        }
-
-                        guest.pay(invoice, method);
-                        break;
-                    } catch (InvalidInputException e) {
-                        System.out.println(e.getMessage());
-                    }
+                if (choice == 0) {
+                    break;
                 }
             }
-            if (choice == 0) {
-                break;
-            }
+
         }
-
-    }
     public static void receptionistMenu(Receptionist receptionist) {
         int choice;
         while (true) {
-            System.out.println("1.Check In Guest\n2.Check Out Guest\n0.Log Out");
+            System.out.println("1.View Guests\n2.View Reservations\n3.View Rooms\n4.Check In Guest\n5.Check Out Guest\n0.Log Out");
             while (true) {
                 try {
                     System.out.println("Enter choice: ");
                     choice = Authenticator.validateInteger(input.nextLine());
-                    if (choice < -1 || choice > 2) {
+                    if (choice < -1 || choice > 5) {
                         throw new InvalidInputException("Invalid choice");
                     }
                     break;
@@ -262,7 +294,28 @@ public class testseif {
                     System.out.println(e.getMessage());
                 }
             }
-            if (choice == 1) {
+            if(choice==1){
+                if (HotelDataBase.filterGuest().isEmpty()) {
+                    System.out.println("No Guests available!");
+                    continue;
+                }
+                receptionist.viewGuest();
+            }
+            if(choice==2){
+                if (HotelDataBase.reservations.isEmpty()) {
+                    System.out.println("No Reservations available!");
+                    continue;
+                }
+                receptionist.viewReservations();
+            }
+            if(choice==3){
+                if (HotelDataBase.rooms.isEmpty()) {
+                    System.out.println("No rooms available!");
+                    continue;
+                }
+                receptionist.viewRooms();
+            }
+            if (choice == 4) {
                 while (true) {
                     try {
                         receptionist.viewCheckingInGuests();
@@ -286,7 +339,7 @@ public class testseif {
                     }
                 }
             }
-            if (choice == 2) {
+            if (choice == 5) {
                 while (true) {
                     try {
                         receptionist.viewCheckingOutGuests();
@@ -329,12 +382,12 @@ public class testseif {
     }
     public static void adminMenu(Admin admin) {
         int choice;
-        Amenity amenity = new Amenity("spa", 200);
-        Amenity amenity1 = new Amenity("wifi", 20);
-        HotelDataBase.amenities.add(amenity1);
-        HotelDataBase.amenities.add(amenity);
+
         while (true) {
-            System.out.println("Admin menu\n 1. View all rooms\n 2. Add room\n 3. Remove room\n 4. Update room\n 5. View all room types \n 6. Add room type \n 7. Remove room type \n 8. Update room type \n 9. View all amenities \n10. Add amenity \n11. Remove amenity\n12. Update amenity\n13. View all guests\n14. View all reservations\n0. logout");
+            System.out.println("Admin menu\n 1. View all rooms\n 2. Add room\n 3. Remove room\n 4. Update room\n" +
+                    " 5. View all room types \n 6. Add room type \n 7. Remove room type \n " +
+                    "8. Update room type \n 9. View all amenities \n10. Add amenity \n11. Remove amenity\n" +
+                    "12. Update amenity\n13. View all guests\n14. View all reservations\n0. logout");
             while (true) {
                 try {
                     System.out.println("Enter choice: ");
@@ -346,10 +399,7 @@ public class testseif {
                 } catch (InvalidInputException e) {
                     System.out.println(e.getMessage());
                 }
-            }//Validating choice input
-
-//            RoomType roomtype = new RoomType("10", 20, 4);
-//            Room room = new Room(roomtype, amenity,1, 1, Room.view.SEA);
+            }
             switch (choice) {
                 case 0 -> {
                     System.out.println("Logging out!");

@@ -51,13 +51,7 @@ public class Guest extends User {
         this.prefered = r;
         HotelDataBase.users.add(this);
     }
-    public void viewRooms(){
-        int cnt=1;
-        for (Room r:HotelDataBase.rooms){
-            System.out.println(cnt+". "+r);
-            cnt++;
-        }
-    }
+
     public void viewAvailableRooms(LocalDate checkInDate,LocalDate checkOutDate)throws InvalidInputException{
         if(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate).isEmpty()){
             throw new InvalidInputException("No available rooms in this duration");
@@ -68,15 +62,21 @@ public class Guest extends User {
             cnt++;
         }
     }
-    public void makeReservation(Room room,LocalDate checkInDate,LocalDate checkOutDate)throws InvalidInputException{
-        if(checkOutDate.isBefore(checkInDate)){
-            throw new InvalidInputException("Check out date can't be before Check in date");
+    public void viewAvailableRooms(LocalDate checkInDate,LocalDate checkOutDate,roomPreferences preferred)throws InvalidInputException{
+        if(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate).isEmpty()){
+            throw new InvalidInputException("No available rooms in this duration");
         }
-        for(Reservation r:HotelDataBase.reservations){
-            if(r.getGuest()==this&&checkInDate.isBefore(r.getCheckOutDate())&&checkOutDate.isAfter(r.getCheckInDate())){
-                throw new InvalidInputException("Required duration overlaps with an existing reservation from "+r.getCheckInDate()+" to "+r.getCheckOutDate());
-            }
+        if(HotelDataBase.filterRooms(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate),preferred).isEmpty()){
+            throw new InvalidInputException("No available rooms with your preferences in this duration");
         }
+        int cnt=1;
+        for (Room r:HotelDataBase.filterRooms(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate),preferred)){
+            System.out.println(cnt+". "+r);
+            cnt++;
+        }
+    }
+    public void makeReservation(Room room,LocalDate checkInDate,LocalDate checkOutDate){
+
         Reservation reservation=new Reservation(this,room,checkInDate,checkOutDate);
 //        reservation.setStatus(Reservation.Status.CONFIRMED); //will be deleted when Receptionist check in function is made
         HotelDataBase.reservations.add(reservation);
@@ -125,6 +125,7 @@ public class Guest extends User {
             }
         }
         for(Reservation r:confirmed) {
+            amenityTotal=0;
             for (Amenity a : r.getRoom().getAmenities()) {
                 amenityTotal += a.getPrice();
             }

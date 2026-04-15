@@ -37,7 +37,7 @@ public class RoomType {
 
     public static void create(RoomType newRoomType) throws  InvalidInputException {
         for(RoomType r : HotelDataBase.roomTypes){
-            if(r.equals(HotelDataBase.roomTypes)){
+            if(r.equals(newRoomType)){
                 throw new InvalidInputException("RoomTypes Already Exists");
             }
         }

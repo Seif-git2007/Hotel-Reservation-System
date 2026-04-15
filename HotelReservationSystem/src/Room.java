@@ -96,14 +96,6 @@ public class Room {
         System.out.println("Room Has Been Created Successfully");
     }
 
-    public static void read(){
-        System.out.println("All Rooms Details");
-        for(Room R : HotelDataBase.rooms){
-            System.out.println(R.toString());
-        }
-    }
-
-
     public void update(Room modifiedRoom) throws InvalidInputException {
         for(Room R : HotelDataBase.rooms){
             if(R.equals(modifiedRoom)){

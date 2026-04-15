@@ -58,4 +58,10 @@ public class Authenticator {
         }
         return LocalDate.parse(dateStr);
     }
+    public static void validateReservationDates(LocalDate checkInDate,LocalDate checkOutDate)throws InvalidInputException{
+        if(checkOutDate.isBefore(checkInDate)){
+            throw new InvalidInputException("Check out date can't be before Check in date");
+        }
+
+    }
 }

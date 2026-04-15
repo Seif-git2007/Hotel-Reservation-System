@@ -27,10 +27,9 @@ public class Amenity{
 
     @Override
     public String toString() {
-        return "Amenity{" +
-                "name='" + name + '\'' +
-                ", price=" + price +
-                '}';
+        return "Amenity:" +
+                "name: '" + name + '\'' +
+                ", price: " + price ;
     }
 
     @Override
