@@ -1,6 +1,6 @@
 import java.util.Objects;
 
-public class Amenity implements Manageable{
+public class Amenity{
     private String name;
     private double price;
 
@@ -26,6 +26,13 @@ public class Amenity implements Manageable{
     }
 
     @Override
+    public String toString() {
+        return "Amenity:" +
+                "name: '" + name + '\'' +
+                ", price: " + price ;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
@@ -44,8 +51,8 @@ public class Amenity implements Manageable{
         HotelDataBase.amenities.add(a);
         System.out.println("Amenity " + a.getName() + " added successfully.");
     }
-    @Override
-    public void read() {
+
+    public static void read() {
         for (Amenity a : HotelDataBase.amenities) {
             System.out.println("Amenity: " + a.getName() + " | Price: $" + a.getPrice());
         }
@@ -69,7 +76,7 @@ public class Amenity implements Manageable{
         System.out.println("Amenity updated successfully to: " + name + " ,  $" + price);
     }
 
-    @Override
+
     public void delete(int index) throws InvalidInputException {
         Amenity a = HotelDataBase.amenities.get(index);
 
@@ -86,6 +93,7 @@ public class Amenity implements Manageable{
         }
         HotelDataBase.amenities.remove(a);
         System.out.println("Amenity " + a.getName() + " deleted");
+
     }
 
 }

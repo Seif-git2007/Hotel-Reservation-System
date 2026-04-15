@@ -2,7 +2,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Room implements Manageable{
+public class Room {
     private RoomType type;
     private ArrayList<Amenity> amenities=new ArrayList<>(); // used amenities in current room
     private int roomNumber;
@@ -96,15 +96,6 @@ public class Room implements Manageable{
         System.out.println("Room Has Been Created Successfully");
     }
 
-    @Override
-    public void read(){
-        System.out.println("All Rooms Details");
-        for(Room R : HotelDataBase.rooms){
-            System.out.println(R.toString());
-        }
-    }
-
-
     public void update(Room modifiedRoom) throws InvalidInputException {
         for(Room R : HotelDataBase.rooms){
             if(R.equals(modifiedRoom)){
@@ -124,7 +115,6 @@ public class Room implements Manageable{
 
     }
 
-    @Override
     public void delete(int index) throws InvalidInputException {
         for(Reservation res : HotelDataBase.reservations){
             if(res.getRoom().equals(HotelDataBase.rooms.get(index)) && (res.getStatus() == Reservation.Status.PENDING || res.getStatus() == Reservation.Status.CONFIRMED )){
