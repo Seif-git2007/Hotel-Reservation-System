@@ -9,11 +9,12 @@ public class Guest extends User {
 
     public Guest() {}
 
-    public Guest(String username, String password, LocalDate dateOfBirth, double balance, roomPreferences prefered, String address) {
-        super(username, password, dateOfBirth);
+    public Guest(String username, String password, LocalDate dateOfBirth, double balance, roomPreferences prefered, String address,User.Gender gender) {
+        super(username, password, dateOfBirth,gender);
         this.balance = balance;
         this.prefered = prefered;
         this.address = address;
+
     }
 
     public double getBalance() {
@@ -50,13 +51,7 @@ public class Guest extends User {
         this.prefered = r;
         HotelDataBase.users.add(this);
     }
-    public void viewRooms(){
-        int cnt=1;
-        for (Room r:HotelDataBase.rooms){
-            System.out.println(cnt+". "+r);
-            cnt++;
-        }
-    }
+
     public void viewAvailableRooms(LocalDate checkInDate,LocalDate checkOutDate)throws InvalidInputException{
         if(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate).isEmpty()){
             throw new InvalidInputException("No available rooms in this duration");
@@ -67,17 +62,23 @@ public class Guest extends User {
             cnt++;
         }
     }
-    public void makeReservation(Room room,LocalDate checkInDate,LocalDate checkOutDate)throws InvalidInputException{
-        if(checkOutDate.isBefore(checkInDate)){
-            throw new InvalidInputException("Check out date can't be before Check in date");
+    public void viewAvailableRooms(LocalDate checkInDate,LocalDate checkOutDate,roomPreferences preferred)throws InvalidInputException{
+        if(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate).isEmpty()){
+            throw new InvalidInputException("No available rooms in this duration");
         }
-        for(Reservation r:HotelDataBase.reservations){
-            if(r.getGuest()==this&&checkInDate.isBefore(r.getCheckOutDate())&&checkOutDate.isAfter(r.getCheckInDate())){
-                throw new InvalidInputException("Required duration overlaps with an existing reservation from "+r.getCheckInDate()+" to "+r.getCheckOutDate());
-            }
+        if(HotelDataBase.filterRooms(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate),preferred).isEmpty()){
+            throw new InvalidInputException("No available rooms with your preferences in this duration");
         }
+        int cnt=1;
+        for (Room r:HotelDataBase.filterRooms(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate),preferred)){
+            System.out.println(cnt+". "+r);
+            cnt++;
+        }
+    }
+    public void makeReservation(Room room,LocalDate checkInDate,LocalDate checkOutDate){
+
         Reservation reservation=new Reservation(this,room,checkInDate,checkOutDate);
-        reservation.setStatus(Reservation.Status.CONFIRMED); //will be deleted when Receptionist check in function is made
+//        reservation.setStatus(Reservation.Status.CONFIRMED); //will be deleted when Receptionist check in function is made
         HotelDataBase.reservations.add(reservation);
         System.out.println("Reservation is made successfully");
     }
@@ -119,11 +120,12 @@ public class Guest extends User {
             throw new InvalidInputException("You are not checked in");
         }
         for(Reservation r:confirmed){
-            if(r.getCheckOutDate().isAfter(LocalDate.now())){
+            if(r.getCheckOutDate().isAfter(JumpInTime.now)){
                 throw new InvalidInputException("You can't check out before your check out date");
             }
         }
         for(Reservation r:confirmed) {
+            amenityTotal=0;
             for (Amenity a : r.getRoom().getAmenities()) {
                 amenityTotal += a.getPrice();
             }
@@ -141,7 +143,7 @@ public class Guest extends User {
             }
             this.balance-=invoice.getTotal();
         }
-        invoice.setPaymentDate(LocalDate.now());
+        invoice.setPaymentDate(JumpInTime.now);
         invoice.setPaid(true);
         invoice.setMethod(method);
         System.out.println("Payment Done Successfully");
@@ -149,11 +151,10 @@ public class Guest extends User {
     }
     @Override
     public String toString() {
-        return "Guest| " +
-                "name: "+getUsername()+
-                "balance: " + balance +
-                "| prefered: " + prefered +
-                "| address: " + address  +
-                "| gender=" + gender ;
+        return "Guest: " + getUsername()+
+                " | balance: " + balance +"$"+
+                " | prefered: " + prefered +
+                " | address: " + address  +
+                " | gender:" + gender ;
     }
 }

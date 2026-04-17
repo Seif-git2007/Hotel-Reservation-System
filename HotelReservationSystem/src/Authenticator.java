@@ -53,15 +53,15 @@ public class Authenticator {
         }
     }
     public static LocalDate validateDate(String dateStr) throws InvalidInputException {
-        LocalDate date;
-        try {
-            date = LocalDate.parse(dateStr);
-        } catch (Exception e) {
+        if (!dateStr.matches("\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])")) {
             throw new InvalidInputException("Invalid date format, please use YYYY-MM-DD");
         }
-//        if (date.isBefore(LocalDate.now())) {
-//            throw new InvalidInputException("Date cannot be in the past");
-//        }
-        return date;
+        return LocalDate.parse(dateStr);
+    }
+    public static void validateReservationDates(LocalDate checkInDate,LocalDate checkOutDate)throws InvalidInputException{
+        if(checkOutDate.isBefore(checkInDate)){
+            throw new InvalidInputException("Check out date can't be before Check in date");
+        }
+
     }
 }

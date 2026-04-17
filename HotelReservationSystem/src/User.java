@@ -13,10 +13,11 @@ public abstract class User {
     User() {
     }
 
-    public User(String username, String password, LocalDate dateOfBirth) {
+    public User(String username, String password, LocalDate dateOfBirth,Gender gender) {
         this.username = username;
         this.password = password;
         this.dateOfBirth = dateOfBirth;
+        this.gender=gender;
     }
 
     public String getUsername() {
@@ -50,5 +51,12 @@ public abstract class User {
             return u;
         }
         throw new InvalidInputException("Account not found");
+    }
+    public void viewRooms(){
+        int cnt=1;
+        for (Room r:HotelDataBase.rooms){
+            System.out.println(cnt+". "+r);
+            cnt++;
+        }
     }
 }
