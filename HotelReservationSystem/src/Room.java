@@ -91,6 +91,9 @@ public class Room {
             if(R.equals(newRoom)){
                 throw new InvalidInputException("Room Already Exists");
             }
+            if(R.getRoomNumber()==newRoom.getRoomNumber()){
+                throw new InvalidInputException("Room Number Already Exists");
+            }
         }
         HotelDataBase.rooms.add(newRoom);
         System.out.println("Room Has Been Created Successfully");
