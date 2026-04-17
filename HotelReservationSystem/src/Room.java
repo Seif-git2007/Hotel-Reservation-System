@@ -91,18 +91,13 @@ public class Room {
             if(R.equals(newRoom)){
                 throw new InvalidInputException("Room Already Exists");
             }
+            if(R.getRoomNumber()==newRoom.getRoomNumber()){
+                throw new InvalidInputException("Room Number Already Exists");
+            }
         }
         HotelDataBase.rooms.add(newRoom);
         System.out.println("Room Has Been Created Successfully");
     }
-
-    public static void read(){
-        System.out.println("All Rooms Details");
-        for(Room R : HotelDataBase.rooms){
-            System.out.println(R.toString());
-        }
-    }
-
 
     public void update(Room modifiedRoom) throws InvalidInputException {
         for(Room R : HotelDataBase.rooms){
