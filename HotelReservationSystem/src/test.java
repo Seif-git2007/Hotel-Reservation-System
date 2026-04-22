@@ -1,4 +1,4 @@
-import java.time.LocalDate;
+import  java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -383,15 +383,15 @@ public class test {
         int choice;
 
         while (true) {
-            System.out.println("Admin menu\n 1. View all rooms\n 2. Add room\n 3. Remove room\n 4. Update room\n" +
-                    " 5. View all room types \n 6. Add room type \n 7. Remove room type \n " +
-                    "8. Update room type \n 9. View all amenities \n10. Add amenity \n11. Remove amenity\n" +
-                    "12. Update amenity\n13. View all guests\n14. View all reservations\n0. logout");
+            System.out.println("----Admin menu----\n 1. View all rooms\n 2. Add new room\n 3. Remove room\n 4. Update room\n" +
+                    " 5. View all room types \n 6. Add new room type \n 7. Remove room type \n " +
+                    "8. Update room type \n 9. View all amenities \n10. Add new amenity \n11. Remove amenity\n" +
+                    "12. Update amenity\n13. View all guests\n14. View all reservations\n15. View all receptionists\n16. Add new receptionist \n0. logout");
             while (true) {
                 try {
                     System.out.println("Enter choice: ");
                     choice = Authenticator.validateInteger(input.nextLine());
-                    if (choice < 0 || choice > 14) {
+                    if (choice < 0 || choice > 16) {
                         throw new InvalidInputException("Invalid choice! Please enter a number between 0 and 14.");
                     }
                     break;
@@ -884,9 +884,86 @@ public class test {
                     }
                     admin.viewReservations();
                 }
+                case 15 ->{
+                    if(HotelDataBase.getReceptionists().isEmpty()){
+                        System.out.println("No current receptionists available!");
+                        continue;
+                    }
+                    admin.viewReceptionists();
+                }
+                case 16 ->{
+                    String name = null , pass = null;
+                    LocalDate date = null;
+                    int hours = 0;
+                    String gender = null;
+
+                    while (true){
+                        try{
+                            System.out.println("Please enter new Receptionist's name");
+                            name = Authenticator.validateName(input.nextLine());
+                            break;
+                        }
+                        catch(InvalidInputException e){
+                            System.out.println(e.getMessage());
+                        }
+                    }
+
+                    while (true) {
+                        try {
+                            System.out.println("Please enter new Receptionist's password");
+                            pass = Authenticator.validatePassword(input.nextLine());
+                            break;
+                        } catch (InvalidInputException e){
+                            System.out.println(e.getMessage());
+                        }
+                    }
+
+                    while(true){
+                        try{
+                            System.out.println("Please enter new Receptionist's date of birth as YYYY-MM-DD");
+                            date = Authenticator.validateDate(input.nextLine());
+                            break;
+                        } catch(InvalidInputException e){
+                            System.out.println(e.getMessage());
+                        }
+
+                    }
+
+                    while(true){
+                        try{
+                            System.out.println("Please enter new Receptionist's working hours");
+                            hours = Authenticator.validateInteger(input.nextLine());
+                            if (hours < 0){
+                                throw new InvalidInputException(
+                                        "Hours can not be negative");
+                            } else if (hours > 12){
+                                throw new InvalidInputException("Receptionist cannot work more than 12 hours.");
+                            }
+                            break;
+                        } catch (InvalidInputException e ){
+                            System.out.println(e.getMessage());
+                        }
+                    }
+
+                    while (true){
+                        try{ System.out.println("Please enter new Receptionist's gender");
+                            gender = Authenticator.validateGender(input.nextLine());
+                            break;
+                        } catch (InvalidInputException e){
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                    try {
+                        admin.addReceptionists(name, pass, date, hours, gender);
+                        System.out.println("You have successfully registered a new receptionist!");
+                    }catch(InvalidInputException e){
+                        System.out.println(e.getMessage());
+                    }
+                }
+                }
             }
         }
-    }
+
     public static void main(String[] args) {
         User user=null;
         Scanner input=new Scanner(System.in);

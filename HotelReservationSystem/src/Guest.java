@@ -54,7 +54,7 @@ public class Guest extends User {
 
     public void viewAvailableRooms(LocalDate checkInDate,LocalDate checkOutDate)throws InvalidInputException{
         if(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate).isEmpty()){
-            throw new InvalidInputException("No available rooms in this duration");
+            throw new RoomNotAvailableException("No available rooms in this duration");
         }
         int cnt=1;
         for (Room r:HotelDataBase.getAvailableRooms(checkInDate,checkOutDate)){
@@ -64,10 +64,10 @@ public class Guest extends User {
     }
     public void viewAvailableRooms(LocalDate checkInDate,LocalDate checkOutDate,roomPreferences preferred)throws InvalidInputException{
         if(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate).isEmpty()){
-            throw new InvalidInputException("No available rooms in this duration");
+            throw new RoomNotAvailableException("No available rooms in this duration");
         }
         if(HotelDataBase.filterRooms(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate),preferred).isEmpty()){
-            throw new InvalidInputException("No available rooms with your preferences in this duration");
+            throw new RoomNotAvailableException("No available rooms with your preferences in this duration");
         }
         int cnt=1;
         for (Room r:HotelDataBase.filterRooms(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate),preferred)){
