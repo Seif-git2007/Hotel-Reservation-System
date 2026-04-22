@@ -58,7 +58,7 @@ public abstract class User {
             System.out.println("Login Successful");
             return u;
         }
-        throw new InvalidInputException("Account not found");
+        throw new AuthenticationException("Account not found");
     }
     public void viewRooms(){
         int cnt=1;

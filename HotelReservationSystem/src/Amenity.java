@@ -45,7 +45,7 @@ public class Amenity{
     public static void create(Amenity a) throws InvalidInputException {
         for (Amenity am : HotelDataBase.amenities) {
             if (am.equals(a)) {
-                throw new InvalidInputException("Amenity '" + a.getName() + "' already exists.");
+                throw new RoomInUseException("Amenity '" + a.getName() + "' already exists.");
             }
         }
         HotelDataBase.amenities.add(a);
@@ -62,13 +62,13 @@ public class Amenity{
         for (Reservation r : HotelDataBase.reservations) {
             if (r.getRoom().getAmenities().contains(this)) {
                 if (r.getStatus() == Reservation.Status.PENDING || r.getStatus() == Reservation.Status.CONFIRMED) {
-                    throw new InvalidInputException("Cannot update amenity  ," + name + ", as it is being used now");
+                    throw new RoomInUseException("Cannot update amenity  ," + name + ", as it is being used now");
                 }
             }
         }
         for (Amenity a : HotelDataBase.amenities) {
             if (a.equals(modifiedAmenity)) {
-                throw new InvalidInputException("No Modifications Are Performed , modified amenity is the same as old amenity");
+                throw new RoomInUseException("No Modifications Are Performed , modified amenity is the same as old amenity");
             }
         }
         this.name = modifiedAmenity.getName();
@@ -83,7 +83,7 @@ public class Amenity{
         for (Reservation r : HotelDataBase.reservations) {
             if (r.getRoom().getAmenities().contains(a)) {
                 if (r.getStatus() == Reservation.Status.PENDING || r.getStatus() == Reservation.Status.CONFIRMED) {
-                    throw new InvalidInputException("Cannot delete amenity '" + a.getName() + "' as it is in use in an active reservation.");
+                    throw new RoomInUseException("Cannot delete amenity '" + a.getName() + "' as it is in use in an active reservation.");
                 }
             }
         }
