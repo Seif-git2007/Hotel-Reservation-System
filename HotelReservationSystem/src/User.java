@@ -44,6 +44,14 @@ public abstract class User {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public void setGender(Gender gender){
+        this.gender = gender;
+    }
+    public Gender getGender(){
+        return gender;
+    }
+
+
     public static User Login(String username, String password) throws InvalidInputException {
         User u =HotelDataBase.searchUser(username);
         if (u!=null&&u.getPassword().equals(password)) {
