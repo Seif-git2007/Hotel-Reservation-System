@@ -117,11 +117,11 @@ public class Guest extends User {
             }
         }
         if(confirmed.isEmpty()){
-            throw new InvalidInputException("You are not checked in");
+            throw new InvalidPaymentException("You are not checked in");
         }
         for(Reservation r:confirmed){
             if(r.getCheckOutDate().isAfter(JumpInTime.now)){
-                throw new InvalidInputException("You can't check out before your check out date");
+                throw new InvalidPaymentException("You can't check out before your check out date");
             }
         }
         for(Reservation r:confirmed) {
@@ -139,7 +139,7 @@ public class Guest extends User {
     public void pay(Invoice invoice,Invoice.paymentMethod method) throws InvalidInputException{
         if(method==Invoice.paymentMethod.ONLINE){
             if(balance<invoice.getTotal()){
-                throw new InvalidInputException("Insufficient balance , Please choose another method");
+                throw new InvalidPaymentException("Insufficient balance , Please choose another method");
             }
             this.balance-=invoice.getTotal();
         }
