@@ -44,13 +44,21 @@ public abstract class User {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public void setGender(Gender gender){
+        this.gender = gender;
+    }
+    public Gender getGender(){
+        return gender;
+    }
+
+
     public static User Login(String username, String password) throws InvalidInputException {
         User u =HotelDataBase.searchUser(username);
         if (u!=null&&u.getPassword().equals(password)) {
             System.out.println("Login Successful");
             return u;
         }
-        throw new InvalidInputException("Account not found");
+        throw new AuthenticationException("Account not found");
     }
     public void viewRooms(){
         int cnt=1;

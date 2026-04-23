@@ -55,4 +55,12 @@ public class Receptionist extends Staff{
         System.out.println("Checkout completed " );
     }
 
+    @Override
+    public String toString(){
+        return "Name: "+getUsername()
+                +" | Birthday: " +getDateOfBirth()
+                +"| Gender: "  + getGender()
+                + " | Working hours: " +getWorkingHours();
+    }
+
 }
