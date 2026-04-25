@@ -89,10 +89,10 @@ public class Room {
     public static void create(Room newRoom) throws InvalidInputException {
         for(Room R : HotelDataBase.rooms){
             if(R.equals(newRoom)){
-                throw new InvalidInputException("Room Already Exists");
+                throw new RoomInUseException("Room Already Exists");
             }
             if(R.getRoomNumber()==newRoom.getRoomNumber()){
-                throw new InvalidInputException("Room Number Already Exists");
+                throw new RoomInUseException("Room Number Already Exists");
             }
         }
         HotelDataBase.rooms.add(newRoom);
@@ -102,12 +102,12 @@ public class Room {
     public void update(Room modifiedRoom) throws InvalidInputException {
         for(Room R : HotelDataBase.rooms){
             if(R.equals(modifiedRoom)){
-                throw new InvalidInputException("No Modifications Are Preformed");
+                throw new RoomInUseException("No Modifications Are Preformed");
             }
         }
         for(Reservation res : HotelDataBase.reservations){
             if(res.getRoom().equals(this) && (res.getStatus() == Reservation.Status.PENDING || res.getStatus() == Reservation.Status.CONFIRMED )){
-                throw new InvalidInputException("Can't Modify Room While It's In Use");
+                throw new RoomInUseException("Can't Modify Room While It's In Use");
             }
         }
         this.type = modifiedRoom.getType();
@@ -121,7 +121,7 @@ public class Room {
     public void delete(int index) throws InvalidInputException {
         for(Reservation res : HotelDataBase.reservations){
             if(res.getRoom().equals(HotelDataBase.rooms.get(index)) && (res.getStatus() == Reservation.Status.PENDING || res.getStatus() == Reservation.Status.CONFIRMED )){
-                throw new InvalidInputException("Can't Delete Room While It's In Use");
+                throw new RoomInUseException("Can't Delete Room While It's In Use");
             }
         }
         HotelDataBase.rooms.remove(index);

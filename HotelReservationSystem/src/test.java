@@ -1,4 +1,4 @@
-import java.time.LocalDate;
+import  java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -755,7 +755,7 @@ public class test {
 
                         }
                     }
-                    System.out.println("enter room size(Single,Double,etc..)");
+                    System.out.println("Enter room size(Single,Double,etc..)");
                     size = input.nextLine();
                     try {
                         admin.updateRoomTypes(size, basePrice, capacity,roomTypechoice-1);
@@ -765,7 +765,7 @@ public class test {
                 }
                 case 9 -> {
                     if (HotelDataBase.amenities.isEmpty()) {
-                        System.out.println("No amenties available!");
+                        System.out.println("No amenities available!");
                         continue;
                     }
                     admin.viewAmenities();
@@ -776,7 +776,7 @@ public class test {
                     double price = 0;
                     while (true) {
                         try {
-                            System.out.println("enter Amenity Price:");
+                            System.out.println("Enter Amenity Price:");
                             double b = input.nextDouble();
                             input.nextLine();
                             price = Authenticator.validateBalance(b);
@@ -798,14 +798,14 @@ public class test {
                 case 11 -> {
 
 
-                    int roomTypeNo = 0;
+                    int amenityNo = 0;
 
                     while (true) {
                         try {
                             admin.viewAmenities();
-                            System.out.print("Please enter room type you would like to remove(0 to exit) ");
-                            roomTypeNo = Authenticator.validateInteger(input.nextLine());
-                            if (roomTypeNo < 0 || roomTypeNo > HotelDataBase.roomTypes.size()) {
+                            System.out.print("Please Choose the amenity you would like to remove(0 to exit): ");
+                            amenityNo = Authenticator.validateInteger(input.nextLine());
+                            if (amenityNo < 0 || amenityNo > HotelDataBase.amenities.size()) {
                                 throw new InvalidInputException("Invalid Choice");
                             }
 
@@ -813,11 +813,11 @@ public class test {
                             System.out.println(e.getMessage());
                             continue;
                         }
-                        if (roomTypeNo == 0) {
+                        if (amenityNo == 0) {
                             break;
                         }
                         try {
-                            admin.removeAmenity(roomTypeNo - 1);
+                            admin.removeAmenity(amenityNo - 1);
                             break;
                         } catch (InvalidInputException e) {
                             System.out.println(e.getMessage());
@@ -1012,3 +1012,4 @@ public class test {
         }
     }
 }
+//trial one gui

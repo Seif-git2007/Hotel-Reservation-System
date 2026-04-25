@@ -54,7 +54,7 @@ public class Guest extends User {
 
     public void viewAvailableRooms(LocalDate checkInDate,LocalDate checkOutDate)throws InvalidInputException{
         if(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate).isEmpty()){
-            throw new InvalidInputException("No available rooms in this duration");
+            throw new RoomNotAvailableException("No available rooms in this duration");
         }
         int cnt=1;
         for (Room r:HotelDataBase.getAvailableRooms(checkInDate,checkOutDate)){
@@ -64,10 +64,10 @@ public class Guest extends User {
     }
     public void viewAvailableRooms(LocalDate checkInDate,LocalDate checkOutDate,roomPreferences preferred)throws InvalidInputException{
         if(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate).isEmpty()){
-            throw new InvalidInputException("No available rooms in this duration");
+            throw new RoomNotAvailableException("No available rooms in this duration");
         }
         if(HotelDataBase.filterRooms(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate),preferred).isEmpty()){
-            throw new InvalidInputException("No available rooms with your preferences in this duration");
+            throw new RoomNotAvailableException("No available rooms with your preferences in this duration");
         }
         int cnt=1;
         for (Room r:HotelDataBase.filterRooms(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate),preferred)){
@@ -117,11 +117,11 @@ public class Guest extends User {
             }
         }
         if(confirmed.isEmpty()){
-            throw new InvalidInputException("You are not checked in");
+            throw new InvalidPaymentException("You are not checked in");
         }
         for(Reservation r:confirmed){
             if(r.getCheckOutDate().isAfter(JumpInTime.now)){
-                throw new InvalidInputException("You can't check out before your check out date");
+                throw new InvalidPaymentException("You can't check out before your check out date");
             }
         }
         for(Reservation r:confirmed) {
@@ -132,6 +132,9 @@ public class Guest extends User {
             daysStayed=ChronoUnit.DAYS.between(r.getCheckInDate(),r.getCheckOutDate());
             total+= ((daysStayed*r.getRoom().getType().getBasePrice())+amenityTotal);
         }
+        for(Reservation r:confirmed){
+            r.setStatus(Reservation.Status.AWAITING_CONFIRMATION);
+        }
         Invoice invoice=new Invoice(this,confirmed,total);
         HotelDataBase.invoices.add(invoice);
         return invoice;
@@ -139,7 +142,7 @@ public class Guest extends User {
     public void pay(Invoice invoice,Invoice.paymentMethod method) throws InvalidInputException{
         if(method==Invoice.paymentMethod.ONLINE){
             if(balance<invoice.getTotal()){
-                throw new InvalidInputException("Insufficient balance , Please choose another method");
+                throw new InvalidPaymentException("Insufficient balance , Please choose another method");
             }
             this.balance-=invoice.getTotal();
         }
