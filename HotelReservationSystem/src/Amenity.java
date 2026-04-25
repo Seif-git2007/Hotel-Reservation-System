@@ -53,8 +53,10 @@ public class Amenity{
     }
 
     public static void read() {
+        int cnt=1;
         for (Amenity a : HotelDataBase.amenities) {
-            System.out.println("Amenity: " + a.getName() + " | Price: $" + a.getPrice());
+            System.out.println(cnt+"."+"Amenity: " + a.getName() + " | Price: $" + a.getPrice());
+            cnt++;
         }
     }
 

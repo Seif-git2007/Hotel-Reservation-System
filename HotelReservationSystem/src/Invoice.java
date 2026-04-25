@@ -9,8 +9,6 @@ public class Invoice {
     public enum paymentMethod{CREDIT,CASH,ONLINE}
     private paymentMethod method;
     private boolean isPaid;
-
-
     public Invoice(Guest guest, ArrayList<Reservation> reservation, double total) {
         this.guest = guest;
         this.reservation = reservation;
