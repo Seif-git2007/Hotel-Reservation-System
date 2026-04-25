@@ -1000,12 +1000,10 @@ public class test {
                 else if(user instanceof Admin){
                     System.out.println("Welcome Admin "+user.getUsername());
                     adminMenu((Admin) user);
-                    //admin menu called here (DON'T DELETE THIS COMMENT)
                 }
                 else if(user instanceof Receptionist ){
                     System.out.println("Welcome Receptionist "+user.getUsername());
                     receptionistMenu((Receptionist) user);
-                    //Receptionist menu called here (DON'T DELETE THIS COMMENT)
                 }
             }
             if(choice==1){

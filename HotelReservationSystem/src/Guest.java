@@ -132,7 +132,7 @@ public class Guest extends User {
             for (Amenity a : r.getRoom().getAmenities()) {
                 amenityTotal += a.getPrice();
             }
-            daysStayed=ChronoUnit.DAYS.between(r.getCheckInDate(),r.getCheckOutDate());
+            daysStayed=ChronoUnit.DAYS.between(r.getCheckInDate(),r.getCheckOutDate())==0?1:ChronoUnit.DAYS.between(r.getCheckInDate(),r.getCheckOutDate());
             total+= ((daysStayed*r.getRoom().getType().getBasePrice())+amenityTotal);
         }
         for(Reservation r:confirmed){

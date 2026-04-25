@@ -76,7 +76,7 @@ public class Invoice {
             sb.append(String.format("║  Check-in  : %-31s ║\n", r.getCheckInDate()));
             sb.append(String.format("║  Check-out : %-31s ║\n", r.getCheckOutDate()));
             long days = java.time.temporal.ChronoUnit.DAYS.between(r.getCheckInDate(), r.getCheckOutDate());
-            sb.append(String.format("║  Nights    : %-31s ║\n", days));
+            sb.append(String.format("║  Nights    : %-31s ║\n", days==0?"Day-Use":days));
             sb.append(String.format("║  Rate      : $%-30s ║\n", r.getRoom().getType().getBasePrice() + "/night"));
             if (!r.getRoom().getAmenities().isEmpty()) {
                 sb.append("║  Amenities :                                 ║\n");
@@ -108,7 +108,7 @@ public class Invoice {
             sb.append(String.format("║  Check-in  : %-31s ║\n", r.getCheckInDate()));
             sb.append(String.format("║  Check-out : %-31s ║\n", r.getCheckOutDate()));
             long days = java.time.temporal.ChronoUnit.DAYS.between(r.getCheckInDate(), r.getCheckOutDate());
-            sb.append(String.format("║  Nights    : %-31s ║\n", days));
+            sb.append(String.format("║  Nights    : %-31s ║\n", days==0?"Day-Use":days));
             sb.append(String.format("║  Rate      : $%-30s ║\n", r.getRoom().getType().getBasePrice() + "/night"));
             if (!r.getRoom().getAmenities().isEmpty()) {
                 sb.append("║  Amenities :                                 ║\n");
