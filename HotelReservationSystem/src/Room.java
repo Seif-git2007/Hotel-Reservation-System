@@ -60,21 +60,23 @@ public class Room {
         this.amenities = amenities;
     }
 
-    public boolean isAvailable(LocalDate checkInDate,LocalDate checkOutDate) {
-        for(Reservation r:HotelDataBase.reservations){
-            if(r.getRoom()==this&&(r.getStatus()== Reservation.Status.PENDING||r.getStatus()== Reservation.Status.CONFIRMED)){
-                if(!( checkOutDate.isBefore(r.getCheckInDate()) || checkOutDate.equals(r.getCheckInDate())
-                        || checkInDate.isAfter(r.getCheckOutDate()) || checkInDate.equals(r.getCheckOutDate()) )){
-                    return false;
+    public boolean isAvailable(LocalDate checkInDate, LocalDate checkOutDate) {
+        for (Reservation r : HotelDataBase.reservations) {
+            if (r.getRoom() == this && (r.getStatus() == Reservation.Status.PENDING || r.getStatus() == Reservation.Status.CONFIRMED)) {
+                if (checkInDate.equals(checkOutDate)) {
+                    if (!checkInDate.isBefore(r.getCheckInDate()) && !checkInDate.isAfter(r.getCheckOutDate())) {
+                        return false;
+                    }
+                } else {
+                    if (!(checkOutDate.isBefore(r.getCheckInDate()) || checkOutDate.equals(r.getCheckInDate())
+                            || checkInDate.isAfter(r.getCheckOutDate()) || checkInDate.equals(r.getCheckOutDate()))) {
+                        return false;
+                    }
                 }
-
             }
-
         }
         return true;
     }
-    //hi 5elo
-
 
     @Override
     public boolean equals(Object o) {

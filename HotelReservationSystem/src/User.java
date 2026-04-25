@@ -66,5 +66,6 @@ public abstract class User {
             System.out.println(cnt+". "+r);
             cnt++;
         }
+        System.out.println();
     }
 }

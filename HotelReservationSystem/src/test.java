@@ -221,13 +221,17 @@ public class test {
                 guest.viewReservations();
             }
             if (choice == 4) {
-                guest.viewPendingReservations();
-                System.out.println("Choose a Room");
+                ArrayList<Reservation> pending= guest.viewPendingReservations();
+                if(pending.isEmpty()){
+                    System.out.println("No pending reservations to cancel");
+                    continue;
+                }
+                System.out.println("Choose a reservation to cancel");
                 while (true) {
                     try {
                         System.out.println("Enter choice: ");
                         choice = Authenticator.validateInteger(input.nextLine());
-                        if (choice <= 0 || choice > HotelDataBase.getPendingReservations().size()) {
+                        if (choice <= 0 || choice > pending.size()) {
                             throw new InvalidInputException("Invalid choice");
                         }
                         break;
@@ -235,40 +239,41 @@ public class test {
                         System.out.println(e.getMessage());
                     }
                 }
-                guest.cancelReservation(HotelDataBase.getPendingReservations().get(choice - 1));
+                guest.cancelReservation(pending.get(choice - 1));
 
             }
             if (choice == 5) {
 
-                while (true) {
+
                     try {
                         invoice = guest.checkOut();
                     } catch (InvalidInputException e) {
                         System.out.println(e.getMessage());
                         break;
                     }
-                    System.out.println("Enter payment Method\n1.Cash\n2.Credit Card\n3.Online Balance");
-                    try {
-                        System.out.println("Enter choice: ");
-                        choice = Authenticator.validateInteger(input.nextLine());
-                        if (choice < 1 || choice > 3) {
-                            throw new InvalidInputException("Invalid choice");
-                        }
-                        if (choice == 1) {
-                            method = Invoice.paymentMethod.CASH;
-                        }
-                        if (choice == 2) {
-                            method = Invoice.paymentMethod.CREDIT;
-                        }
-                        if (choice == 3) {
-                            method = Invoice.paymentMethod.ONLINE;
-                        }
+                    while (true) {
+                        System.out.println("Enter payment Method\n1.Cash\n2.Credit Card\n3.Online Balance");
+                        try {
+                            System.out.println("Enter choice: ");
+                            choice = Authenticator.validateInteger(input.nextLine());
+                            if (choice < 1 || choice > 3) {
+                                throw new InvalidInputException("Invalid choice");
+                            }
+                            if (choice == 1) {
+                                method = Invoice.paymentMethod.CASH;
+                            }
+                            if (choice == 2) {
+                                method = Invoice.paymentMethod.CREDIT;
+                            }
+                            if (choice == 3) {
+                                method = Invoice.paymentMethod.ONLINE;
+                            }
 
-                        guest.pay(invoice, method);
-                        break;
-                    } catch (InvalidInputException e) {
-                        System.out.println(e.getMessage());
-                    }
+                            guest.pay(invoice, method);
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
                 }
             }
             if (choice == 0) {
