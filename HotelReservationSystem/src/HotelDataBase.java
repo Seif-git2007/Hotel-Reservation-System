@@ -19,6 +19,9 @@ public class HotelDataBase {
           roomPreferences prefer = new roomPreferences(5, Room.view.POOL);
           Guest guest = new Guest("3", "3", LocalDate.parse("2000-12-16"), 500, prefer, "1st street", User.Gender.MALE);
           users.add(guest);
+          roomPreferences prefer1 = new roomPreferences(3, Room.view.SEA);
+          Guest guest1 = new Guest("4", "4", LocalDate.parse("2003-10-12"), 50000, prefer1, "2nd street", User.Gender.FEMALE);
+          users.add(guest1);
 
           RoomType type = new RoomType("Single", 200, 1);
           RoomType type1 = new RoomType("Double", 300, 2);
@@ -99,7 +102,6 @@ public class HotelDataBase {
 
      public static ArrayList<Guest> checktodayinvoices() {
           ArrayList<Guest> guests = new ArrayList<>();
-// de hatshof lw el guest mawgowd lw msh mawgod add
           for (Invoice inv : HotelDataBase.invoices) {
                for (Reservation r : inv.getReservation()) {
                     if (Receptionist.isToday(r.getCheckOutDate()) && !guests.contains(inv.getGuest()) && r.getStatus() != Reservation.Status.COMPLETED) {

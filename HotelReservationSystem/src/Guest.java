@@ -91,14 +91,17 @@ public class Guest extends User {
             }
         }
     }
-    public void viewPendingReservations(){
+    public ArrayList<Reservation> viewPendingReservations(){
         int cnt=1;
+        ArrayList<Reservation> pending=new ArrayList<>();
         for(Reservation r:HotelDataBase.getPendingReservations()){
             if(r.getGuest()==this){
                 System.out.println(cnt+". "+r);
+                pending.add(r);
                 cnt++;
             }
         }
+        return pending;
     }
     public void cancelReservation(Reservation r){
         r.setStatus(Reservation.Status.CANCELLED);
@@ -137,6 +140,7 @@ public class Guest extends User {
         }
         Invoice invoice=new Invoice(this,confirmed,total);
         HotelDataBase.invoices.add(invoice);
+        System.out.println(invoice.toSummary());
         return invoice;
     }
     public void pay(Invoice invoice,Invoice.paymentMethod method) throws InvalidInputException{
@@ -151,6 +155,7 @@ public class Guest extends User {
         invoice.setMethod(method);
         System.out.println("Payment Done Successfully");
         System.out.println("Awaiting Receptionist Confirmation");
+        System.out.println(invoice);
     }
     @Override
     public String toString() {
