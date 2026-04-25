@@ -5,7 +5,7 @@ public class Reservation {
     private Room room;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
-    public enum Status{PENDING,CONFIRMED,COMPLETED,CANCELLED}
+    public enum Status{PENDING,CONFIRMED,AWAITING_CONFIRMATION,COMPLETED,CANCELLED}
     private Status status;
 
     public Reservation(Guest guest, Room room, LocalDate checkInDate, LocalDate checkOutDate) {

@@ -132,6 +132,9 @@ public class Guest extends User {
             daysStayed=ChronoUnit.DAYS.between(r.getCheckInDate(),r.getCheckOutDate());
             total+= ((daysStayed*r.getRoom().getType().getBasePrice())+amenityTotal);
         }
+        for(Reservation r:confirmed){
+            r.setStatus(Reservation.Status.AWAITING_CONFIRMATION);
+        }
         Invoice invoice=new Invoice(this,confirmed,total);
         HotelDataBase.invoices.add(invoice);
         return invoice;
