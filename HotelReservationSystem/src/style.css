@@ -13,12 +13,16 @@
      Stone        #6B6B6B  — muted / placeholder
    ===================================================== */
 
+/* =====================================================
+   KEMPINSKI HOTEL EGYPT — RESTORED PALETTE
+   ===================================================== */
+
 .root {
     -fx-background-color: #F0EDE4;
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
 }
 
-/* ── PRIMARY GOLD BUTTON (Sign In / Create Account) ── */
+/* PRIMARY GOLD BUTTON */
 .button {
     -fx-background-color: #C9A84C;
     -fx-text-fill: #FFFFFF;
@@ -29,23 +33,73 @@
     -fx-cursor: hand;
 }
 .button:hover { -fx-background-color: #B8963E; }
-.button:pressed { -fx-background-color: #A07830; -fx-scale-x: 0.98; -fx-scale-y: 0.98; }
 
-/* ── OUTLINE BUTTON (Register on Main) ────────────── */
+/* OUTLINE BUTTON */
 .button-outline {
     -fx-background-color: transparent;
     -fx-text-fill: #C9A84C;
     -fx-font-weight: bold;
-    -fx-font-size: 14px;
-    -fx-background-radius: 6;
     -fx-border-color: #C9A84C;
     -fx-border-radius: 6;
     -fx-border-width: 2;
-    -fx-padding: 13 24;
     -fx-cursor: hand;
 }
 .button-outline:hover { -fx-background-color: rgba(201,168,76,0.10); }
 
+/* IMAGE-SPECIFIC CHANGES */
+.main-menu-root {
+    -fx-background-color: transparent;
+}
+
+.main-menu-brand-card {
+    /* Adjusted opacity for better readability on images */
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-background-radius: 10;
+    -fx-padding: 28 70;
+}
+
+/* KEEPING YOUR ORIGINAL TEXT STYLES */
+.main-menu-wordmark {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: "Georgia", serif;
+    -fx-font-size: 44px;
+    -fx-font-style: italic;
+}
+
+.main-menu-tagline {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 11px;
+    -fx-letter-spacing: 0.16em;
+}
+
+.main-menu-rule {
+    -fx-background-color: #C9A84C;
+    -fx-pref-height: 1.5;
+}
+
+.main-menu-welcome {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: "Georgia", serif;
+    -fx-font-size: 30px;
+}
+
+.main-menu-subtitle {
+    -fx-text-fill: rgba(255,255,255,0.65);
+    -fx-font-size: 14px;
+}
+
+.main-menu-egypt {
+    -fx-text-fill: #C9A84C;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 0.18em;
+}
+
+.main-menu-footer {
+    -fx-text-fill: rgba(255,255,255,0.28);
+    -fx-font-size: 11px;
+}
+
+/* Rest of your existing styles (nav-bar, labels, etc.) go here... */
 /* ── NAV BAR ─────────────────────────────────────── */
 .nav-bar {
     -fx-background-color: #0F2160;

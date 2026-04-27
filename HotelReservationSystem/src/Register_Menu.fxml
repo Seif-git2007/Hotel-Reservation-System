@@ -100,7 +100,7 @@
             </PasswordField>
 
             <!-- Error labels (hidden by default) -->
-            <Label fx:id="nameError" styleClass="label-error" visible="false">
+            <Label fx:id="nameError" styleClass="label-error" translateY="-92.0" visible="false">
                 <VBox.margin><Insets bottom="2" /></VBox.margin>
             </Label>
             <Label fx:id="passwordError" styleClass="label-error" visible="false">
