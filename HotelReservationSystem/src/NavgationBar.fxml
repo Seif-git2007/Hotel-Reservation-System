@@ -1,12 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="600.0" style="-fx-background-color: red;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
-    <children>
-        <Button layoutX="534.0" layoutY="11.0" mnemonicParsing="false" onAction="#logout" text="Logout" />
-      <Button layoutX="470.0" layoutY="11.0" mnemonicParsing="false" text="Home" />
-      <Button layoutX="407.0" layoutY="11.0" mnemonicParsing="false" onAction="#back" text="Back" />
-    </children>
-</AnchorPane>
+<!--
+  NAVIGATION BAR — matches screenshot 4 exactly
+  Navy bg, ✦ diamond + KEMPINSKI bold white + "HOTELS & RESORTS" gold small
+  White vertical divider
+  ← Back   △ Home   [Logout] outlined gold
+  Gold 3px bottom accent line
+
+  fx:id="roleBadge" is available if you want to show a role label.
+  Wire onAction handlers to your controller as needed.
+-->
+
+<VBox prefWidth="900.0" spacing="0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
+
+    <!-- ══ NAVBAR STRIP ══ -->
+    <HBox alignment="CENTER_LEFT" prefHeight="68" prefWidth="900" spacing="0" styleClass="nav-bar">
+
+        <!-- ✦ Diamond icon -->
+        <Label styleClass="nav-diamond" text="✦">
+            <HBox.margin><Insets left="4" right="8" /></HBox.margin>
+        </Label>
+
+        <!-- Brand VBox: KEMPINSKI + HOTELS & RESORTS -->
+        <VBox alignment="CENTER_LEFT" spacing="1">
+            <HBox.margin><Insets right="20" /></HBox.margin>
+            <Label styleClass="nav-brand-name" text="KEMPINSKI" />
+            <Label styleClass="nav-brand-sub" text="HOTELS &amp; RESORTS" />
+        </VBox>
+
+        <!-- White vertical divider -->
+        <Pane styleClass="nav-divider">
+            <HBox.margin><Insets right="16" /></HBox.margin>
+        </Pane>
+
+        <!-- Spacer pushes action buttons to the right -->
+        <Pane HBox.hgrow="ALWAYS" />
+
+        <!-- ← Back -->
+        <Button fx:id="navBack" onAction="#back" prefHeight="68" styleClass="nav-action-button" text="◀ Back">
+            <HBox.margin><Insets right="4" /></HBox.margin>
+        </Button>
+
+        <!-- △ Home -->
+        <Button fx:id="navHome" onAction="#home" prefHeight="68" styleClass="nav-action-button" text="🏠 Home">
+            <HBox.margin><Insets right="16" /></HBox.margin>
+        </Button>
+
+        <!-- [Logout] outlined gold -->
+        <Button fx:id="navLogout" onAction="#logout" prefHeight="38" styleClass="nav-logout-button" text="Logout">
+            <HBox.margin><Insets right="8" /></HBox.margin>
+        </Button>
+
+    </HBox>
+
+    <!-- Gold bottom accent line -->
+    <Pane prefWidth="900" styleClass="nav-bar-accent" />
+
+</VBox>

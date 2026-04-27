@@ -12,6 +12,8 @@ public class testGUI extends Application {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("Main_Menu.fxml"));
             Scene scene = new Scene(root);
+            String css = MainController.class.getResource("style.css").toExternalForm();
+            scene.getStylesheets().add(css);
             Image image = new Image("icon.png");
             primaryStage.setTitle("Kempinski Hotel");
             primaryStage.setScene(scene);
