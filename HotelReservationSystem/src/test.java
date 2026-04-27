@@ -972,7 +972,6 @@ public class test {
     public static void main(String[] args) {
         User user=null;
         Scanner input=new Scanner(System.in);
-
         System.out.println("Welcome to Kempinski Hotel");
         while(true) {
             System.out.println("1.Register\n2.Login\n0.Exit");
