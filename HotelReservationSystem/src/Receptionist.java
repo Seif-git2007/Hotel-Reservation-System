@@ -32,7 +32,7 @@ public class Receptionist extends Staff{
         for (Reservation r:reservations) {
             r.setStatus(Reservation.Status.CONFIRMED);
         }
-        System.out.println("the reservation is confirmed");
+        System.out.println("Guest Checked in successfully");
     }
     public void viewCheckingOutGuests()throws InvalidInputException{
         List<Guest> guests = HotelDataBase.checktodayinvoices();
@@ -48,11 +48,19 @@ public class Receptionist extends Staff{
     public void checkOut(Guest guest) {
 
         for (Reservation r : HotelDataBase.reservations) {
-            if (r.getGuest() == guest && r.getStatus() == Reservation.Status.CONFIRMED) {
+            if (r.getGuest() == guest && r.getStatus() == Reservation.Status.AWAITING_CONFIRMATION) {
                 r.setStatus(Reservation.Status.COMPLETED);
             }
         }
         System.out.println("Checkout completed " );
+    }
+
+    @Override
+    public String toString(){
+        return "Name: "+getUsername()
+                +" | Birthday: " +getDateOfBirth()
+                +"| Gender: "  + getGender()
+                + " | Working hours: " +getWorkingHours();
     }
 
 }

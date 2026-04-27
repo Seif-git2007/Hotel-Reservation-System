@@ -38,7 +38,7 @@ public class RoomType {
     public static void create(RoomType newRoomType) throws  InvalidInputException {
         for(RoomType r : HotelDataBase.roomTypes){
             if(r.equals(newRoomType)){
-                throw new InvalidInputException("RoomTypes Already Exists");
+                throw new RoomInUseException("RoomTypes Already Exists");
             }
         }
         HotelDataBase.roomTypes.add(newRoomType);
@@ -48,8 +48,10 @@ public class RoomType {
 
     public static void read(){
         System.out.println("ALl RoomType Details");
+        int cnt=1;
         for(RoomType r : HotelDataBase.roomTypes){
-            System.out.println(r.toString());
+            System.out.println(cnt+"."+r.toString());
+            cnt++;
         }
 
     }
@@ -57,12 +59,12 @@ public class RoomType {
     public void update(RoomType modifiedRoomType) throws InvalidInputException {
         for(RoomType r : HotelDataBase.roomTypes){
             if(r.equals(modifiedRoomType)){
-                throw new InvalidInputException("No Modifications Are Preformed");
+                throw new RoomInUseException("No Modifications Are Preformed");
             }
         }
         for(Reservation res : HotelDataBase.reservations){
             if(res.getRoom().getType().equals(this) && (res.getStatus() == Reservation.Status.PENDING || res.getStatus() == Reservation.Status.CONFIRMED )){
-                throw new InvalidInputException("Can't Modify RoomType While It's In Use");
+                throw new RoomInUseException("Can't Modify RoomType While It's In Use");
             }
         }
         this.basePrice = modifiedRoomType.getBasePrice();
@@ -74,7 +76,7 @@ public class RoomType {
     public void delete(int index) throws InvalidInputException {
         for(Reservation res : HotelDataBase.reservations){
             if(res.getRoom().getType().equals(HotelDataBase.rooms.get(index).getType()) && (res.getStatus() == Reservation.Status.PENDING || res.getStatus() == Reservation.Status.CONFIRMED )){
-                throw new InvalidInputException("Can't Delete RoomType While It's In Use");
+                throw new RoomInUseException("Can't Delete RoomType While It's In Use");
             }
         }
         HotelDataBase.roomTypes.remove(index);

@@ -78,6 +78,21 @@ public class Admin extends Staff{
         Amenity am = new Amenity(name, newPrice);
         HotelDataBase.amenities.get(index).update(am);
 
-
     }
+
+    //Receptionist in admin methods
+
+    public void viewReceptionists() {
+        int count = 1;
+        for (Receptionist r : HotelDataBase.getReceptionists()) {
+            System.out.println(count + ". " + r);
+            count++;
+        }
+    }
+
+    public void addReceptionists(String name, String pass, LocalDate date, int hours, String gender) throws InvalidInputException{
+        Receptionist r = new Receptionist( name , pass , date , hours ,Gender.valueOf(gender.toUpperCase()));
+        HotelDataBase.users.add(r);
+    }
+
 }
