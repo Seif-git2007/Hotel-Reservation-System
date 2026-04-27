@@ -4,6 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.util.Stack;
@@ -24,7 +25,10 @@ public class MainController {
         try {
             Parent root = FXMLLoader.load(MainController.class.getResource(file));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
+            Scene scene =new Scene(root);
+            String css = MainController.class.getResource("style.css").toExternalForm();
+            scene.getStylesheets().add(css);
+            stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,6 +71,16 @@ public class MainController {
             navigate(event,"Admin_Menu.fxml");
         }
     }
+    public static void setFieldError(Label label, String message){
+        label.setText(message);
+        label.setVisible(true);
+    }
+    public static void clearErrors(Label... labels) {
+        for (Label l : labels) {
+            l.setVisible(false);
+        }
+    }
+
 }
 
 

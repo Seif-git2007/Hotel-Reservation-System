@@ -27,6 +27,6 @@ public class LoginController {
         }
     }
     public void Back(ActionEvent event){
-        MainController.navigate(event,"Main_Menu.fxml");
+        MainController.navigate(event,"Register_Menu.fxml");
     }
 }

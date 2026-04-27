@@ -1,12 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
+<!--
+  MAIN MENU — matches screenshot 3 exactly
+  Full navy screen, top+bottom gold bars, italic Kempinski brand card,
+  gold rule, EGYPT, "Welcome to Kempinski", SIGN IN (gold filled) + REGISTER (gold outline)
+  Size: 900 x 580
+-->
+<AnchorPane
+        prefHeight="580.0" prefWidth="900.0"
+        styleClass="main-menu-root"
+        stylesheets="@style.css"
+        xmlns="http://javafx.com/javafx/21"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="MainController">
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
-   <children>
-      <Button layoutX="277.0" layoutY="261.0" mnemonicParsing="false" onAction="#ChooseLogin" text="Login" />
-      <Button layoutX="270.0" layoutY="162.0" mnemonicParsing="false" onAction="#ChooseRegister" text="Register" />
-   </children>
+   <!-- Top gold accent -->
+   <Pane layoutX="0" layoutY="0" prefWidth="900" prefHeight="3"
+         style="-fx-background-color: #C9A84C;" />
+   <!-- Bottom gold accent -->
+   <Pane layoutX="0" layoutY="577" prefWidth="900" prefHeight="3"
+         style="-fx-background-color: #C9A84C;" />
+
+   <!-- Full-screen centred VBox -->
+   <VBox
+           layoutX="0" layoutY="3"
+           prefWidth="900" prefHeight="574"
+           alignment="CENTER"
+           spacing="0">
+
+      <!-- Brand card -->
+      <VBox styleClass="main-menu-brand-card" alignment="CENTER" spacing="8" prefWidth="580">
+         <VBox.margin><Insets bottom="20" /></VBox.margin>
+         <Label text="Kempinski" styleClass="main-menu-wordmark" />
+         <Label text="HOTELS &amp; RESORTS" styleClass="main-menu-tagline" />
+         <!-- Gold rule centred -->
+         <Pane styleClass="main-menu-rule" maxWidth="80" />
+      </VBox>
+
+      <!-- EGYPT -->
+      <Label text="EGYPT" styleClass="main-menu-egypt">
+         <VBox.margin><Insets bottom="14" /></VBox.margin>
+      </Label>
+
+      <!-- Welcome to Kempinski -->
+      <Label text="Welcome to Kempinski" styleClass="main-menu-welcome">
+         <VBox.margin><Insets bottom="8" /></VBox.margin>
+      </Label>
+
+      <!-- Subtitle -->
+      <Label text="Please choose how you would like to continue" styleClass="main-menu-subtitle">
+         <VBox.margin><Insets bottom="36" /></VBox.margin>
+      </Label>
+
+      <!-- Buttons row: SIGN IN (gold) + REGISTER (outline) -->
+      <HBox alignment="CENTER" spacing="20">
+         <Button text="SIGN IN"
+                 onAction="#ChooseLogin"
+                 prefWidth="180" prefHeight="52"
+                 styleClass="button" />
+         <Button text="REGISTER"
+                 onAction="#ChooseRegister"
+                 prefWidth="180" prefHeight="52"
+                 styleClass="button-outline" />
+      </HBox>
+
+      <!-- Spacer -->
+      <Pane VBox.vgrow="ALWAYS" />
+
+      <!-- Footer -->
+      <Label text="Excellence in Hospitality · Since 1897" styleClass="main-menu-footer">
+         <VBox.margin><Insets bottom="18" /></VBox.margin>
+      </Label>
+   </VBox>
+
 </AnchorPane>
