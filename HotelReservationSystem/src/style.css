@@ -185,7 +185,7 @@
 /* ── FORM LABELS ─────────────────────────────────── */
 .label-field {
     -fx-text-fill: #0F2160;
-    -fx-font-size: 12px;
+    -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-letter-spacing: 0.08em;
 }
@@ -373,4 +373,153 @@
     -fx-font-family: "Georgia", "Times New Roman", serif;
     -fx-font-size: 13px;
     -fx-font-style: italic;
+}
+.form-panel {
+    -fx-background-color: #F0EDE4;
+}
+.profile-value {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #C9A84C;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 7 14;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2C2C2C;
+}
+/* ── GUEST PROFILE SCREEN ────────────────────────── */
+
+/* Avatar circle on the right panel */
+.profile-avatar-circle {
+    -fx-background-color: #0F2160;
+    -fx-background-radius: 50;
+    -fx-pref-width: 54;
+    -fx-pref-height: 54;
+    -fx-min-width: 54;
+    -fx-min-height: 54;
+}
+
+.profile-avatar-initials {
+    -fx-text-fill: #C9A84C;
+    -fx-font-family: "Georgia", "Times New Roman", serif;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+}
+
+/* Standard read-only value box */
+.profile-value {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #C9A84C;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 9 14;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2C2C2C;
+    -fx-pref-height: 42;
+    -fx-min-width: 196;
+    -fx-pref-width: 420;
+}
+
+/* Balance field — navy tint to stand out */
+.profile-value-accent {
+    -fx-background-color: #F5F1E8;
+    -fx-border-color: #0F2160;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 9 14;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0F2160;
+    -fx-pref-height: 42;
+    -fx-pref-width: 420;
+}
+
+/* ── REGISTER SCREEN (extended) ─────────────────── */
+
+/* Transparent scroll pane so the ivory bg shows through */
+.register-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+.register-scroll .viewport {
+    -fx-background-color: transparent;
+}
+.register-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8;
+}
+.register-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: #C9A84C;
+    -fx-background-radius: 4;
+}
+.register-scroll .scroll-bar:vertical .track {
+    -fx-background-color: rgba(201,168,76,0.15);
+    -fx-background-radius: 4;
+}
+.register-scroll .increment-button,
+.register-scroll .decrement-button {
+    -fx-pref-height: 0;
+    -fx-pref-width: 0;
+    -fx-opacity: 0;
+}
+
+/* Gold-accented section heading */
+.register-section-label {
+    -fx-text-fill: #C9A84C;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 0.16em;
+}
+
+/* ComboBox — matches text-field style */
+.register-combo {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #C9A84C;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2C2C2C;
+}
+.register-combo .list-cell {
+    -fx-text-fill: #2C2C2C;
+    -fx-font-size: 14px;
+    -fx-background-color: #FFFFFF;
+}
+.register-combo:focused {
+    -fx-border-color: #0F2160;
+    -fx-border-width: 1.5;
+}
+.register-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+.register-combo .arrow {
+    -fx-background-color: #C9A84C;
+}
+
+/* DatePicker — matches text-field style */
+.register-datepicker {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #C9A84C;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-font-size: 14px;
+}
+.register-datepicker .text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2C2C2C;
+    -fx-prompt-text-fill: #AAAAAA;
+}
+.register-datepicker:focused {
+    -fx-border-color: #0F2160;
+    -fx-border-width: 1.5;
+}
+.register-datepicker .arrow-button {
+    -fx-background-color: transparent;
+}
+.register-datepicker .arrow-button .arrow {
+    -fx-background-color: #C9A84C;
 }

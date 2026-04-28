@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<!--
+  GUEST PROFILE — Kempinski Hotel Egypt
+  Left panel: Deep Navy #0F2160, Kempinski brand card, PROFILE label
+  Right panel: Ivory #F0EDE4, avatar circle, field rows with label+value
+  Size: 900 x 580
+-->
+
+<AnchorPane prefHeight="580.0" prefWidth="900.0" style="-fx-background-color: #F0EDE4;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GuestProfileController">
+
+    <!-- ══ OUTER GOLD BORDER FRAME ══ -->
+    <Pane layoutX="0" layoutY="0" prefHeight="3" prefWidth="900" style="-fx-background-color: #C9A84C;" />
+    <Pane layoutX="0" layoutY="577" prefHeight="3" prefWidth="900" style="-fx-background-color: #C9A84C;" />
+
+    <!-- ══ LEFT — Navy Brand Panel ══ -->
+    <VBox alignment="TOP_CENTER" layoutX="0" layoutY="3" prefHeight="574" prefWidth="320" styleClass="brand-panel-navy">
+
+        <!-- Kempinski inner card -->
+        <VBox alignment="CENTER" spacing="6" styleClass="brand-card">
+            <VBox.margin><Insets left="30" right="30" top="60" /></VBox.margin>
+            <Label styleClass="brand-wordmark" text="Kempinski" />
+            <Label styleClass="brand-tagline" text="HOTELS &amp; RESORTS" />
+        </VBox>
+
+        <!-- Gold rule -->
+        <Pane styleClass="brand-rule">
+            <VBox.margin><Insets top="22" /></VBox.margin>
+        </Pane>
+
+        <!-- PROFILE label -->
+        <Label styleClass="brand-location" text="PROFILE">
+            <VBox.margin><Insets top="12" /></VBox.margin>
+        </Label>
+
+        <!-- Spacer -->
+        <Pane VBox.vgrow="ALWAYS" />
+
+        <!-- Footer -->
+        <Label styleClass="brand-footer" text="Your personal account details">
+            <VBox.margin><Insets bottom="36" /></VBox.margin>
+        </Label>
+    </VBox>
+
+    <!-- ══ RIGHT — Ivory Profile Panel ══ -->
+    <VBox alignment="CENTER_LEFT" layoutX="320" layoutY="3" prefHeight="574" prefWidth="580" styleClass="form-panel">
+
+        <VBox alignment="TOP_LEFT" prefWidth="480" spacing="0">
+            <VBox.margin><Insets left="56" right="40" /></VBox.margin>
+
+            <!-- ── Avatar + Title row ── -->
+            <HBox alignment="CENTER_LEFT" spacing="18">
+                <VBox.margin><Insets bottom="6" /></VBox.margin>
+
+                <!-- Avatar circle -->
+                <Pane styleClass="profile-avatar-circle">
+                    <Label fx:id="avatarInitialsLabel" layoutX="14" layoutY="11" styleClass="profile-avatar-initials" text="G" />
+                </Pane>
+
+                <!-- Title + subtitle -->
+                <VBox alignment="CENTER_LEFT" spacing="4">
+                    <Label styleClass="label-page-title" text="My Profile" />
+                    <Label styleClass="label-page-subtitle" text="Kempinski Guest Account" />
+                </VBox>
+            </HBox>
+
+            <!-- Divider -->
+            <Separator prefWidth="480">
+                <VBox.margin><Insets bottom="22" top="14" /></VBox.margin>
+            </Separator>
+
+            <!-- ── Field rows ── -->
+
+            <!-- Full Name -->
+            <HBox spacing="0" styleClass="profile-field-row">
+                <VBox.margin><Insets bottom="12" /></VBox.margin>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label styleClass="label-field" text="FULL NAME" />
+                    <Label fx:id="fullNameLabel" maxWidth="420" styleClass="profile-value" />
+                </VBox>
+            </HBox>
+
+            <!-- Gender + Birth Date side-by-side -->
+            <HBox spacing="16">
+                <VBox.margin><Insets bottom="12" /></VBox.margin>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label styleClass="label-field" text="GENDER" />
+                    <Label fx:id="genderLabel" maxWidth="196" styleClass="profile-value" />
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label styleClass="label-field" text="BIRTH DATE" />
+                    <Label fx:id="birthDateLabel" maxWidth="196" styleClass="profile-value" />
+                </VBox>
+            </HBox>
+
+            <!-- Balance -->
+            <HBox spacing="0" styleClass="profile-field-row">
+                <VBox.margin><Insets bottom="12" /></VBox.margin>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label styleClass="label-field" text="ACCOUNT BALANCE" />
+                    <Label fx:id="balanceLabel" maxWidth="420" styleClass="profile-value-accent" />
+                </VBox>
+            </HBox>
+
+            <!-- Address -->
+            <HBox spacing="0" styleClass="profile-field-row">
+                <VBox.margin><Insets bottom="22" /></VBox.margin>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label styleClass="label-field" text="ADDRESS" />
+                    <Label fx:id="adressLabel" maxWidth="420" styleClass="profile-value" />
+                </VBox>
+            </HBox>
+
+            <!-- ── Back button ── -->
+            <HBox alignment="CENTER_RIGHT" prefWidth="480">
+                <Button onAction="#back" prefHeight="46" prefWidth="140" styleClass="button" text="← BACK" />
+            </HBox>
+
+        </VBox>
+    </VBox>
+
+</AnchorPane>

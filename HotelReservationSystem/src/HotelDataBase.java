@@ -71,7 +71,7 @@ public class HotelDataBase {
 
      public static User searchUser(String name) {
           for (User u : users) {
-               if (u.getUsername().equals(name)) {
+               if (u.getUsername().toUpperCase().equals(name.toUpperCase())) {
                     return u;
                }
           }

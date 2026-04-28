@@ -44,14 +44,15 @@
         <Pane HBox.hgrow="ALWAYS" />
 
         <!-- ← Back -->
-        <Button fx:id="navBack" onAction="#back" prefHeight="68" styleClass="nav-action-button" text="◀ Back">
+        <Button fx:id="navBack" onAction="#back" prefHeight="68" styleClass="nav-action-button" text="◀ Back" translateX="55.0">
             <HBox.margin><Insets right="4" /></HBox.margin>
         </Button>
 
         <!-- △ Home -->
-        <Button fx:id="navHome" onAction="#home" prefHeight="68" styleClass="nav-action-button" text="🏠 Home">
+        <Button fx:id="navHome" onAction="#home" prefHeight="68" styleClass="nav-action-button" text="🏠 Home" translateX="36.0">
             <HBox.margin><Insets right="16" /></HBox.margin>
         </Button>
+      <Button fx:id="viewProfile" onAction="#viewProfile" prefHeight="68" styleClass="nav-action-button" text="👤View Profile" />
 
         <!-- [Logout] outlined gold -->
         <Button fx:id="navLogout" onAction="#logout" prefHeight="38" styleClass="nav-logout-button" text="Logout">
