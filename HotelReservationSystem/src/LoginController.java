@@ -1,12 +1,14 @@
 import com.sun.tools.javac.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 public class LoginController {
     @FXML private TextField name;
     @FXML private PasswordField password;
+    @FXML private Label nameError;
     public void login(ActionEvent event){
         User user ;
         try {
@@ -23,7 +25,7 @@ public class LoginController {
                     MainController.navigate(event,"Admin_Menu.fxml");
                 }
         } catch (InvalidInputException e) {
-            System.out.println(e.getMessage());
+            MainController.setFieldError(nameError, e.getMessage());
         }
     }
     public void Back(ActionEvent event){

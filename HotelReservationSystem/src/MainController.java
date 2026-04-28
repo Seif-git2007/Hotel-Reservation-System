@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import java.util.Stack;
 
 public class MainController {
-    private static Stack<String> history = new Stack<>();
+    static Stack<String> history = new Stack<>();
     private static User user;
 
     public static User getUser() {
@@ -21,7 +21,7 @@ public class MainController {
         MainController.user = user;
     }
 
-    private static void loadScene(ActionEvent event, String file) {
+    public static void loadScene(ActionEvent event, String file) {
         try {
             Parent root = FXMLLoader.load(MainController.class.getResource(file));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -80,6 +80,11 @@ public class MainController {
             l.setVisible(false);
         }
     }
+    public void viewProfile(ActionEvent event){
+        navigate(event,"Guest_Profile.fxml");
+    }
+
+
 
 }
 

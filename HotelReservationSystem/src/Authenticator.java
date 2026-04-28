@@ -9,7 +9,7 @@ public class Authenticator {
         if(u==null){
             return name;
         }
-        if (u.getUsername().equals(name)) {
+        if (u.getUsername().toUpperCase().equals(name.toUpperCase())) {
                 throw new AuthenticationException("Username already exists.");
             }
         return name;
