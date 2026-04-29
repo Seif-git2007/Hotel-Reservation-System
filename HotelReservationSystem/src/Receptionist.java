@@ -6,8 +6,8 @@ public class Receptionist extends Staff{
     public Receptionist() {
     }
 
-    public Receptionist(String name, String password, LocalDate date,int hours,User.Gender gender) {
-        super(name, password, date,gender);
+    public Receptionist(String name, String password, LocalDate date,int hours,User.Gender gender,String email) {
+        super(name, password, date,gender,email);
         super.setWorkingHours(hours);
     }
     public static boolean isToday(LocalDate date) {

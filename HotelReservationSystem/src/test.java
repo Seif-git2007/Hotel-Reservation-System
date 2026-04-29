@@ -12,7 +12,10 @@ public class test {
         String view;
         double balance;
         LocalDate date;
+        String displayName;
         roomPreferences perfer = new roomPreferences();
+        System.out.println("enter displayName:");
+        displayName = input.nextLine();
         while (true) {
             try {
                 System.out.println("enter name:");
@@ -60,6 +63,8 @@ public class test {
             }
         }
 
+        System.out.println("enter email:");
+        String email = input.nextLine();
         System.out.println("enter address:");
         String address = input.nextLine();
         while (true) {
@@ -97,7 +102,7 @@ public class test {
                 System.out.println(e.getMessage());
             }
         }
-        guest.Register(name,password,gender,balance,date, address, perfer);
+        guest.Register(name,password,gender,balance,date, address, perfer,displayName,email);
         System.out.println("Registration Successful!");
     }
     public static User callLogin(User user){
@@ -184,7 +189,7 @@ public class test {
 
                         if (filterChoice == 1) {
                             guest.viewAvailableRooms(checkInDate, checkOutDate, guest.getPrefered());
-                            rooms = HotelDataBase.filterRooms(HotelDataBase.getAvailableRooms(checkInDate, checkOutDate), guest.getPrefered());
+                            rooms = HotelDataBase.filterRoomsByPreferences(HotelDataBase.getAvailableRooms(checkInDate, checkOutDate), guest.getPrefered());
                         }
                         if (filterChoice == 2) {
                             guest.viewAvailableRooms(checkInDate, checkOutDate);
@@ -949,7 +954,8 @@ public class test {
                             System.out.println(e.getMessage());
                         }
                     }
-
+                    System.out.println("Enter Email");
+                    String email=input.nextLine();
                     while (true){
                         try{ System.out.println("Please enter new Receptionist's gender");
                             gender = Authenticator.validateGender(input.nextLine());
@@ -959,7 +965,7 @@ public class test {
                         }
                     }
                     try {
-                        admin.addReceptionists(name, pass, date, hours, gender);
+                        admin.addReceptionists(name, pass, date, hours, gender,email);
                         System.out.println("You have successfully registered a new receptionist!");
                     }catch(InvalidInputException e){
                         System.out.println(e.getMessage());

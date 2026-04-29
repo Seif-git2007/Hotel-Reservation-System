@@ -1,5 +1,4 @@
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -64,7 +63,7 @@ public class MainController {
     }
     public void home(ActionEvent event){
         if(user instanceof Guest){
-            navigate(event,"Guest_Menu.fxml");
+            navigate(event, "Guest_Dashboard.fxml");
         }else if(user instanceof Receptionist){
             navigate(event,"Receptionist_Menu.fxml");
         }else if(user instanceof Admin){

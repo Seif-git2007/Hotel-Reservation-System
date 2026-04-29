@@ -5,8 +5,8 @@ public abstract class Staff extends User{
     enum Role {ADMIN ,RECEPTIONIST}
     Role role;
     public Staff(){}
-    public Staff(String name, String password, LocalDate date,User.Gender gender){
-        super(name,password,date,gender);
+    public Staff(String name, String password, LocalDate date,User.Gender gender,String email){
+        super(name,password,date,gender,email);
     }
 
     public int getWorkingHours() {

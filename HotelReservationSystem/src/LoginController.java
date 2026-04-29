@@ -1,4 +1,3 @@
-import com.sun.tools.javac.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -16,7 +15,7 @@ public class LoginController {
             MainController.setUser(user);
                 if (user instanceof Guest) {
                     System.out.println("Guest");
-                    MainController.navigate(event,"Guest_Menu.fxml");
+                    MainController.navigate(event, "Guest_Dashboard.fxml");
                 } else if (user instanceof Receptionist) {
                     System.out.println("Receptionist");
                     MainController.navigate(event,"Receptionist_Menu.fxml");
@@ -30,5 +29,8 @@ public class LoginController {
     }
     public void Back(ActionEvent event){
         MainController.navigate(event,"Register_Menu.fxml");
+    }
+    public void forgetPassword(ActionEvent event){
+        MainController.navigate(event,"Forget_Password.fxml");
     }
 }

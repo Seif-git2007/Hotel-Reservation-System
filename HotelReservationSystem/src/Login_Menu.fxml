@@ -12,72 +12,65 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<!--
-  LOGIN MENU — matches screenshot 1 exactly
-  Left panel: Deep Navy #0F2160, italic Kempinski card, EGYPT gold label, "Excellence in Hospitality"
-  Right panel: Ivory #F0EDE4, "Welcome Back" serif title, gold-bordered inputs, gold SIGN IN button
-  Size: 900 x 580
--->
 
 <AnchorPane prefHeight="580.0" prefWidth="900.0" style="-fx-background-color: #F0EDE4;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginController">
 
-   <!-- ══ OUTER GOLD BORDER FRAME ══ -->
-   <!-- Top gold line -->
+
    <Pane layoutX="0" layoutY="0" prefHeight="3" prefWidth="900" style="-fx-background-color: #C9A84C;" />
-   <!-- Bottom gold line -->
+
    <Pane layoutX="0" layoutY="577" prefHeight="3" prefWidth="900" style="-fx-background-color: #C9A84C;" />
 
-   <!-- ══ LEFT — Navy Brand Panel ══ -->
+
    <VBox alignment="TOP_CENTER" layoutX="0" layoutY="3" prefHeight="574" prefWidth="380" spacing="0" styleClass="brand-panel-navy">
 
-      <!-- Kempinski inner card -->
+
       <VBox alignment="CENTER" spacing="6" styleClass="brand-card">
          <VBox.margin><Insets left="30" right="30" top="60" /></VBox.margin>
          <Label styleClass="brand-wordmark" text="Kempinski" />
          <Label styleClass="brand-tagline" text="HOTELS &amp; RESORTS" />
       </VBox>
 
-      <!-- Gold rule -->
+
       <Pane styleClass="brand-rule">
          <VBox.margin><Insets top="22" /></VBox.margin>
       </Pane>
 
-      <!-- EGYPT -->
+
       <Label styleClass="brand-location" text="EGYPT">
          <VBox.margin><Insets top="12" /></VBox.margin>
       </Label>
 
-      <!-- Spacer -->
+
       <Pane VBox.vgrow="ALWAYS" />
 
-      <!-- Excellence in Hospitality -->
+
       <Label styleClass="brand-footer" text="Excellence in Hospitality">
          <VBox.margin><Insets bottom="36" /></VBox.margin>
       </Label>
    </VBox>
 
-   <!-- ══ RIGHT — Ivory Form Panel ══ -->
+
    <VBox alignment="CENTER_LEFT" layoutX="380" layoutY="3" prefHeight="574" prefWidth="520" spacing="0" styleClass="form-panel">
 
       <VBox alignment="TOP_LEFT" prefWidth="440" spacing="0">
          <VBox.margin><Insets left="56" right="40" /></VBox.margin>
 
-         <!-- Title -->
+
          <Label styleClass="label-page-title" text="Welcome Back">
             <VBox.margin><Insets bottom="6" /></VBox.margin>
          </Label>
 
-         <!-- Subtitle -->
+
          <Label styleClass="label-page-subtitle" text="Sign in to your Kempinski account">
             <VBox.margin><Insets bottom="20" /></VBox.margin>
          </Label>
 
-         <!-- Divider line below subtitle -->
+
          <Separator prefWidth="420">
             <VBox.margin><Insets bottom="24" /></VBox.margin>
          </Separator>
 
-         <!-- USERNAME -->
+
          <Label styleClass="label-field" text="USERNAME">
             <VBox.margin><Insets bottom="6" /></VBox.margin>
          </Label>
@@ -85,29 +78,28 @@
             <VBox.margin><Insets bottom="18" /></VBox.margin>
          </TextField>
 
-         <!-- PASSWORD -->
+
          <Label styleClass="label-field" text="PASSWORD">
             <VBox.margin><Insets bottom="6" /></VBox.margin>
          </Label>
          <PasswordField fx:id="password" prefHeight="48" prefWidth="420" promptText="Enter your password" styleClass="password-field">
             <VBox.margin><Insets bottom="24" /></VBox.margin>
          </PasswordField>
+         <Hyperlink onAction="#forgetPassword" styleClass="hyperlink" text="Forgot Password?" />
          <Label fx:id="nameError" styleClass="label-error" visible="false" />
 
-         <!-- SIGN IN button -->
+
          <Button onAction="#login" prefHeight="50" prefWidth="420" styleClass="button" text="SIGN IN">
             <VBox.margin><Insets bottom="18" /></VBox.margin>
          </Button>
 
-         <!-- — or — divider -->
+
          <HBox alignment="CENTER" prefWidth="420" spacing="10">
             <VBox.margin><Insets bottom="14" /></VBox.margin>
             <Separator HBox.hgrow="ALWAYS" />
             <Label styleClass="label-muted" text="or" />
             <Separator HBox.hgrow="ALWAYS" />
          </HBox>
-
-         <!-- Register row -->
          <HBox alignment="CENTER_LEFT" prefWidth="420" spacing="6">
             <Label styleClass="label-muted" text="Don't have an account?" />
             <Hyperlink onAction="#Back" styleClass="hyperlink" text="Register Now" />

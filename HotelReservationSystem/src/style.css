@@ -1,28 +1,11 @@
-/* =====================================================
-   KEMPINSKI HOTEL EGYPT — JavaFX Style Sheet
-   Matches approved design screenshots exactly.
 
-   Palette:
-     Deep Navy    #0F2160  — login left panel, navbar, main screen
-     Teal Panel   #3B6B7A  — register left panel
-     Champagne    #C9A84C  — gold buttons, links, accents
-     Gold Hover   #B8963E  — gold pressed/hover
-     Ivory        #F0EDE4  — right form panel, content bg
-     White        #FFFFFF  — inputs, section cards
-     Charcoal     #2C2C2C  — body text
-     Stone        #6B6B6B  — muted / placeholder
-   ===================================================== */
-
-/* =====================================================
-   KEMPINSKI HOTEL EGYPT — RESTORED PALETTE
-   ===================================================== */
 
 .root {
     -fx-background-color: #F0EDE4;
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
 }
 
-/* PRIMARY GOLD BUTTON */
+
 .button {
     -fx-background-color: #C9A84C;
     -fx-text-fill: #FFFFFF;
@@ -34,7 +17,6 @@
 }
 .button:hover { -fx-background-color: #B8963E; }
 
-/* OUTLINE BUTTON */
 .button-outline {
     -fx-background-color: transparent;
     -fx-text-fill: #C9A84C;
@@ -46,19 +28,18 @@
 }
 .button-outline:hover { -fx-background-color: rgba(201,168,76,0.10); }
 
-/* IMAGE-SPECIFIC CHANGES */
 .main-menu-root {
     -fx-background-color: transparent;
 }
 
 .main-menu-brand-card {
-    /* Adjusted opacity for better readability on images */
+
     -fx-background-color: rgba(255,255,255,0.1);
     -fx-background-radius: 10;
     -fx-padding: 28 70;
 }
 
-/* KEEPING YOUR ORIGINAL TEXT STYLES */
+
 .main-menu-wordmark {
     -fx-text-fill: #FFFFFF;
     -fx-font-family: "Georgia", serif;
@@ -99,8 +80,6 @@
     -fx-font-size: 11px;
 }
 
-/* Rest of your existing styles (nav-bar, labels, etc.) go here... */
-/* ── NAV BAR ─────────────────────────────────────── */
 .nav-bar {
     -fx-background-color: #0F2160;
     -fx-pref-height: 68;
@@ -112,7 +91,7 @@
     -fx-pref-height: 3;
 }
 
-/* Brand text in navbar */
+
 .nav-brand-name {
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 15px;
@@ -129,14 +108,13 @@
     -fx-font-size: 13px;
 }
 
-/* Nav divider between brand and actions */
 .nav-divider {
     -fx-background-color: rgba(255,255,255,0.20);
     -fx-pref-width: 1;
     -fx-pref-height: 30;
 }
 
-/* Back / Home transparent buttons */
+
 .nav-action-button {
     -fx-background-color: transparent;
     -fx-text-fill: #FFFFFF;
@@ -149,7 +127,6 @@
 }
 .nav-action-button:hover { -fx-text-fill: #C9A84C; -fx-background-color: transparent; }
 
-/* Logout outlined gold button */
 .nav-logout-button {
     -fx-background-color: transparent;
     -fx-text-fill: #C9A84C;
@@ -165,7 +142,7 @@
 }
 .nav-logout-button:hover { -fx-background-color: rgba(201,168,76,0.10); }
 
-/* ── TEXT FIELDS ─────────────────────────────────── */
+
 .text-field, .password-field {
     -fx-background-color: #FFFFFF;
     -fx-border-color: #C9A84C;
@@ -182,7 +159,6 @@
     -fx-border-width: 1.5;
 }
 
-/* ── FORM LABELS ─────────────────────────────────── */
 .label-field {
     -fx-text-fill: #0F2160;
     -fx-font-size: 14px;
@@ -208,7 +184,7 @@
     -fx-font-size: 11px;
 }
 
-/* ── HYPERLINK ───────────────────────────────────── */
+
 .hyperlink {
     -fx-text-fill: #C9A84C;
     -fx-font-weight: bold;
@@ -221,7 +197,6 @@
 .hyperlink:hover { -fx-text-fill: #0F2160; -fx-underline: true; }
 .hyperlink:visited { -fx-text-fill: #C9A84C; }
 
-/* ── BRAND PANEL CLASSES ─────────────────────────── */
 .brand-panel-navy { -fx-background-color: #0F2160; }
 .brand-panel-teal { -fx-background-color: #3B6B7A; }
 
@@ -271,7 +246,7 @@
     -fx-font-style: italic;
 }
 
-/* ── MAIN MENU ───────────────────────────────────── */
+
 .main-menu-root { -fx-background-color: #0F2160; }
 .main-menu-brand-card {
     -fx-background-color: rgba(255,255,255,0.07);
@@ -314,7 +289,7 @@
     -fx-font-size: 11px;
 }
 
-/* ── CONTENT AREA (role menus) ───────────────────── */
+
 .content-area { -fx-background-color: #F0EDE4; }
 
 .page-header-strip {
@@ -338,7 +313,7 @@
     -fx-font-size: 13px;
 }
 
-/* ── SECTION CARDS (Users / Bookings / etc.) ─────── */
+
 .section-card {
     -fx-background-color: #FFFFFF;
     -fx-background-radius: 12;
@@ -359,7 +334,7 @@
     -fx-background-radius: 2;
 }
 
-/* ── MAIN CONTENT PLACEHOLDER ────────────────────── */
+
 .main-content-card {
     -fx-background-color: #FFFFFF;
     -fx-background-radius: 8;
@@ -386,9 +361,9 @@
     -fx-font-size: 14px;
     -fx-text-fill: #2C2C2C;
 }
-/* ── GUEST PROFILE SCREEN ────────────────────────── */
 
-/* Avatar circle on the right panel */
+
+
 .profile-avatar-circle {
     -fx-background-color: #0F2160;
     -fx-background-radius: 50;
@@ -406,7 +381,7 @@
     -fx-font-style: italic;
 }
 
-/* Standard read-only value box */
+
 .profile-value {
     -fx-background-color: #FFFFFF;
     -fx-border-color: #C9A84C;
@@ -420,7 +395,7 @@
     -fx-pref-width: 420;
 }
 
-/* Balance field — navy tint to stand out */
+
 .profile-value-accent {
     -fx-background-color: #F5F1E8;
     -fx-border-color: #0F2160;
@@ -434,9 +409,7 @@
     -fx-pref-width: 420;
 }
 
-/* ── REGISTER SCREEN (extended) ─────────────────── */
 
-/* Transparent scroll pane so the ivory bg shows through */
 .register-scroll {
     -fx-background-color: transparent;
     -fx-background: transparent;
@@ -465,7 +438,43 @@
     -fx-opacity: 0;
 }
 
-/* Gold-accented section heading */
+
+.luxury-slider {
+    -fx-padding: 0 0 0 0;
+}
+
+
+.luxury-slider .track {
+    -fx-background-color: rgba(201,168,76,0.25);
+    -fx-background-radius: 3;
+    -fx-pref-height: 4;
+}
+
+
+.luxury-slider .colored-track {
+    -fx-background-color: #C9A84C;
+    -fx-background-radius: 3;
+}
+
+.luxury-slider .thumb {
+    -fx-background-color: #C9A84C;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 14;
+    -fx-pref-height: 14;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0.2, 0, 1);
+}
+
+
+.luxury-slider .thumb:hover {
+    -fx-background-color: #B8963E;
+}
+
+
+.luxury-slider .thumb:pressed {
+    -fx-background-color: #0F2160;
+}
+
+
 .register-section-label {
     -fx-text-fill: #C9A84C;
     -fx-font-size: 11px;
@@ -473,32 +482,8 @@
     -fx-letter-spacing: 0.16em;
 }
 
-/* ComboBox — matches text-field style */
-.register-combo {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #C9A84C;
-    -fx-border-radius: 5;
-    -fx-background-radius: 5;
-    -fx-font-size: 14px;
-    -fx-text-fill: #2C2C2C;
-}
-.register-combo .list-cell {
-    -fx-text-fill: #2C2C2C;
-    -fx-font-size: 14px;
-    -fx-background-color: #FFFFFF;
-}
-.register-combo:focused {
-    -fx-border-color: #0F2160;
-    -fx-border-width: 1.5;
-}
-.register-combo .arrow-button {
-    -fx-background-color: transparent;
-}
-.register-combo .arrow {
-    -fx-background-color: #C9A84C;
-}
 
-/* DatePicker — matches text-field style */
+
 .register-datepicker {
     -fx-background-color: #FFFFFF;
     -fx-border-color: #C9A84C;
@@ -522,4 +507,259 @@
 }
 .register-datepicker .arrow-button .arrow {
     -fx-background-color: #C9A84C;
+}
+
+
+.sidebar-panel {
+    -fx-background-color: #0F2160;
+    -fx-pref-width: 220;
+    -fx-min-width: 220;
+}
+
+.sidebar-brand-card {
+    -fx-background-color: rgba(255,255,255,0.07);
+    -fx-background-radius: 8;
+    -fx-padding: 16 20;
+}
+
+.sidebar-brand-wordmark {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: "Georgia", "Times New Roman", serif;
+    -fx-font-size: 20px;
+    -fx-font-style: italic;
+}
+
+.sidebar-brand-sub {
+    -fx-text-fill: #C9A84C;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 0.14em;
+}
+
+.sidebar-section-label {
+    -fx-text-fill: rgba(255,255,255,0.38);
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 0.16em;
+}
+
+.sidebar-nav-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255,255,255,0.78);
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 0 0 20;
+    -fx-background-radius: 0;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+    -fx-effect: none;
+    -fx-graphic-text-gap: 10;
+}
+
+.sidebar-nav-btn:hover {
+    -fx-background-color: rgba(201,168,76,0.12);
+    -fx-text-fill: #C9A84C;
+}
+
+
+.sidebar-nav-btn-active {
+    -fx-background-color: rgba(201,168,76,0.18);
+    -fx-text-fill: #C9A84C;
+    -fx-border-color: #C9A84C transparent #C9A84C transparent;
+    -fx-border-width: 0 0 0 3;
+    -fx-padding: 0 0 0 17;
+}
+
+
+.sidebar-logout-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255,120,120,0.80);
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 0 0 20;
+    -fx-background-radius: 0;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+    -fx-effect: none;
+}
+
+.sidebar-logout-btn:hover {
+    -fx-background-color: rgba(255,80,80,0.10);
+    -fx-text-fill: #FF8080;
+}
+
+.room-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: #F0EDE4;
+    -fx-border-color: transparent;
+}
+
+.room-scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+
+.room-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 10;
+    -fx-border-color: #E0DAD0;
+    -fx-border-radius: 10;
+    -fx-border-width: 0.5;
+    -fx-padding: 20;
+}
+
+.room-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(15,33,96,0.1), 10, 0, 0, 4);
+}
+
+.room-card-title {
+    -fx-text-fill: #0F2160;
+    -fx-font-family: "Georgia", serif;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.room-card-price {
+    -fx-text-fill: #6B6B6B;
+    -fx-font-size: 14px;
+}
+
+.room-card-status {
+    -fx-text-fill: #C9A84C;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 0.1em;
+}
+
+
+.btn-select-room {
+    -fx-background-color: #C9A84C;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 12px;
+    -fx-padding: 8 16;
+    -fx-background-radius: 4;
+}
+
+.btn-select-room:hover {
+    -fx-background-color: #B8963E;
+}
+.filter-tag {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #0F2160;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-border-color: #D0C9BC;
+    -fx-border-radius: 20;
+    -fx-border-width: 1.5;
+    -fx-padding: 5 14;
+    -fx-cursor: hand;
+}
+.filter-tag:hover {
+    -fx-border-color: #C9A84C;
+    -fx-text-fill: #C9A84C;
+}
+
+.filter-btn-solid {
+    -fx-background-color: #C9A84C;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-pref-height: 38;
+    -fx-padding: 0 18;
+}
+
+.filter-btn-solid:hover {
+    -fx-background-color: #B8963E;
+}
+
+.filter-btn-outline {
+    -fx-background-color: transparent;
+    -fx-text-fill: #C9A84C;
+    -fx-border-color: #C9A84C;
+    -fx-border-radius: 6;
+    -fx-border-width: 1.5;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-pref-height: 38;
+    -fx-padding: 0 18;
+}
+
+.filter-btn-outline:hover {
+    -fx-background-color: rgba(201,168,76,0.10);
+}
+
+.filter-tag-selected {
+    -fx-background-color: #0F2160;
+    -fx-text-fill: #C9A84C;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-border-color: #0F2160;
+    -fx-border-radius: 20;
+    -fx-border-width: 1.5;
+    -fx-padding: 5 14;
+    -fx-cursor: hand;
+}
+.filter-tag-selected:hover {
+    -fx-background-color: #1A3370;
+}
+
+
+.filter-combo {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #C9A84C;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-pref-height: 38;
+    -fx-padding: 4 10;
+}
+
+
+.filter-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.filter-combo .arrow {
+    -fx-background-color: #C9A84C;
+}
+
+
+.filter-combo:focused {
+    -fx-border-color: #0F2160;
+}
+
+
+
+.filter-combo .combo-box-popup .list-view {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #C9A84C;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 4;
+}
+
+
+.filter-combo .combo-box-popup .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #2C2C2C;
+    -fx-font-size: 13px;
+    -fx-padding: 8 10;
+}
+
+.filter-combo .combo-box-popup .list-cell:hover {
+    -fx-background-color: rgba(201,168,76,0.15);
+}
+
+
+.filter-combo .combo-box-popup .list-cell:selected {
+    -fx-background-color: #C9A84C;
+    -fx-text-fill: #FFFFFF;
+}
+
+.filter-combo .combo-box-popup .list-view:focused {
+    -fx-background-insets: 0;
 }

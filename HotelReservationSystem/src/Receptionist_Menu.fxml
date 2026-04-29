@@ -7,12 +7,6 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<!--
-  RECEPTIONIST MENU — matches screenshot 7 exactly
-  Navbar | "Receptionist Panel" header | Check-In / Check-Out / Reservations cards (empty)
-  | Main content placeholder
-  Size: 900 x 660
--->
 <AnchorPane
         prefHeight="660.0" prefWidth="900.0"
         style="-fx-background-color: #F0EDE4;"
@@ -20,17 +14,17 @@
         xmlns="http://javafx.com/javafx/21"
         xmlns:fx="http://javafx.com/fxml/1">
 
-    <!-- Navigation Bar -->
+
     <fx:include source="NavgationBar.fxml" layoutX="0" layoutY="0" fx:id="navBar" />
 
-    <!-- ══ CONTENT ══ -->
+
     <VBox
             layoutX="0" layoutY="71"
             prefWidth="900" prefHeight="589"
             styleClass="content-area"
             spacing="0">
 
-        <!-- Page header -->
+
         <HBox styleClass="page-header-strip" prefWidth="900" alignment="CENTER_LEFT" spacing="14">
             <Pane styleClass="page-title-accent" prefHeight="46" />
             <VBox spacing="4">
@@ -39,40 +33,34 @@
             </VBox>
         </HBox>
 
-        <!-- Section cards row -->
+
         <HBox spacing="20" prefWidth="900">
             <VBox.margin><Insets top="20" left="24" right="24" bottom="16" /></VBox.margin>
 
-            <!-- Check-In -->
+
             <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="10">
                 <Label text="Check-In" styleClass="section-card-title" />
-                <!-- ╔══════════════════════════════╗
-                     ║  Add Check-In content here   ║
-                     ╚══════════════════════════════╝ -->
+
                 <Pane prefHeight="148" />
             </VBox>
 
-            <!-- Check-Out -->
+
             <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="10">
                 <Label text="Check-Out" styleClass="section-card-title" />
-                <!-- ╔══════════════════════════════╗
-                     ║  Add Check-Out content here  ║
-                     ╚══════════════════════════════╝ -->
+
                 <Pane prefHeight="148" />
             </VBox>
 
-            <!-- Reservations -->
+
             <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="10">
                 <Label text="Reservations" styleClass="section-card-title" />
-                <!-- ╔══════════════════════════════╗
-                     ║  Add Reservations content    ║
-                     ╚══════════════════════════════╝ -->
+
                 <Pane prefHeight="148" />
             </VBox>
 
         </HBox>
 
-        <!-- Main content placeholder -->
+
         <VBox styleClass="main-content-card" prefWidth="852" VBox.vgrow="ALWAYS" alignment="CENTER">
             <VBox.margin><Insets left="24" right="24" bottom="24" /></VBox.margin>
             <Label text="Main content area — add your components here"

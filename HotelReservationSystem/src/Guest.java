@@ -6,15 +6,26 @@ public class Guest extends User {
     private double balance;
     private roomPreferences prefered;
     private String address;
+    private String displayname;
 
     public Guest() {}
 
-    public Guest(String username, String password, LocalDate dateOfBirth, double balance, roomPreferences prefered, String address,User.Gender gender) {
-        super(username, password, dateOfBirth,gender);
+    public Guest(String username, String password, LocalDate dateOfBirth, double balance, roomPreferences prefered, String address,User.Gender gender,String displayName,String email) {
+        super(username, password, dateOfBirth,gender,email);
         this.balance = balance;
         this.prefered = prefered;
         this.address = address;
+        this.displayname=displayName;
 
+
+    }
+
+    public String getDisplayname() {
+        return displayname;
+    }
+
+    public void setDisplayname(String displayname) {
+        this.displayname = displayname;
     }
 
     public double getBalance() {
@@ -41,7 +52,9 @@ public class Guest extends User {
         this.address = address;
     }
 
-    public void Register(String name,String password,String gender,double balance,LocalDate date, String address, roomPreferences r) {
+
+
+    public void Register(String name, String password, String gender, double balance, LocalDate date, String address, roomPreferences r, String displayname, String email) {
         this.setUsername(name);
         this.setPassword(password);
         this.gender= Gender.valueOf(gender.toUpperCase());
@@ -49,6 +62,8 @@ public class Guest extends User {
         this.setDateOfBirth(date);
         this.address = address;
         this.prefered = r;
+        this.displayname=displayname;
+        this.setEmail(email);
         HotelDataBase.users.add(this);
     }
 
@@ -66,11 +81,11 @@ public class Guest extends User {
         if(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate).isEmpty()){
             throw new RoomNotAvailableException("No available rooms in this duration");
         }
-        if(HotelDataBase.filterRooms(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate),preferred).isEmpty()){
+        if(HotelDataBase.filterRoomsByPreferences(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate),preferred).isEmpty()){
             throw new RoomNotAvailableException("No available rooms with your preferences in this duration");
         }
         int cnt=1;
-        for (Room r:HotelDataBase.filterRooms(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate),preferred)){
+        for (Room r:HotelDataBase.filterRoomsByPreferences(HotelDataBase.getAvailableRooms(checkInDate,checkOutDate),preferred)){
             System.out.println(cnt+". "+r);
             cnt++;
         }

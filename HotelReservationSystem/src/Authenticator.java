@@ -3,9 +3,9 @@ import java.time.LocalDate;
 public class Authenticator {
     public static String validateName(String name) throws InvalidInputException {
         if (name == null || name.trim().isEmpty()) {
-            throw new AuthenticationException("Username cannot be empty.");
+            throw new AuthenticationException("Please Enter User name.");
         }
-        User u = HotelDataBase.searchUser(name);
+        User u = HotelDataBase.searchUserByName(name);
         if(u==null){
             return name;
         }
@@ -13,6 +13,19 @@ public class Authenticator {
                 throw new AuthenticationException("Username already exists.");
             }
         return name;
+    }
+    public static String validateEmail(String email) throws InvalidInputException {
+        if (email == null || email.trim().isEmpty()) {
+            throw new AuthenticationException("Please Enter Email");
+        }
+        User u = HotelDataBase.searchUserByEmail(email);
+        if(u==null){
+            return email;
+        }
+        if (u.getUsername().toUpperCase().equals(email.toUpperCase())) {
+            throw new AuthenticationException("Username already exists.");
+        }
+        return email;
     }
 
     public static String validatePassword(String password) throws InvalidInputException {
