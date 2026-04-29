@@ -14,21 +14,17 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<!--
-  REGISTER MENU — Kempinski Hotel Egypt
-  Left panel : Teal #3B6B7A brand panel
-  Right panel: Scrollable form — all Guest + roomPreferences fields
-  Size: 900 x 580
--->
+
 
 <AnchorPane prefHeight="580.0" prefWidth="900.0" style="-fx-background-color: #F0EDE4;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="RegisterController">
 
-    <!-- ══ OUTER GOLD BORDER FRAME ══ -->
+
     <Pane layoutX="0" layoutY="0" prefHeight="3" prefWidth="900" style="-fx-background-color: #C9A84C;" />
     <Pane layoutX="0" layoutY="577" prefHeight="3" prefWidth="900" style="-fx-background-color: #C9A84C;" />
 
-    <!-- ══ LEFT — Teal Brand Panel ══ -->
+
     <VBox alignment="TOP_CENTER" layoutX="0" layoutY="3" prefHeight="574" prefWidth="320" styleClass="brand-panel-teal">
 
         <VBox alignment="CENTER" spacing="6" styleClass="brand-card">
@@ -58,13 +54,13 @@
         </Label>
     </VBox>
 
-    <!-- ══ RIGHT — Scrollable Form Panel ══ -->
+
     <ScrollPane hbarPolicy="NEVER" layoutX="320.0" layoutY="3.0" prefHeight="574" prefWidth="580.0" styleClass="register-scroll" vbarPolicy="AS_NEEDED">
    
                  <VBox alignment="TOP_LEFT" fillWidth="false" prefHeight="831.0" prefWidth="545.0" spacing="0" styleClass="form-panel" translateX="20.0" translateY="12.0">
             <VBox.margin><Insets bottom="32" left="56" right="40" top="32" /></VBox.margin>
    
-                     <!-- Title -->
+
             <Label styleClass="label-page-title" text="Create Account">
                 <VBox.margin>
                <Insets bottom="4" />
@@ -81,24 +77,40 @@
             </VBox.margin>
             </Separator>
    
-                     <!-- ── SECTION: Personal Info ── -->
+
             <Label styleClass="register-section-label" text="PERSONAL INFORMATION">
                 <VBox.margin>
                <Insets bottom="14" />
             </VBox.margin>
             </Label>
+         <Label styleClass="label-field" text="Display Name" translateY="-7.0" />
+         <Label text="Label" visible="false">
+            <font>
+               <Font size="4.0" />
+            </font>
+         </Label>
+         <TextField fx:id="displayName" prefHeight="46" prefWidth="460" promptText="Enter your Display Name " styleClass="text-field" />
+         <Label fx:id="displayNameEmpty" styleClass="label-error" text="displayNameError" visible="false" />
    
-                     <!-- Full Name -->
-            <Label styleClass="label-field" text="FULL NAME">
+
+            <Label styleClass="label-field" text="User Name" translateY="4.0">
                 <VBox.margin>
                <Insets bottom="6" />
             </VBox.margin>
             </Label>
+         <Label text="Label" visible="false">
+            <font>
+               <Font size="4.0" />
+            </font>
+         </Label>
          <TextField fx:id="name" prefHeight="46" prefWidth="460" promptText="Enter your Name" styleClass="text-field" />
          <Label fx:id="nameError" styleClass="label-error" text="nameError" visible="false" />
+         <Label styleClass="label-field" text="Email" />
+         <TextField fx:id="email" prefHeight="46" prefWidth="460" promptText="Enter your Email" styleClass="text-field" />
+         <Label fx:id="emailError" styleClass="label-error" text="emailError" visible="false" />
    
-                     <!-- Password -->
-            <Label styleClass="label-field" text="PASSWORD">
+
+            <Label styleClass="label-field" text="Password">
                 <VBox.margin>
                <Insets bottom="6" />
             </VBox.margin>
@@ -110,14 +122,14 @@
             </PasswordField>
          <Label fx:id="passwordError" styleClass="label-error" text="passwordError" translateY="-5.0" visible="false" />
    
-                     <!-- Gender + Date of Birth side by side -->
+
             <HBox spacing="16">
                 <VBox.margin>
                <Insets bottom="14" />
             </VBox.margin>
                 <VBox spacing="6" HBox.hgrow="ALWAYS">
                     <Label styleClass="label-field" text="GENDER" />
-                    <ComboBox fx:id="genderCombo" prefHeight="46" prefWidth="218" promptText="Select gender" styleClass="register-combo" />
+                    <ComboBox fx:id="genderCombo" prefHeight="46" prefWidth="218" promptText="Select gender" styleClass="filter-combo" />
                <Label fx:id="genderEmpty" styleClass="label-error" text="genderEmpty" visible="false" />
                 </VBox>
                 <VBox spacing="6" HBox.hgrow="ALWAYS">
@@ -127,7 +139,7 @@
                 </VBox>
             </HBox>
    
-                     <!-- Address -->
+
             <Label styleClass="label-field" text="ADDRESS">
                 <VBox.margin>
                <Insets bottom="6" />
@@ -140,7 +152,7 @@
             </TextField>
          <Label fx:id="addressEmpty" styleClass="label-error" text="addressEmpty" visible="false" />
    
-                     <!-- Balance -->
+
             <Label styleClass="label-field" text="INITIAL BALANCE ($)">
                 <VBox.margin>
                <Insets bottom="6" />
@@ -153,7 +165,7 @@
             </TextField>
          <Label fx:id="balanceError" styleClass="label-error" text="balanceError" visible="false" />
    
-                     <!-- ── SECTION DIVIDER ── -->
+
             <HBox alignment="CENTER_LEFT" spacing="12">
                 <VBox.margin>
                <Insets bottom="14" />
@@ -161,14 +173,14 @@
                 <Pane style="-fx-background-color: #C9A84C; -fx-pref-height: 1.5;" HBox.hgrow="ALWAYS" />
             </HBox>
    
-                     <!-- ── SECTION: Room Preferences ── -->
+
             <Label styleClass="register-section-label" text="ROOM PREFERENCES">
                 <VBox.margin>
                <Insets bottom="14" />
             </VBox.margin>
             </Label>
    
-                     <!-- Floor + View side by side -->
+
             <HBox spacing="16">
                 <VBox.margin>
                <Insets bottom="22" />
@@ -180,12 +192,12 @@
                 </VBox>
                 <VBox spacing="6" HBox.hgrow="ALWAYS">
                     <Label styleClass="label-field" text="PREFERRED VIEW" />
-                    <ComboBox fx:id="prefView" prefHeight="46" prefWidth="218" promptText="Select view" styleClass="register-combo" />
+                    <ComboBox fx:id="prefView" prefHeight="46" prefWidth="218" promptText="Select view" styleClass="filter-combo" />
                <Label fx:id="viewEmpty" styleClass="label-error" text="viewEmpty" visible="false" />
                 </VBox>
             </HBox>
    
-                           <!-- or + Sign In -->
+
             <HBox alignment="CENTER" prefWidth="460" spacing="10">
                 <VBox.margin>
                <Insets bottom="12" />
@@ -200,14 +212,14 @@
                 <Hyperlink onAction="#toLogin" styleClass="hyperlink" text="Sign In" />
             </HBox>
    
-                     <!-- Error label -->
+
             <Label fx:id="errorLabel" styleClass="label-error" visible="false">
                 <VBox.margin>
                <Insets bottom="10" />
             </VBox.margin>
             </Label>
    
-                     <!-- CREATE ACCOUNT button -->
+
             <Button onAction="#Register" prefHeight="50" prefWidth="460" styleClass="button" text="CREATE ACCOUNT" translateY="-10.0">
                 <VBox.margin>
                <Insets bottom="16" />

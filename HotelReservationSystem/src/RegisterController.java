@@ -11,13 +11,17 @@ import java.util.function.UnaryOperator;
 public class RegisterController implements Initializable {
     @FXML private Label nameError;
     @FXML private Label passwordError;
+    @FXML private Label emailError;
     @FXML private Label genderEmpty;
     @FXML private Label dateEmpty;
     @FXML private Label addressEmpty;
     @FXML private Label balanceError;
     @FXML private Label floorError;
     @FXML private Label viewEmpty;
+    @FXML private Label displayNameEmpty;
+    @FXML private TextField displayName;
     @FXML private TextField name;
+    @FXML private TextField email;
     @FXML private PasswordField password;
     @FXML private ComboBox<User.Gender> genderCombo;
     @FXML private DatePicker dateOfBirth;
@@ -25,7 +29,9 @@ public class RegisterController implements Initializable {
     @FXML private TextField balance;
     @FXML private TextField prefFloor;
     @FXML private ComboBox<Room.view> prefView;
+    private String validDisplayName;
     private String validname;
+    private String validemail;
     private String validPassword;
     User.Gender gender;
     LocalDate birthDate;
@@ -62,12 +68,24 @@ public class RegisterController implements Initializable {
     }
 
     public void Register(ActionEvent event){
-        MainController.clearErrors(nameError,passwordError);
+        MainController.clearErrors(nameError,passwordError,genderEmpty,dateEmpty,addressEmpty,balanceError,floorError,viewEmpty,displayNameEmpty);
+        if(!displayName.getText().isEmpty()){
+            validDisplayName=displayName.getText();
+            cnt++;
+        }else {
+            MainController.setFieldError(displayNameEmpty,"Please enter Display Name");
+        }
         try{
             validname=Authenticator.validateName(name.getText());
             cnt++;
         }catch (InvalidInputException e){
             MainController.setFieldError(nameError, e.getMessage());
+        }
+        try{
+            validemail=Authenticator.validateName(email.getText());
+            cnt++;
+        }catch (InvalidInputException e){
+            MainController.setFieldError(emailError, e.getMessage());
         }
         try{
             validPassword=Authenticator.validatePassword(password.getText());
@@ -96,6 +114,7 @@ public class RegisterController implements Initializable {
         }else {
             MainController.setFieldError(addressEmpty,"Please enter Address");
         }
+
         if(!balance.getText().isEmpty()){
             validBalance = Double.parseDouble(balance.getText());
             cnt++;
@@ -115,10 +134,10 @@ public class RegisterController implements Initializable {
         }else {
             MainController.setFieldError(viewEmpty, "Please select a View");
         }
-        if(cnt==8){
+        if(cnt==10){
             Guest guest=new Guest();
             roomPreferences r=new roomPreferences(validFloor,view);
-            guest.Register(validname,validPassword,gender.toString(),validBalance,birthDate,validAddress,r);
+            guest.Register(validname,validPassword,gender.toString(),validBalance,birthDate,validAddress,r,validDisplayName,validemail);
             System.out.println("I registered");
             MainController.navigate(event, "Login_Menu.fxml");
         }
@@ -127,4 +146,5 @@ public class RegisterController implements Initializable {
     public void toLogin(ActionEvent event){
         MainController.navigate(event,"Login_Menu.fxml");
     }
+
 }

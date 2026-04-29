@@ -9,13 +9,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<!--
-  ADMIN MENU — matches screenshot 5 exactly
-  Navbar + gold accent | Page header with gold left bar | 3 section cards (Users, Bookings, Revenue)
-  | Large main content placeholder card
-  Content area is EMPTY — add your components inside the section cards and main card.
-  Size: 900 x 660
--->
+
 <AnchorPane
         prefHeight="660.0" prefWidth="900.0"
         style="-fx-background-color: #F0EDE4;"
@@ -23,64 +17,57 @@
         xmlns="http://javafx.com/javafx/21"
         xmlns:fx="http://javafx.com/fxml/1">
 
-   <!-- Navigation Bar (includes its own gold accent line) -->
+
    <fx:include source="NavgationBar.fxml" layoutX="0" layoutY="0" fx:id="navBar" />
 
-   <!-- ══ CONTENT — starts at Y=71 (68px navbar + 3px accent) ══ -->
    <VBox
            layoutX="0" layoutY="71"
            prefWidth="900" prefHeight="589"
            styleClass="content-area"
            spacing="0">
 
-      <!-- Page header strip with gold left accent bar -->
+
       <HBox styleClass="page-header-strip" prefWidth="900" alignment="CENTER_LEFT" spacing="14">
-         <!-- Gold left accent bar -->
+
          <Pane styleClass="page-title-accent" prefHeight="46" />
-         <!-- Title + subtitle -->
+
          <VBox spacing="4">
             <Label text="Admin Dashboard" styleClass="label-dashboard-title" />
             <Label text="Manage hotel operations, staff, and system settings" styleClass="label-dashboard-sub" />
          </VBox>
       </HBox>
 
-      <!-- ══ SECTION CARDS ROW ══ -->
+
       <HBox spacing="20" prefWidth="900">
          <VBox.margin><Insets top="20" left="24" right="24" bottom="16" /></VBox.margin>
 
-         <!-- Card 1: Users -->
+
          <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="10">
             <Label text="Users" styleClass="section-card-title" />
             <Pane styleClass="section-card-accent" />
-            <!-- ╔══════════════════════════════╗
-                 ║  Add Users content here      ║
-                 ╚══════════════════════════════╝ -->
+
             <Pane prefHeight="140" />
          </VBox>
 
-         <!-- Card 2: Bookings -->
+
          <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="10">
             <Label text="Bookings" styleClass="section-card-title" />
             <Pane styleClass="section-card-accent" />
-            <!-- ╔══════════════════════════════╗
-                 ║  Add Bookings content here   ║
-                 ╚══════════════════════════════╝ -->
+
             <Pane prefHeight="140" />
          </VBox>
 
-         <!-- Card 3: Revenue -->
+
          <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="10">
             <Label text="Revenue" styleClass="section-card-title" />
             <Pane styleClass="section-card-accent" />
-            <!-- ╔══════════════════════════════╗
-                 ║  Add Revenue content here    ║
-                 ╚══════════════════════════════╝ -->
+
             <Pane prefHeight="140" />
          </VBox>
 
       </HBox>
 
-      <!-- ══ MAIN CONTENT PLACEHOLDER CARD ══ -->
+
       <VBox styleClass="main-content-card" prefWidth="852" VBox.vgrow="ALWAYS" alignment="CENTER">
          <VBox.margin><Insets left="24" right="24" bottom="24" /></VBox.margin>
          <Label text="Main content area — add your components here"

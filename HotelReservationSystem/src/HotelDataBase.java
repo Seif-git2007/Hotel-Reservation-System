@@ -10,17 +10,17 @@ public class HotelDataBase {
      static ArrayList<Amenity> amenities = new ArrayList<>();//all available amenities
 
      static {
-          Admin admin = new Admin("1", "1", LocalDate.parse("2000-12-05"), 8, User.Gender.MALE);
+          Admin admin = new Admin("1", "1", LocalDate.parse("2000-12-05"), 8, User.Gender.MALE,"admin123@gmail.com");
           users.add(admin);
 
-          Receptionist receptionist = new Receptionist("2", "2", LocalDate.parse("2002-10-03"), 10, User.Gender.MALE);
+          Receptionist receptionist = new Receptionist("2", "2", LocalDate.parse("2002-10-03"), 10, User.Gender.MALE,"recep123@gmail.com");
           users.add(receptionist);
 
           roomPreferences prefer = new roomPreferences(5, Room.view.POOL);
-          Guest guest = new Guest("3", "3", LocalDate.parse("2000-12-16"), 500, prefer, "1st street", User.Gender.MALE);
+          Guest guest = new Guest("3", "3", LocalDate.parse("2000-12-16"), 500, prefer, "1st street", User.Gender.MALE,"Seif Mahrous","seifmahrous2007@gmail.com");
           users.add(guest);
           roomPreferences prefer1 = new roomPreferences(3, Room.view.SEA);
-          Guest guest1 = new Guest("4", "4", LocalDate.parse("2003-10-12"), 50000, prefer1, "2nd street", User.Gender.FEMALE);
+          Guest guest1 = new Guest("4", "4", LocalDate.parse("2003-10-12"), 50000, prefer1, "2nd street", User.Gender.FEMALE,"Norhan ELzahby","norhanfawzy2007@gmail.com");
           users.add(guest1);
 
           RoomType type = new RoomType("Single", 200, 1);
@@ -69,9 +69,17 @@ public class HotelDataBase {
           return pending;
      }
 
-     public static User searchUser(String name) {
+     public static User searchUserByName(String name) {
           for (User u : users) {
                if (u.getUsername().toUpperCase().equals(name.toUpperCase())) {
+                    return u;
+               }
+          }
+          return null;
+     }
+     public static User searchUserByEmail(String email) {
+          for (User u : users) {
+               if (u.getEmail().toUpperCase().equals(email.toUpperCase())) {
                     return u;
                }
           }
@@ -123,7 +131,7 @@ public class HotelDataBase {
           return filtered;
      }
 
-     public static ArrayList<Room> filterRooms(ArrayList<Room> availableRooms, roomPreferences preferred) {
+     public static ArrayList<Room> filterRoomsByPreferences(ArrayList<Room> availableRooms, roomPreferences preferred) {
           ArrayList<Room> filteredRooms = new ArrayList<>();
           for (Room r : availableRooms) {
                if (r.getFloor() == preferred.getFloor() || r.getView() == preferred.getView()) {
@@ -131,8 +139,35 @@ public class HotelDataBase {
                }
           }
           return filteredRooms;
-
-
+     }
+     public static ArrayList<Room> filterRoomsByPrice(double price) {
+          ArrayList<Room> filteredRooms = new ArrayList<>();
+          for (Room r : rooms) {
+               if (r.getType().getBasePrice()<=price) {
+                    filteredRooms.add(r);
+               }
+          }
+          return filteredRooms;
+     }
+     public static ArrayList<Room> filterRoomsByAmenities(ArrayList<Amenity> reqAmenities) {
+          ArrayList<Room> filteredRooms = new ArrayList<>();
+          for (Room r : rooms) {
+               for(Amenity a :reqAmenities){
+                    if(r.getAmenities().contains(a)){
+                         filteredRooms.add(r);
+                    }
+               }
+          }
+          return filteredRooms;
+     }
+     public static ArrayList<Room> filterRoomsByRoomType(ArrayList<RoomType> reqRoomTypes) {
+          ArrayList<Room> filteredRooms = new ArrayList<>();
+          for (Room r : rooms) {
+               if (reqRoomTypes.contains(r.getType())) {
+                    filteredRooms.add(r);
+               }
+          }
+          return filteredRooms;
      }
 
      public static ArrayList<Receptionist> getReceptionists() {
