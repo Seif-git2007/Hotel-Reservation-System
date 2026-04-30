@@ -71,7 +71,25 @@ public class Authenticator {
         }
         return LocalDate.parse(dateStr);
     }
+    public static LocalDate validateBirthDate(LocalDate date) throws InvalidInputException {
+        if(date==null){
+            throw new AuthenticationException("Please enter your birth date");
+        }
+        if(date.isAfter(JumpInTime.now.minusYears(17))){
+            throw new AuthenticationException("You must be at least 17 years old to register.");
+        }
+        if (date.isBefore(JumpInTime.now)) {
+            throw new AuthenticationException("Date can't be before current date");
+        }
+        return date;
+    }
     public static void validateReservationDates(LocalDate checkInDate,LocalDate checkOutDate)throws InvalidInputException{
+        if(checkInDate==null||checkOutDate==null){
+            throw new AuthenticationException("Please fill in both dates");
+        }
+        if(checkOutDate.isBefore(JumpInTime.now)||checkInDate.isBefore(JumpInTime.now)){
+            throw new AuthenticationException("Date can't be before current date");
+        }
         if(checkOutDate.isBefore(checkInDate)){
             throw new AuthenticationException("Check out date can't be before Check in date");
         }
