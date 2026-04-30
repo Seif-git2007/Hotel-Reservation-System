@@ -22,8 +22,8 @@ public class Authenticator {
         if(u==null){
             return email;
         }
-        if (u.getUsername().toUpperCase().equals(email.toUpperCase())) {
-            throw new AuthenticationException("Username already exists.");
+        if (u.getEmail().toUpperCase().equals(email.toUpperCase())) {
+            throw new AuthenticationException("Email already exists.");
         }
         return email;
     }
@@ -78,9 +78,7 @@ public class Authenticator {
         if(date.isAfter(JumpInTime.now.minusYears(17))){
             throw new AuthenticationException("You must be at least 17 years old to register.");
         }
-        if (date.isBefore(JumpInTime.now)) {
-            throw new AuthenticationException("Date can't be before current date");
-        }
+
         return date;
     }
     public static void validateReservationDates(LocalDate checkInDate,LocalDate checkOutDate)throws InvalidInputException{

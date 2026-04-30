@@ -90,10 +90,10 @@ public class Guest extends User {
             cnt++;
         }
     }
-    public void makeReservation(Room room,LocalDate checkInDate,LocalDate checkOutDate){
+    public void makeReservation(Room room,LocalDate checkInDate,LocalDate checkOutDate,String specialRequests){
 
         Reservation reservation=new Reservation(this,room,checkInDate,checkOutDate);
-//        reservation.setStatus(Reservation.Status.CONFIRMED); //will be deleted when Receptionist check in function is made
+        reservation.setSpecialRequests(specialRequests);
         HotelDataBase.reservations.add(reservation);
         System.out.println("Reservation is made successfully");
     }
@@ -143,12 +143,7 @@ public class Guest extends User {
             }
         }
         for(Reservation r:confirmed) {
-            amenityTotal=0;
-            for (Amenity a : r.getRoom().getAmenities()) {
-                amenityTotal += a.getPrice();
-            }
-            daysStayed=ChronoUnit.DAYS.between(r.getCheckInDate(),r.getCheckOutDate())==0?1:ChronoUnit.DAYS.between(r.getCheckInDate(),r.getCheckOutDate());
-            total+= ((daysStayed*r.getRoom().getType().getBasePrice())+amenityTotal);
+            total+= r.getRoom().calcTotal(r.getCheckInDate(),r.getCheckOutDate());
         }
         for(Reservation r:confirmed){
             r.setStatus(Reservation.Status.AWAITING_CONFIRMATION);
