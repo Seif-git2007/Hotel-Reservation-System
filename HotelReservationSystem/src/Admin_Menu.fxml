@@ -67,7 +67,6 @@
 
       </HBox>
 
-
       <VBox styleClass="main-content-card" prefWidth="852" VBox.vgrow="ALWAYS" alignment="CENTER">
          <VBox.margin><Insets left="24" right="24" bottom="24" /></VBox.margin>
          <Label text="Main content area — add your components here"

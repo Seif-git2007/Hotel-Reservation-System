@@ -100,13 +100,13 @@ public class RegisterController implements Initializable {
         }else {
             MainController.setFieldError(genderEmpty, "Please select Gender");
         }
-
-        if(dateOfBirth.getValue()!=null) {
-            birthDate = dateOfBirth.getValue();
+        try{
+            birthDate=Authenticator.validateBirthDate(dateOfBirth.getValue());
             cnt++;
-        }else {
-            MainController.setFieldError(dateEmpty, "Please select Date of Birth");
+        }catch (InvalidInputException e){
+            MainController.setFieldError(dateEmpty, e.getMessage());
         }
+
 
         if(!address.getText().isEmpty()){
             validAddress=address.getText();
