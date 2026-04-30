@@ -68,7 +68,7 @@ public class RegisterController implements Initializable {
     }
 
     public void Register(ActionEvent event){
-        MainController.clearErrors(nameError,passwordError,genderEmpty,dateEmpty,addressEmpty,balanceError,floorError,viewEmpty,displayNameEmpty);
+        MainController.clearErrors(nameError,passwordError,genderEmpty,dateEmpty,addressEmpty,balanceError,floorError,viewEmpty,displayNameEmpty,emailError);
         if(!displayName.getText().isEmpty()){
             validDisplayName=displayName.getText();
             cnt++;
@@ -82,7 +82,7 @@ public class RegisterController implements Initializable {
             MainController.setFieldError(nameError, e.getMessage());
         }
         try{
-            validemail=Authenticator.validateName(email.getText());
+            validemail=Authenticator.validateEmail(email.getText());
             cnt++;
         }catch (InvalidInputException e){
             MainController.setFieldError(emailError, e.getMessage());

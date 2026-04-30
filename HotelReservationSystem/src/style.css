@@ -1,5 +1,3 @@
-
-
 .root {
     -fx-background-color: #F0EDE4;
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
@@ -181,7 +179,8 @@
 }
 .label-error {
     -fx-text-fill: #B00020;
-    -fx-font-size: 11px;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
 }
 
 
@@ -590,6 +589,44 @@
     -fx-text-fill: #FF8080;
 }
 
+.btn-cancel-reservation {
+    -fx-background-color: rgba(176,0,32,0.06);
+    -fx-text-fill: rgba(255,120,120,0.90);
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 7 18 7 18;
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(176,0,32,0.15);
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-effect: none;
+}
+
+.btn-cancel-reservation:hover {
+    -fx-background-color: rgba(176,0,32,0.06);
+    -fx-text-fill: rgba(255,120,120,0.90);
+}
+
+.btn-cancel-reservation-hover {
+    -fx-background-color: rgba(176,0,32,0.13);
+    -fx-text-fill: #FF5555;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 7 18 7 18;
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(176,0,32,0.30);
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-effect: none;
+}
+
+.btn-cancel-reservation-hover:hover {
+    -fx-background-color: rgba(176,0,32,0.13);
+    -fx-text-fill: #FF5555;
+}
+
 .room-scroll-pane {
     -fx-background-color: transparent;
     -fx-background: #F0EDE4;
@@ -763,3 +800,17 @@
 .filter-combo .combo-box-popup .list-view:focused {
     -fx-background-insets: 0;
 }
+
+.status-badge {
+    -fx-padding: 5 15;
+    -fx-background-radius: 20;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.status-confirmed { -fx-background-color: #2E7D32; }
+.status-pending { -fx-background-color: #C9A84C; }
+.status-awaiting_confirmation { -fx-background-color: #3B6B7A; }
+.status-cancelled { -fx-background-color: #B00020; }
+.status-completed { -fx-background-color: #6B6B6B; }

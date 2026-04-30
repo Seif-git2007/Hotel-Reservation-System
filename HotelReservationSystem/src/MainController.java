@@ -6,11 +6,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+import java.time.LocalDate;
 import java.util.Stack;
 
 public class MainController {
     static Stack<String> history = new Stack<>();
     private static User user;
+
+    private static ReservationContext reservationContext = new ReservationContext();
 
     public static User getUser() {
         return user;
@@ -18,6 +21,16 @@ public class MainController {
 
     public static void setUser(User user) {
         MainController.user = user;
+    }
+
+    public static ReservationContext getReservationContext() {
+        return reservationContext;
+    }
+
+    public static void setReservationContext(Room room, LocalDate checkIn, LocalDate checkOut) {
+        reservationContext.setSelectedRoom(room);
+        reservationContext.setCheckInDate(checkIn);
+        reservationContext.setCheckOutDate(checkOut);
     }
 
     public static void loadScene(ActionEvent event, String file) {

@@ -7,6 +7,7 @@ public class Reservation {
     private LocalDate checkOutDate;
     public enum Status{PENDING,CONFIRMED,AWAITING_CONFIRMATION,COMPLETED,CANCELLED}
     private Status status;
+    private String specialRequests;
 
     public Reservation(Guest guest, Room room, LocalDate checkInDate, LocalDate checkOutDate) {
         this.guest = guest;
@@ -14,6 +15,14 @@ public class Reservation {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.status=Status.PENDING;
+    }
+
+    public String getSpecialRequests() {
+        return specialRequests;
+    }
+
+    public void setSpecialRequests(String specialRequests) {
+        this.specialRequests = specialRequests;
     }
 
     public Guest getGuest() {

@@ -214,7 +214,7 @@ public class test {
                                 System.out.println(e.getMessage());
                             }
                         }
-                        guest.makeReservation(rooms.get(choice - 1), checkInDate, checkOutDate);
+                        guest.makeReservation(rooms.get(choice - 1), checkInDate, checkOutDate,null);
                         reserved = true;
 
                     } catch (InvalidInputException e) {

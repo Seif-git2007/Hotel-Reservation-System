@@ -26,7 +26,7 @@ public class Receptionist extends Staff{
 
     }
     public void checkIn(Guest guest) throws InvalidInputException {
-        ArrayList<Reservation> reservations = HotelDataBase.getGuestReservation(guest);
+        ArrayList<Reservation> reservations = HotelDataBase.receptionistGetGuestPendingReservation(guest);
         if (reservations.isEmpty())
             throw new InvalidInputException("no reservations today " );
         for (Reservation r:reservations) {
