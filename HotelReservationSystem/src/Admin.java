@@ -5,8 +5,8 @@ public class Admin extends Staff{
 
 
 
-    public Admin(String name, String password, LocalDate date,int hours,Gender gender) {
-        super(name, password, date, gender);
+    public Admin(String name, String password, LocalDate date,int hours,Gender gender,String email) {
+        super(name, password, date, gender,email);
         super.setWorkingHours(hours);
     }
 
@@ -90,8 +90,8 @@ public class Admin extends Staff{
         }
     }
 
-    public void addReceptionists(String name, String pass, LocalDate date, int hours, String gender) throws InvalidInputException{
-        Receptionist r = new Receptionist( name , pass , date , hours ,Gender.valueOf(gender.toUpperCase()));
+    public void addReceptionists(String name, String pass, LocalDate date, int hours, String gender,String email) throws InvalidInputException{
+        Receptionist r = new Receptionist( name , pass , date , hours ,Gender.valueOf(gender.toUpperCase()),email);
         HotelDataBase.users.add(r);
     }
 

@@ -12,7 +12,10 @@ public class test {
         String view;
         double balance;
         LocalDate date;
+        String displayName;
         roomPreferences perfer = new roomPreferences();
+        System.out.println("enter displayName:");
+        displayName = input.nextLine();
         while (true) {
             try {
                 System.out.println("enter name:");
@@ -60,6 +63,8 @@ public class test {
             }
         }
 
+        System.out.println("enter email:");
+        String email = input.nextLine();
         System.out.println("enter address:");
         String address = input.nextLine();
         while (true) {
@@ -97,7 +102,7 @@ public class test {
                 System.out.println(e.getMessage());
             }
         }
-        guest.Register(name,password,gender,balance,date, address, perfer);
+        guest.Register(name,password,gender,balance,date, address, perfer,displayName,email);
         System.out.println("Registration Successful!");
     }
     public static User callLogin(User user){
@@ -184,7 +189,7 @@ public class test {
 
                         if (filterChoice == 1) {
                             guest.viewAvailableRooms(checkInDate, checkOutDate, guest.getPrefered());
-                            rooms = HotelDataBase.filterRooms(HotelDataBase.getAvailableRooms(checkInDate, checkOutDate), guest.getPrefered());
+                            rooms = HotelDataBase.filterRoomsByPreferences(HotelDataBase.getAvailableRooms(checkInDate, checkOutDate), guest.getPrefered());
                         }
                         if (filterChoice == 2) {
                             guest.viewAvailableRooms(checkInDate, checkOutDate);
@@ -209,7 +214,7 @@ public class test {
                                 System.out.println(e.getMessage());
                             }
                         }
-                        guest.makeReservation(rooms.get(choice - 1), checkInDate, checkOutDate);
+                        guest.makeReservation(rooms.get(choice - 1), checkInDate, checkOutDate,null);
                         reserved = true;
 
                     } catch (InvalidInputException e) {
@@ -221,13 +226,17 @@ public class test {
                 guest.viewReservations();
             }
             if (choice == 4) {
-                guest.viewPendingReservations();
-                System.out.println("Choose a Room");
+                ArrayList<Reservation> pending= guest.viewPendingReservations();
+                if(pending.isEmpty()){
+                    System.out.println("No pending reservations to cancel");
+                    continue;
+                }
+                System.out.println("Choose a reservation to cancel");
                 while (true) {
                     try {
                         System.out.println("Enter choice: ");
                         choice = Authenticator.validateInteger(input.nextLine());
-                        if (choice <= 0 || choice > HotelDataBase.getPendingReservations().size()) {
+                        if (choice <= 0 || choice > pending.size()) {
                             throw new InvalidInputException("Invalid choice");
                         }
                         break;
@@ -235,40 +244,41 @@ public class test {
                         System.out.println(e.getMessage());
                     }
                 }
-                guest.cancelReservation(HotelDataBase.getPendingReservations().get(choice - 1));
+                guest.cancelReservation(pending.get(choice - 1));
 
             }
             if (choice == 5) {
 
-                while (true) {
+
                     try {
                         invoice = guest.checkOut();
                     } catch (InvalidInputException e) {
                         System.out.println(e.getMessage());
                         break;
                     }
-                    System.out.println("Enter payment Method\n1.Cash\n2.Credit Card\n3.Online Balance");
-                    try {
-                        System.out.println("Enter choice: ");
-                        choice = Authenticator.validateInteger(input.nextLine());
-                        if (choice < 1 || choice > 3) {
-                            throw new InvalidInputException("Invalid choice");
-                        }
-                        if (choice == 1) {
-                            method = Invoice.paymentMethod.CASH;
-                        }
-                        if (choice == 2) {
-                            method = Invoice.paymentMethod.CREDIT;
-                        }
-                        if (choice == 3) {
-                            method = Invoice.paymentMethod.ONLINE;
-                        }
+                    while (true) {
+                        System.out.println("Enter payment Method\n1.Cash\n2.Credit Card\n3.Online Balance");
+                        try {
+                            System.out.println("Enter choice: ");
+                            choice = Authenticator.validateInteger(input.nextLine());
+                            if (choice < 1 || choice > 3) {
+                                throw new InvalidInputException("Invalid choice");
+                            }
+                            if (choice == 1) {
+                                method = Invoice.paymentMethod.CASH;
+                            }
+                            if (choice == 2) {
+                                method = Invoice.paymentMethod.CREDIT;
+                            }
+                            if (choice == 3) {
+                                method = Invoice.paymentMethod.ONLINE;
+                            }
 
-                        guest.pay(invoice, method);
-                        break;
-                    } catch (InvalidInputException e) {
-                        System.out.println(e.getMessage());
-                    }
+                            guest.pay(invoice, method);
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
                 }
             }
             if (choice == 0) {
@@ -944,7 +954,8 @@ public class test {
                             System.out.println(e.getMessage());
                         }
                     }
-
+                    System.out.println("Enter Email");
+                    String email=input.nextLine();
                     while (true){
                         try{ System.out.println("Please enter new Receptionist's gender");
                             gender = Authenticator.validateGender(input.nextLine());
@@ -954,7 +965,7 @@ public class test {
                         }
                     }
                     try {
-                        admin.addReceptionists(name, pass, date, hours, gender);
+                        admin.addReceptionists(name, pass, date, hours, gender,email);
                         System.out.println("You have successfully registered a new receptionist!");
                     }catch(InvalidInputException e){
                         System.out.println(e.getMessage());
@@ -967,7 +978,6 @@ public class test {
     public static void main(String[] args) {
         User user=null;
         Scanner input=new Scanner(System.in);
-
         System.out.println("Welcome to Kempinski Hotel");
         while(true) {
             System.out.println("1.Register\n2.Login\n0.Exit");
@@ -995,12 +1005,10 @@ public class test {
                 else if(user instanceof Admin){
                     System.out.println("Welcome Admin "+user.getUsername());
                     adminMenu((Admin) user);
-                    //admin menu called here (DON'T DELETE THIS COMMENT)
                 }
                 else if(user instanceof Receptionist ){
                     System.out.println("Welcome Receptionist "+user.getUsername());
                     receptionistMenu((Receptionist) user);
-                    //Receptionist menu called here (DON'T DELETE THIS COMMENT)
                 }
             }
             if(choice==1){

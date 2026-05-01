@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -60,21 +61,23 @@ public class Room {
         this.amenities = amenities;
     }
 
-    public boolean isAvailable(LocalDate checkInDate,LocalDate checkOutDate) {
-        for(Reservation r:HotelDataBase.reservations){
-            if(r.getRoom()==this&&(r.getStatus()== Reservation.Status.PENDING||r.getStatus()== Reservation.Status.CONFIRMED)){
-                if(!( checkOutDate.isBefore(r.getCheckInDate()) || checkOutDate.equals(r.getCheckInDate())
-                        || checkInDate.isAfter(r.getCheckOutDate()) || checkInDate.equals(r.getCheckOutDate()) )){
-                    return false;
+    public boolean isAvailable(LocalDate checkInDate, LocalDate checkOutDate) {
+        for (Reservation r : HotelDataBase.reservations) {
+            if (r.getRoom() == this && (r.getStatus() == Reservation.Status.PENDING || r.getStatus() == Reservation.Status.CONFIRMED)) {
+                if (checkInDate.equals(checkOutDate)) {
+                    if (!checkInDate.isBefore(r.getCheckInDate()) && !checkInDate.isAfter(r.getCheckOutDate())) {
+                        return false;
+                    }
+                } else {
+                    if (!(checkOutDate.isBefore(r.getCheckInDate()) || checkOutDate.equals(r.getCheckInDate())
+                            || checkInDate.isAfter(r.getCheckOutDate()) || checkInDate.equals(r.getCheckOutDate()))) {
+                        return false;
+                    }
                 }
-
             }
-
         }
         return true;
     }
-    //hi 5elo
-
 
     @Override
     public boolean equals(Object o) {
@@ -126,6 +129,18 @@ public class Room {
         }
         HotelDataBase.rooms.remove(index);
         System.out.println("Room Has Been Deleted Successfully");
+    }
+    public double calcTotal(LocalDate checkInDate,LocalDate checkOutDate){
+        double total=0;
+        double amenityTotal=0;
+        long daysStayed= ChronoUnit.DAYS.between(checkInDate,checkOutDate)==0?1:ChronoUnit.DAYS.between(checkInDate,checkOutDate);
+        for (Amenity a:amenities){
+            amenityTotal+=a.getPrice();
+        }
+        total+= ((daysStayed*type.getBasePrice())+amenityTotal);
+        return total;
+
+
     }
 
 }
