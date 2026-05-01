@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -128,6 +129,18 @@ public class Room {
         }
         HotelDataBase.rooms.remove(index);
         System.out.println("Room Has Been Deleted Successfully");
+    }
+    public double calcTotal(LocalDate checkInDate,LocalDate checkOutDate){
+        double total=0;
+        double amenityTotal=0;
+        long daysStayed= ChronoUnit.DAYS.between(checkInDate,checkOutDate)==0?1:ChronoUnit.DAYS.between(checkInDate,checkOutDate);
+        for (Amenity a:amenities){
+            amenityTotal+=a.getPrice();
+        }
+        total+= ((daysStayed*type.getBasePrice())+amenityTotal);
+        return total;
+
+
     }
 
 }
