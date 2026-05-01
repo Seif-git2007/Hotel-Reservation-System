@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="660.0" prefWidth="900.0"
-            style="-fx-background-color: #F0EDE4;"
-            stylesheets="@style.css"
-            xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="GuestDashboardController">
+<AnchorPane prefHeight="660.0" prefWidth="900.0" style="-fx-background-color: #F0EDE4;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GuestDashboardController">
 
     <fx:include fx:id="navBar" layoutX="0" layoutY="0" source="NavgationBar.fxml" />
 
@@ -20,17 +14,11 @@
 
         <fx:include fx:id="sidebar" source="GuestSidebar.fxml" />
 
-        <VBox prefHeight="589" prefWidth="680"
-              alignment="CENTER" spacing="20"
-              style="-fx-background-color: #F0EDE4;">
-            <Label style="-fx-text-fill: #0F2160; -fx-font-family: 'Georgia'; -fx-font-size: 32px; -fx-font-style: italic;"
-                   text="Welcome back," />
-            <Label fx:id="welcomeName"
-                   style="-fx-text-fill: #C9A84C; -fx-font-size: 22px; -fx-font-weight: bold;"
-                   text="Guest" />
+        <VBox alignment="CENTER" prefHeight="589" prefWidth="680" spacing="20" style="-fx-background-color: #F0EDE4;">
+            <Label style="-fx-text-fill: #0F2160; -fx-font-family: 'Georgia'; -fx-font-size: 32px; -fx-font-style: italic;" text="Welcome back," />
+            <Label fx:id="welcomeName" style="-fx-text-fill: #C9A84C; -fx-font-size: 22px; -fx-font-weight: bold;" text="Guest" />
             <Pane prefHeight="2" prefWidth="80" style="-fx-background-color: #C9A84C;" />
-            <Label style="-fx-text-fill: #6B6B6B; -fx-font-size: 14px;"
-                   text="Select an option from the left to get started." />
+            <Label style="-fx-text-fill: #6B6B6B; -fx-font-size: 14px;" text="Select an option from the left to get started." />
         </VBox>
 
     </HBox>
