@@ -95,6 +95,7 @@ public class Guest extends User {
 
     public Invoice checkOut() throws InvalidInputException {
         ArrayList<Reservation> confirmed = new ArrayList<>();
+        double total = 0;
             for (Reservation r : HotelDataBase.reservations) {
                 if (r.getGuest() == this && r.getStatus() == Reservation.Status.CONFIRMED) {
                     confirmed.add(r);
@@ -107,7 +108,6 @@ public class Guest extends User {
             if (r.getCheckOutDate().isAfter(JumpInTime.now))
                 throw new InvalidInputException("You can't check out before your check out date");
 
-        double total = 0;
         for (Reservation r : confirmed){
             total += r.getRoom().calcTotal(r.getCheckInDate(), r.getCheckOutDate());
         }
