@@ -3,16 +3,29 @@ import java.time.LocalDate;
 public class Authenticator {
     public static String validateName(String name) throws InvalidInputException {
         if (name == null || name.trim().isEmpty()) {
-            throw new AuthenticationException("Username cannot be empty.");
+            throw new AuthenticationException("Please Enter User name.");
         }
-        User u = HotelDataBase.searchUser(name);
+        User u = HotelDataBase.searchUserByName(name);
         if(u==null){
             return name;
         }
-        if (u.getUsername().equals(name)) {
+        if (u.getUsername().toUpperCase().equals(name.toUpperCase())) {
                 throw new AuthenticationException("Username already exists.");
             }
         return name;
+    }
+    public static String validateEmail(String email) throws InvalidInputException {
+        if (email == null || email.trim().isEmpty()) {
+            throw new AuthenticationException("Please Enter Email");
+        }
+        User u = HotelDataBase.searchUserByEmail(email);
+        if(u==null){
+            return email;
+        }
+        if (u.getEmail().toUpperCase().equals(email.toUpperCase())) {
+            throw new AuthenticationException("Email already exists.");
+        }
+        return email;
     }
 
     public static String validatePassword(String password) throws InvalidInputException {
@@ -58,7 +71,23 @@ public class Authenticator {
         }
         return LocalDate.parse(dateStr);
     }
+    public static LocalDate validateBirthDate(LocalDate date) throws InvalidInputException {
+        if(date==null){
+            throw new AuthenticationException("Please enter your birth date");
+        }
+        if(date.isAfter(JumpInTime.now.minusYears(17))){
+            throw new AuthenticationException("You must be at least 17 years old to register.");
+        }
+
+        return date;
+    }
     public static void validateReservationDates(LocalDate checkInDate,LocalDate checkOutDate)throws InvalidInputException{
+        if(checkInDate==null||checkOutDate==null){
+            throw new AuthenticationException("Please fill in both dates");
+        }
+        if(checkOutDate.isBefore(JumpInTime.now)||checkInDate.isBefore(JumpInTime.now)){
+            throw new AuthenticationException("Date can't be before current date");
+        }
         if(checkOutDate.isBefore(checkInDate)){
             throw new AuthenticationException("Check out date can't be before Check in date");
         }
