@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane
+        prefHeight="660.0" prefWidth="900.0"
+        style="-fx-background-color: #F0EDE4;"
+        stylesheets="@style.css"
+        xmlns="http://javafx.com/javafx/21"
+        xmlns:fx="http://javafx.com/fxml/1">
+
+
+   <fx:include source="NavgationBar.fxml" layoutX="0" layoutY="0" fx:id="navBar" />
+
+   <VBox
+           layoutX="0" layoutY="71"
+           prefWidth="900" prefHeight="589"
+           styleClass="content-area"
+           spacing="0">
+
+
+      <HBox styleClass="page-header-strip" prefWidth="900" alignment="CENTER_LEFT" spacing="14">
+
+         <Pane styleClass="page-title-accent" prefHeight="46" />
+
+         <VBox spacing="4">
+            <Label text="Admin Dashboard" styleClass="label-dashboard-title" />
+            <Label text="Manage hotel operations, staff, and system settings" styleClass="label-dashboard-sub" />
+         </VBox>
+      </HBox>
+
+
+      <HBox spacing="20" prefWidth="900">
+         <VBox.margin><Insets top="20" left="24" right="24" bottom="16" /></VBox.margin>
+
+
+         <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="10">
+            <Label text="Users" styleClass="section-card-title" />
+            <Pane styleClass="section-card-accent" />
+
+            <Pane prefHeight="140" />
+         </VBox>
+
+
+         <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="10">
+            <Label text="Bookings" styleClass="section-card-title" />
+            <Pane styleClass="section-card-accent" />
+
+            <Pane prefHeight="140" />
+         </VBox>
+
+
+         <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="10">
+            <Label text="Revenue" styleClass="section-card-title" />
+            <Pane styleClass="section-card-accent" />
+
+            <Pane prefHeight="140" />
+         </VBox>
+
+      </HBox>
+
+      <VBox styleClass="main-content-card" prefWidth="852" VBox.vgrow="ALWAYS" alignment="CENTER">
+         <VBox.margin><Insets left="24" right="24" bottom="24" /></VBox.margin>
+         <Label text="Main content area — add your components here"
+                styleClass="main-content-hint" />
+      </VBox>
+
+   </VBox>
+
+</AnchorPane>

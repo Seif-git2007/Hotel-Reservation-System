@@ -6,8 +6,8 @@ public class Receptionist extends Staff{
     public Receptionist() {
     }
 
-    public Receptionist(String name, String password, LocalDate date,int hours,User.Gender gender) {
-        super(name, password, date,gender);
+    public Receptionist(String name, String password, LocalDate date,int hours,User.Gender gender,String email) {
+        super(name, password, date,gender,email);
         super.setWorkingHours(hours);
     }
     public static boolean isToday(LocalDate date) {
@@ -26,13 +26,13 @@ public class Receptionist extends Staff{
 
     }
     public void checkIn(Guest guest) throws InvalidInputException {
-        ArrayList<Reservation> reservations = HotelDataBase.getGuestReservation(guest);
+        ArrayList<Reservation> reservations = HotelDataBase.receptionistGetGuestPendingReservation(guest);
         if (reservations.isEmpty())
             throw new InvalidInputException("no reservations today " );
         for (Reservation r:reservations) {
             r.setStatus(Reservation.Status.CONFIRMED);
         }
-        System.out.println("the reservation is confirmed");
+        System.out.println("Guest Checked in successfully");
     }
     public void viewCheckingOutGuests()throws InvalidInputException{
         List<Guest> guests = HotelDataBase.checktodayinvoices();
@@ -48,7 +48,7 @@ public class Receptionist extends Staff{
     public void checkOut(Guest guest) {
 
         for (Reservation r : HotelDataBase.reservations) {
-            if (r.getGuest() == guest && r.getStatus() == Reservation.Status.CONFIRMED) {
+            if (r.getGuest() == guest && r.getStatus() == Reservation.Status.AWAITING_CONFIRMATION) {
                 r.setStatus(Reservation.Status.COMPLETED);
             }
         }

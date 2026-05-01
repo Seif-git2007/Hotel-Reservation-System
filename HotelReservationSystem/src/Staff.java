@@ -5,8 +5,8 @@ public abstract class Staff extends User{
     enum Role {ADMIN ,RECEPTIONIST}
     Role role;
     public Staff(){}
-    public Staff(String name, String password, LocalDate date,User.Gender gender){
-        super(name,password,date,gender);
+    public Staff(String name, String password, LocalDate date,User.Gender gender,String email){
+        super(name,password,date,gender,email);
     }
 
     public int getWorkingHours() {
@@ -18,10 +18,12 @@ public abstract class Staff extends User{
     }
     public void viewReservations(){
         int cnt=1;
+        System.out.println("Reservations: ");
         for(Reservation r:HotelDataBase.reservations){
                 System.out.println(cnt+"."+r);
                 cnt++;
         }
+        System.out.println();
     }
     public void viewGuest(){
         int cnt=1;
@@ -29,6 +31,7 @@ public abstract class Staff extends User{
                 System.out.println(cnt+"."+u);
                 cnt++;
             }
+        System.out.println();
 
     }
 

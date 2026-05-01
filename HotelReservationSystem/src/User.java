@@ -4,7 +4,7 @@ public abstract class User {
     private String username;
     private String password;
     private LocalDate dateOfBirth;
-
+    private String email;
     public enum Gender {MALE, FEMALE}
 
     ;
@@ -13,11 +13,12 @@ public abstract class User {
     User() {
     }
 
-    public User(String username, String password, LocalDate dateOfBirth,Gender gender) {
+    public User(String username, String password, LocalDate dateOfBirth,Gender gender,String email) {
         this.username = username;
         this.password = password;
         this.dateOfBirth = dateOfBirth;
         this.gender=gender;
+        this.email=email;
     }
 
     public String getUsername() {
@@ -51,9 +52,16 @@ public abstract class User {
         return gender;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public static User Login(String username, String password) throws InvalidInputException {
-        User u =HotelDataBase.searchUser(username);
+        User u =HotelDataBase.searchUserByName(username);
         if (u!=null&&u.getPassword().equals(password)) {
             System.out.println("Login Successful");
             return u;
@@ -66,5 +74,6 @@ public abstract class User {
             System.out.println(cnt+". "+r);
             cnt++;
         }
+        System.out.println();
     }
 }

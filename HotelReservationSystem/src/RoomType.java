@@ -48,8 +48,10 @@ public class RoomType {
 
     public static void read(){
         System.out.println("ALl RoomType Details");
+        int cnt=1;
         for(RoomType r : HotelDataBase.roomTypes){
-            System.out.println(r.toString());
+            System.out.println(cnt+"."+r.toString());
+            cnt++;
         }
 
     }
