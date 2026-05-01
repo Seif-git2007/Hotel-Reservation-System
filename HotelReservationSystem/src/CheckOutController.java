@@ -1,12 +1,17 @@
 import javafx.fxml.FXML;
 
-public class CheckOutController {
+public class CheckOutController implements SessionController {
 
     @FXML private GuestSidebarController sidebarController;
 
-    @FXML
-    public void initialize() {
-        if (sidebarController != null)
+    private AppSession session;
+
+    @Override
+    public void initSession(AppSession session) {
+        this.session = session;
+        if (sidebarController != null) {
+            sidebarController.initSession(session);
             sidebarController.btnCheckOut.getStyleClass().add("sidebar-nav-btn-active");
+        }
     }
 }
