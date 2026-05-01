@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.geometry.Insets?>
+<AnchorPane prefHeight="660.0" prefWidth="900.0" style="-fx-background-color: #F0EDE4;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CancelReservationController">
+
+    <fx:include fx:id="navBar" layoutX="0" layoutY="0" source="NavgationBar.fxml" />
+
+    <HBox layoutX="0" layoutY="71" prefHeight="589" prefWidth="900" spacing="0">
+
+        <fx:include fx:id="sidebar" source="GuestSidebar.fxml" />
+
+        <VBox prefHeight="589" prefWidth="680" spacing="0" style="-fx-background-color: #F0EDE4;">
+
+            <HBox alignment="CENTER_LEFT" prefWidth="680" spacing="12" styleClass="page-header-strip">
+                <Pane prefHeight="32" prefWidth="4" style="-fx-background-color: #C9A84C; -fx-background-radius: 2;" />
+                <VBox spacing="2">
+                    <Label styleClass="label-dashboard-title" text="Cancel Reservation" />
+                    <Label styleClass="label-dashboard-sub" text="Add your subtitle here" />
+                </VBox>
+            </HBox>
+
+            <VBox VBox.vgrow="ALWAYS" spacing="0">
+                <ScrollPane fitToWidth="true"
+                            style="-fx-background-color: transparent; -fx-background: #F0EDE4;"
+                            VBox.vgrow="ALWAYS" styleClass="register-scroll">
+                    <content>
+                        <VBox fx:id="reservationController" spacing="15"
+                              style="-fx-background-color: #F0EDE4;">
+                            <padding>
+                                <Insets bottom="20" left="20" right="20" top="20" />
+                            </padding>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </VBox>
+
+        </VBox>
+    </HBox>
+</AnchorPane>
