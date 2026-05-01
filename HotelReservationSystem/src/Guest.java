@@ -100,16 +100,17 @@ public class Guest extends User {
                     confirmed.add(r);
                 }
             }
-        if (confirmed.isEmpty()) {
-            throw new InvalidInputException("You are not checked in");
         }
-        for (Reservation r : confirmed)
-            if (r.getCheckOutDate().isAfter(JumpInTime.now))
-                throw new InvalidInputException("You can't check out before your check out date");
-
-        double total = 0;
-        for (Reservation r : confirmed){
-            total += r.getRoom().calcTotal(r.getCheckInDate(), r.getCheckOutDate());
+        if(confirmed.isEmpty()){
+            throw new InvalidPaymentException("You are not checked in");
+        }
+        for(Reservation r:confirmed){
+            if(r.getCheckOutDate().isAfter(JumpInTime.now)){
+                throw new InvalidPaymentException("You can't check out before your check out date");
+            }
+        }
+        for(Reservation r:confirmed) {
+            total+= r.getRoom().calcTotal(r.getCheckInDate(),r.getCheckOutDate());
         }
         for (Reservation r : confirmed){
             r.setStatus(Reservation.Status.AWAITING_CONFIRMATION);
@@ -120,12 +121,12 @@ public class Guest extends User {
         System.out.println(invoice.toSummary());
         return invoice;
     }
-
-    public void pay(Invoice invoice, Invoice.paymentMethod method) throws InvalidInputException {
-        if (method == Invoice.paymentMethod.ONLINE) {
-            if (balance < invoice.getTotal())
-                throw new InvalidInputException("Insufficient balance, please choose another method");
-            this.balance -= invoice.getTotal();
+    public void pay(Invoice invoice,Invoice.paymentMethod method) throws InvalidInputException{
+        if(method==Invoice.paymentMethod.ONLINE){
+            if(balance<invoice.getTotal()){
+                throw new InvalidPaymentException("Insufficient balance , Please choose another method");
+            }
+            this.balance-=invoice.getTotal();
         }
         invoice.setPaymentDate(JumpInTime.now);
         invoice.setPaid(true);
