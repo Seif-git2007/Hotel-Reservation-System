@@ -20,6 +20,5 @@ public class GuestSidebarController implements SessionController {
     @FXML private void goViewRooms(ActionEvent e)         { MainController.navigate(e, "ViewRooms.fxml"); }
     @FXML private void goMakeReservation(ActionEvent e)   { MainController.navigate(e, "MakeReservation.fxml"); }
     @FXML private void goViewReservations(ActionEvent e)  { MainController.navigate(e, "ViewReservations.fxml"); }
-    @FXML private void goCancelReservation(ActionEvent e) { MainController.navigate(e, "CancelReservation.fxml"); }
     @FXML private void goCheckOut(ActionEvent e)          { MainController.navigate(e, "CheckOut.fxml"); }
 }

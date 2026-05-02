@@ -20,9 +20,7 @@ public class ViewReservationsController implements SessionController {
             sidebarController.initSession(session);
             sidebarController.btnViewReservations.getStyleClass().add("sidebar-nav-btn-active");
         }
-        renderReservations(
-            HotelDataBase.getGuestReservation(session.getCurrentGuest()),
-            reservationController);
+        refresh();
     }
 
     public void renderReservations(ArrayList<Reservation> reservations, VBox reservationContainer) {
@@ -79,6 +77,10 @@ public class ViewReservationsController implements SessionController {
             card.getChildren().addAll(header, detailsLabel, dateLabel, totalLabel, amenitiesLabel);
 
             if (res.getStatus() == Reservation.Status.PENDING) {
+                HBox actionsRow = new HBox();
+                actionsRow.setAlignment(Pos.CENTER_RIGHT);
+                actionsRow.setSpacing(10);
+
                 Button cancelBtn = new Button("Request Cancellation");
                 cancelBtn.getStyleClass().add("btn-cancel-reservation");
 
@@ -91,18 +93,46 @@ public class ViewReservationsController implements SessionController {
                     cancelBtn.getStyleClass().add("btn-cancel-reservation");
                 });
 
-                ActionEvent event = new ActionEvent(cancelBtn, null);
+                Button confirmBtn = new Button("Confirm");
+                confirmBtn.getStyleClass().add("btn-confirm-inline");
+
+                Button abortBtn = new Button("Abort");
+                abortBtn.getStyleClass().add("btn-abort-inline");
+
                 cancelBtn.setOnAction(e -> {
-                    session.getReservationContext().setReservation(res);
-                    MainController.navigate(event, "CancelReservationForm.fxml");
+                    actionsRow.getChildren().clear();
+                    actionsRow.getChildren().addAll(abortBtn, confirmBtn);
+                });
+                abortBtn.setOnAction(e -> {
+                    actionsRow.getChildren().clear();
+                    actionsRow.getChildren().add(cancelBtn);
                 });
 
-                HBox actionsRow = new HBox(cancelBtn);
-                actionsRow.setAlignment(Pos.CENTER_RIGHT);
+                confirmBtn.setOnAction(e -> {
+                    Alert confirmPopup = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirmPopup.setTitle("Confirm Cancellation");
+                    confirmPopup.setHeaderText("Wait!");
+                    confirmPopup.setContentText("Are you sure you want to permanently cancel this reservation?");
+
+                    if (confirmPopup.showAndWait().get() == ButtonType.OK) {
+                        session.getCurrentGuest().cancelReservation(res);
+                        refresh();
+                        System.out.println("User confirmed they definitely want to cancel.");
+                    }else {
+                        refresh();
+                    }
+                });
+
+                actionsRow.getChildren().add(cancelBtn);
                 card.getChildren().add(actionsRow);
             }
 
-            reservationContainer.getChildren().add(card);
+                reservationContainer.getChildren().add(card);
         }
     }
+    public void refresh(){
+        reservationController.getChildren().clear();
+        renderReservations(HotelDataBase.getGuestReservation(session.getCurrentGuest()), reservationController);
+    }
 }
+
