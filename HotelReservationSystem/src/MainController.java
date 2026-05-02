@@ -24,7 +24,6 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
     public static void navigate(ActionEvent event, String file) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

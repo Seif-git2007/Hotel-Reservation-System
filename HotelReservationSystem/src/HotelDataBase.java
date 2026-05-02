@@ -20,12 +20,20 @@ public class HotelDataBase {
         users.add(receptionist);
 
         roomPreferences prefer  = new roomPreferences(5, Room.view.POOL);
-        Guest guest  = new Guest("3", "3", LocalDate.parse("2000-12-16"), 500,   prefer,  "1st street", User.Gender.MALE,   "Seif Mahrous",    "seifmahrous2007@gmail.com");
+        Guest guest  = new Guest("3", "3", LocalDate.parse("2007-12-16"), 500,   prefer,  "1st street", User.Gender.MALE,   "Seif Mahrous",    "seifmahrous2007@gmail.com");
         roomPreferences prefer1 = new roomPreferences(3, Room.view.SEA);
-        Guest guest1 = new Guest("4", "4", LocalDate.parse("2003-10-12"), 50000, prefer1, "2nd street", User.Gender.FEMALE, "Norhan ELzahby",  "norhanfawzy2007@gmail.com");
+        Guest guest1 = new Guest("4", "4", LocalDate.parse("2007-10-29"), 50000, prefer1, "2nd street", User.Gender.FEMALE, "Norhan EL-Zahaby",  "norhanfawzy2007@gmail.com");
+        roomPreferences prefer2 = new roomPreferences(3, Room.view.SEA);
+        Guest guest2  = new Guest("9", "9", LocalDate.parse("2007-09-02"), 500,   prefer2,  "3rd street", User.Gender.MALE,   "Omar El-Gharably",    "omargharably2007@gmail.com");
+        roomPreferences prefer3 = new roomPreferences(3, Room.view.SEA);
+        Guest guest3  = new Guest("8", "8", LocalDate.parse("2008-08-01"), 500,   prefer3,  "4th street", User.Gender.FEMALE,   "Youstina Nagy",    "youstinanagy2008@gmail.com");
+        roomPreferences prefer4 = new roomPreferences(3, Room.view.SEA);
+        Guest guest4  = new Guest("5", "5", LocalDate.parse("2008-08-01"), 500,   prefer4,  "5th street", User.Gender.FEMALE,   "Rawan Hamada",    "rawanhamada2006@gmail.com");
         users.add(guest);
         users.add(guest1);
-
+        users.add(guest2);
+        users.add(guest3);
+        users.add(guest4);
         RoomType type  = new RoomType("Single",200,  1);
         RoomType type1 = new RoomType("Double",300,  2);
         RoomType type2 = new RoomType("Triple",400,  3);
@@ -73,7 +81,7 @@ public class HotelDataBase {
 
         Reservation r0 = new Reservation(guest, rooms.get(0), LocalDate.parse("2024-06-20"), LocalDate.parse("2024-06-25"));
         r0.setStatus(Reservation.Status.COMPLETED);
-        Reservation r1 = new Reservation(guest, rooms.get(1), LocalDate.parse("2024-06-20"), LocalDate.parse("2024-06-25"));
+        Reservation r1 = new Reservation(guest, rooms.get(1), LocalDate.parse("2026-05-02"), LocalDate.parse("2026-05-02"));
         r1.setStatus(Reservation.Status.CONFIRMED);
         Reservation r2 = new Reservation(guest, rooms.get(2), LocalDate.parse("2024-06-20"), LocalDate.parse("2024-06-25"));
         r2.setStatus(Reservation.Status.PENDING);

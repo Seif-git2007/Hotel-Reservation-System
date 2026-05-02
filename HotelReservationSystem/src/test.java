@@ -274,7 +274,7 @@ public class test {
                                 method = Invoice.paymentMethod.ONLINE;
                             }
 
-                            guest.pay(invoice, method);
+                            guest.pay(invoice, method,null);
                             break;
                         } catch (InvalidInputException e) {
                             System.out.println(e.getMessage());

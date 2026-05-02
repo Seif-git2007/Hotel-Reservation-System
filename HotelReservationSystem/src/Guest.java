@@ -105,7 +105,7 @@ public class Guest extends User {
             throw new InvalidInputException("You are not checked in");
         }
         for (Reservation r : confirmed)
-            if (r.getCheckOutDate().isAfter(JumpInTime.now))
+            if (!r.getCheckOutDate().equals(JumpInTime.now))
                 throw new InvalidInputException("You can't check out before your check out date");
 
         for (Reservation r : confirmed){
@@ -121,11 +121,14 @@ public class Guest extends User {
         return invoice;
     }
 
-    public void pay(Invoice invoice, Invoice.paymentMethod method) throws InvalidInputException {
+    public void pay(Invoice invoice, Invoice.paymentMethod method,VisaCard cardinfo) throws InvalidInputException {
         if (method == Invoice.paymentMethod.ONLINE) {
             if (balance < invoice.getTotal())
                 throw new InvalidInputException("Insufficient balance, please choose another method");
             this.balance -= invoice.getTotal();
+        }
+        if (method == Invoice.paymentMethod.CREDIT) {
+            invoice.setCardInfo(cardinfo);
         }
         invoice.setPaymentDate(JumpInTime.now);
         invoice.setPaid(true);
