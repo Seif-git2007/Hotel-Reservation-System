@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane
+        prefHeight="660.0" prefWidth="900.0"
+        style="-fx-background-color: #F0EDE4;"
+        stylesheets="@style.css"
+        xmlns="http://javafx.com/javafx/17.0.12"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="AdminMenuController">
+
+    <fx:include source="NavgationBar.fxml" layoutX="0" layoutY="0" fx:id="navBar" />
+
+    <HBox layoutX="0" layoutY="71" prefHeight="589" prefWidth="900" spacing="0">
+
+        <!-- Admin sidebar -->
+        <fx:include fx:id="sidebar" source="AdminSidebar.fxml" />
+
+        <!-- Main content (680px = 900 - 220 sidebar) -->
+        <VBox prefHeight="589" prefWidth="680" spacing="0" style="-fx-background-color: #F0EDE4;">
+
+            <!-- Page header -->
+            <HBox alignment="CENTER_LEFT" prefWidth="680" spacing="12" styleClass="page-header-strip">
+                <Pane prefHeight="32" prefWidth="4" style="-fx-background-color: #C9A84C; -fx-background-radius: 2;" />
+                <VBox spacing="2">
+                    <Label styleClass="label-dashboard-title" text="Admin Dashboard" />
+                    <Label styleClass="label-dashboard-sub" text="Manage hotel operations, staff, and system settings" />
+                </VBox>
+            </HBox>
+
+            <!-- Stat cards row -->
+            <HBox spacing="16" prefWidth="680">
+                <VBox.margin><Insets top="20" left="20" right="20" bottom="16" /></VBox.margin>
+
+                <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="10">
+                    <Label text="Users" styleClass="section-card-title" />
+                    <Pane styleClass="section-card-accent" />
+                    <Label fx:id="labelUserCount" styleClass="label-dashboard-title" text="—" />
+                </VBox>
+
+                <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="10">
+                    <Label text="Bookings" styleClass="section-card-title" />
+                    <Pane styleClass="section-card-accent" />
+                    <Label fx:id="labelBookingCount" styleClass="label-dashboard-title" text="—" />
+                </VBox>
+
+                <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="10">
+                    <Label text="Revenue" styleClass="section-card-title" />
+                    <Pane styleClass="section-card-accent" />
+                    <Label fx:id="labelRevenue" styleClass="label-dashboard-title" text="—" />
+                </VBox>
+
+            </HBox>
+
+            <!-- Main content card (tabs injected by controller) -->
+            <VBox fx:id="mainContentCard" styleClass="main-content-card" VBox.vgrow="ALWAYS">
+                <VBox.margin><Insets left="20" right="20" bottom="20" /></VBox.margin>
+            </VBox>
+
+        </VBox>
+    </HBox>
+
+</AnchorPane>

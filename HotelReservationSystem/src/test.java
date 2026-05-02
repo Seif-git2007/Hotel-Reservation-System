@@ -1,4 +1,4 @@
-import java.time.LocalDate;
+import  java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,7 +12,10 @@ public class test {
         String view;
         double balance;
         LocalDate date;
+        String displayName;
         roomPreferences perfer = new roomPreferences();
+        System.out.println("enter displayName:");
+        displayName = input.nextLine();
         while (true) {
             try {
                 System.out.println("enter name:");
@@ -60,6 +63,8 @@ public class test {
             }
         }
 
+        System.out.println("enter email:");
+        String email = input.nextLine();
         System.out.println("enter address:");
         String address = input.nextLine();
         while (true) {
@@ -97,7 +102,7 @@ public class test {
                 System.out.println(e.getMessage());
             }
         }
-        guest.Register(name,password,gender,balance,date, address, perfer);
+        guest.Register(name,password,gender,balance,date, address, perfer,displayName,email);
         System.out.println("Registration Successful!");
     }
     public static User callLogin(User user){
@@ -184,7 +189,7 @@ public class test {
 
                         if (filterChoice == 1) {
                             guest.viewAvailableRooms(checkInDate, checkOutDate, guest.getPrefered());
-                            rooms = HotelDataBase.filterRooms(HotelDataBase.getAvailableRooms(checkInDate, checkOutDate), guest.getPrefered());
+                            rooms = HotelDataBase.filterRoomsByPreferences(HotelDataBase.getAvailableRooms(checkInDate, checkOutDate), guest.getPrefered());
                         }
                         if (filterChoice == 2) {
                             guest.viewAvailableRooms(checkInDate, checkOutDate);
@@ -209,7 +214,7 @@ public class test {
                                 System.out.println(e.getMessage());
                             }
                         }
-                        guest.makeReservation(rooms.get(choice - 1), checkInDate, checkOutDate);
+                        guest.makeReservation(rooms.get(choice - 1), checkInDate, checkOutDate,null);
                         reserved = true;
 
                     } catch (InvalidInputException e) {
@@ -221,13 +226,17 @@ public class test {
                 guest.viewReservations();
             }
             if (choice == 4) {
-                guest.viewPendingReservations();
-                System.out.println("Choose a Room");
+                ArrayList<Reservation> pending= guest.viewPendingReservations();
+                if(pending.isEmpty()){
+                    System.out.println("No pending reservations to cancel");
+                    continue;
+                }
+                System.out.println("Choose a reservation to cancel");
                 while (true) {
                     try {
                         System.out.println("Enter choice: ");
                         choice = Authenticator.validateInteger(input.nextLine());
-                        if (choice <= 0 || choice > HotelDataBase.getPendingReservations().size()) {
+                        if (choice <= 0 || choice > pending.size()) {
                             throw new InvalidInputException("Invalid choice");
                         }
                         break;
@@ -235,40 +244,41 @@ public class test {
                         System.out.println(e.getMessage());
                     }
                 }
-                guest.cancelReservation(HotelDataBase.getPendingReservations().get(choice - 1));
+                guest.cancelReservation(pending.get(choice - 1));
 
             }
             if (choice == 5) {
 
-                while (true) {
+
                     try {
                         invoice = guest.checkOut();
                     } catch (InvalidInputException e) {
                         System.out.println(e.getMessage());
                         break;
                     }
-                    System.out.println("Enter payment Method\n1.Cash\n2.Credit Card\n3.Online Balance");
-                    try {
-                        System.out.println("Enter choice: ");
-                        choice = Authenticator.validateInteger(input.nextLine());
-                        if (choice < 1 || choice > 3) {
-                            throw new InvalidInputException("Invalid choice");
-                        }
-                        if (choice == 1) {
-                            method = Invoice.paymentMethod.CASH;
-                        }
-                        if (choice == 2) {
-                            method = Invoice.paymentMethod.CREDIT;
-                        }
-                        if (choice == 3) {
-                            method = Invoice.paymentMethod.ONLINE;
-                        }
+                    while (true) {
+                        System.out.println("Enter payment Method\n1.Cash\n2.Credit Card\n3.Online Balance");
+                        try {
+                            System.out.println("Enter choice: ");
+                            choice = Authenticator.validateInteger(input.nextLine());
+                            if (choice < 1 || choice > 3) {
+                                throw new InvalidInputException("Invalid choice");
+                            }
+                            if (choice == 1) {
+                                method = Invoice.paymentMethod.CASH;
+                            }
+                            if (choice == 2) {
+                                method = Invoice.paymentMethod.CREDIT;
+                            }
+                            if (choice == 3) {
+                                method = Invoice.paymentMethod.ONLINE;
+                            }
 
-                        guest.pay(invoice, method);
-                        break;
-                    } catch (InvalidInputException e) {
-                        System.out.println(e.getMessage());
-                    }
+                            guest.pay(invoice, method,null);
+                            break;
+                        } catch (InvalidInputException e) {
+                            System.out.println(e.getMessage());
+                        }
                 }
             }
             if (choice == 0) {
@@ -383,15 +393,15 @@ public class test {
         int choice;
 
         while (true) {
-            System.out.println("Admin menu\n 1. View all rooms\n 2. Add room\n 3. Remove room\n 4. Update room\n" +
-                    " 5. View all room types \n 6. Add room type \n 7. Remove room type \n " +
-                    "8. Update room type \n 9. View all amenities \n10. Add amenity \n11. Remove amenity\n" +
-                    "12. Update amenity\n13. View all guests\n14. View all reservations\n0. logout");
+            System.out.println("----Admin menu----\n 1. View all rooms\n 2. Add new room\n 3. Remove room\n 4. Update room\n" +
+                    " 5. View all room types \n 6. Add new room type \n 7. Remove room type \n " +
+                    "8. Update room type \n 9. View all amenities \n10. Add new amenity \n11. Remove amenity\n" +
+                    "12. Update amenity\n13. View all guests\n14. View all reservations\n15. View all receptionists\n16. Add new receptionist \n0. logout");
             while (true) {
                 try {
                     System.out.println("Enter choice: ");
                     choice = Authenticator.validateInteger(input.nextLine());
-                    if (choice < 0 || choice > 14) {
+                    if (choice < 0 || choice > 16) {
                         throw new InvalidInputException("Invalid choice! Please enter a number between 0 and 14.");
                     }
                     break;
@@ -755,7 +765,7 @@ public class test {
 
                         }
                     }
-                    System.out.println("enter room size(Single,Double,etc..)");
+                    System.out.println("Enter room size(Single,Double,etc..)");
                     size = input.nextLine();
                     try {
                         admin.updateRoomTypes(size, basePrice, capacity,roomTypechoice-1);
@@ -765,7 +775,7 @@ public class test {
                 }
                 case 9 -> {
                     if (HotelDataBase.amenities.isEmpty()) {
-                        System.out.println("No amenties available!");
+                        System.out.println("No amenities available!");
                         continue;
                     }
                     admin.viewAmenities();
@@ -776,7 +786,7 @@ public class test {
                     double price = 0;
                     while (true) {
                         try {
-                            System.out.println("enter Amenity Price:");
+                            System.out.println("Enter Amenity Price:");
                             double b = input.nextDouble();
                             input.nextLine();
                             price = Authenticator.validateBalance(b);
@@ -798,14 +808,14 @@ public class test {
                 case 11 -> {
 
 
-                    int roomTypeNo = 0;
+                    int amenityNo = 0;
 
                     while (true) {
                         try {
                             admin.viewAmenities();
-                            System.out.print("Please enter room type you would like to remove(0 to exit) ");
-                            roomTypeNo = Authenticator.validateInteger(input.nextLine());
-                            if (roomTypeNo < 0 || roomTypeNo > HotelDataBase.roomTypes.size()) {
+                            System.out.print("Please Choose the amenity you would like to remove(0 to exit): ");
+                            amenityNo = Authenticator.validateInteger(input.nextLine());
+                            if (amenityNo < 0 || amenityNo > HotelDataBase.amenities.size()) {
                                 throw new InvalidInputException("Invalid Choice");
                             }
 
@@ -813,11 +823,11 @@ public class test {
                             System.out.println(e.getMessage());
                             continue;
                         }
-                        if (roomTypeNo == 0) {
+                        if (amenityNo == 0) {
                             break;
                         }
                         try {
-                            admin.removeAmenity(roomTypeNo - 1);
+                            admin.removeAmenity(amenityNo - 1);
                             break;
                         } catch (InvalidInputException e) {
                             System.out.println(e.getMessage());
@@ -884,13 +894,90 @@ public class test {
                     }
                     admin.viewReservations();
                 }
+                case 15 ->{
+                    if(HotelDataBase.getReceptionists().isEmpty()){
+                        System.out.println("No current receptionists available!");
+                        continue;
+                    }
+                    admin.viewReceptionists();
+                }
+                case 16 ->{
+                    String name = null , pass = null;
+                    LocalDate date = null;
+                    int hours = 0;
+                    String gender = null;
+
+                    while (true){
+                        try{
+                            System.out.println("Please enter new Receptionist's name");
+                            name = Authenticator.validateName(input.nextLine());
+                            break;
+                        }
+                        catch(InvalidInputException e){
+                            System.out.println(e.getMessage());
+                        }
+                    }
+
+                    while (true) {
+                        try {
+                            System.out.println("Please enter new Receptionist's password");
+                            pass = Authenticator.validatePassword(input.nextLine());
+                            break;
+                        } catch (InvalidInputException e){
+                            System.out.println(e.getMessage());
+                        }
+                    }
+
+                    while(true){
+                        try{
+                            System.out.println("Please enter new Receptionist's date of birth as YYYY-MM-DD");
+                            date = Authenticator.validateDate(input.nextLine());
+                            break;
+                        } catch(InvalidInputException e){
+                            System.out.println(e.getMessage());
+                        }
+
+                    }
+
+                    while(true){
+                        try{
+                            System.out.println("Please enter new Receptionist's working hours");
+                            hours = Authenticator.validateInteger(input.nextLine());
+                            if (hours < 0){
+                                throw new InvalidInputException(
+                                        "Hours can not be negative");
+                            } else if (hours > 12){
+                                throw new InvalidInputException("Receptionist cannot work more than 12 hours.");
+                            }
+                            break;
+                        } catch (InvalidInputException e ){
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                    System.out.println("Enter Email");
+                    String email=input.nextLine();
+                    while (true){
+                        try{ System.out.println("Please enter new Receptionist's gender");
+                            gender = Authenticator.validateGender(input.nextLine());
+                            break;
+                        } catch (InvalidInputException e){
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                    try {
+                        admin.addReceptionists(name, pass, date, hours, gender,email);
+                        System.out.println("You have successfully registered a new receptionist!");
+                    }catch(InvalidInputException e){
+                        System.out.println(e.getMessage());
+                    }
+                }
+                }
             }
         }
-    }
+
     public static void main(String[] args) {
         User user=null;
         Scanner input=new Scanner(System.in);
-
         System.out.println("Welcome to Kempinski Hotel");
         while(true) {
             System.out.println("1.Register\n2.Login\n0.Exit");
@@ -918,12 +1005,10 @@ public class test {
                 else if(user instanceof Admin){
                     System.out.println("Welcome Admin "+user.getUsername());
                     adminMenu((Admin) user);
-                    //admin menu called here (DON'T DELETE THIS COMMENT)
                 }
                 else if(user instanceof Receptionist ){
                     System.out.println("Welcome Receptionist "+user.getUsername());
                     receptionistMenu((Receptionist) user);
-                    //Receptionist menu called here (DON'T DELETE THIS COMMENT)
                 }
             }
             if(choice==1){
@@ -935,3 +1020,4 @@ public class test {
         }
     }
 }
+//trial one gui
