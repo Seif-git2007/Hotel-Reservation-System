@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="660.0" prefWidth="900.0" style="-fx-background-color: #F0EDE4;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AdminRoomsController">
+
+    <fx:include fx:id="navBar" layoutX="0" layoutY="0" source="NavgationBar.fxml" />
+
+    <HBox layoutX="0" layoutY="71" prefHeight="589" prefWidth="900" spacing="0">
+
+        <!-- Admin sidebar — controller injected as sidebarController -->
+        <fx:include fx:id="sidebar" source="AdminSidebar.fxml" />
+
+        <!-- Main content -->
+        <VBox prefHeight="589" prefWidth="680" spacing="0" style="-fx-background-color: #F0EDE4;">
+
+            <!-- Page header -->
+            <HBox alignment="CENTER_LEFT" prefWidth="680" spacing="12" styleClass="page-header-strip">
+                <Pane prefHeight="32" prefWidth="4" style="-fx-background-color: #C9A84C; -fx-background-radius: 2;" />
+                <VBox spacing="2">
+                    <Label styleClass="label-dashboard-title" text="Rooms" />
+                    <Label styleClass="label-dashboard-sub" text="Add, edit, and remove hotel rooms" />
+                </VBox>
+            </HBox>
+
+            <!-- Toolbar -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <VBox.margin><Insets bottom="8" left="20" right="20" top="16" /></VBox.margin>
+                <Button fx:id="btnAdd" onAction="#onAdd" styleClass="nav-action-button" text="+ Add Room" />
+                <Button fx:id="btnEdit" onAction="#onEdit" styleClass="nav-action-button" text="✎ Edit" />
+                <Button fx:id="btnDelete" onAction="#onDelete" styleClass="nav-action-button" text="✕ Delete" />
+                <Pane HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblStatus" styleClass="main-content-hint" />
+            </HBox>
+
+            <!-- Table -->
+            <VBox VBox.vgrow="ALWAYS">
+                <VBox.margin><Insets bottom="20" left="20" right="20" /></VBox.margin>
+                <TableView fx:id="table" styleClass="main-content-card" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colNo" prefWidth="80" text="Room #" />
+                        <TableColumn fx:id="colType" prefWidth="110" text="Type" />
+                        <TableColumn fx:id="colFloor" prefWidth="70" text="Floor" />
+                        <TableColumn fx:id="colView" prefWidth="80" text="View" />
+                        <TableColumn fx:id="colPrice" prefWidth="100" text="Base Price" />
+                        <TableColumn fx:id="colCap" prefWidth="80" text="Capacity" />
+                        <TableColumn fx:id="colAmen" text="Amenities" />
+                    </columns>
+                    <placeholder>
+                        <Label styleClass="main-content-hint" text="No rooms found." />
+                    </placeholder>
+                </TableView>
+            </VBox>
+
+        </VBox>
+    </HBox>
+</AnchorPane>
