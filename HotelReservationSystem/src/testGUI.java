@@ -9,47 +9,31 @@ public class testGUI extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            // ── Window 1: Receptionist Sidebar ─────────────────────────────
-            AppSession session1 = new AppSession();
-            Receptionist receptionist = (Receptionist) HotelDataBase.searchUserByName("2");
-            receptionist.setLoggedIn(true);
-            session1.setCurrentUser(receptionist);
+            primaryStage.setUserData(new AppSession());
+            Parent root = FXMLLoader.load(getClass().getResource("Main_Menu.fxml"));
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(
+                    MainController.class.getResource("style.css").toExternalForm());
 
-            FXMLLoader loader1 = new FXMLLoader(getClass().getResource("Receptionist_Menu.fxml"));
-            Parent root1 = loader1.load();
-            ((ReceptionistMenuController) loader1.getController()).initSession(session1);
-
-            Scene scene1 = new Scene(root1);
-            scene1.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
-
-            primaryStage.setUserData(session1);
-            primaryStage.setTitle("TEST — Receptionist Sidebar");
-            primaryStage.setScene(scene1);
+            primaryStage.setTitle("Kempinski Hotel - User 1");
+            primaryStage.setScene(scene);
             primaryStage.getIcons().add(new Image("icon.png"));
-            primaryStage.setX(100);
             primaryStage.show();
+            primaryStage.setX(200);
 
-            // ── Window 2: Admin Amenities CRUD ──────────────────────────────
-            AppSession session2 = new AppSession();
-            Admin admin = (Admin) HotelDataBase.searchUserByName("1");
-            admin.setLoggedIn(true);
-            session2.setCurrentUser(admin);
 
-            FXMLLoader loader2 = new FXMLLoader(getClass().getResource("AdminAmenities.fxml"));
-            Parent root2 = loader2.load();
-            ((AdminAmenitiesController) loader2.getController()).initSession(session2);
-
+            Stage stage2= new Stage();
+            stage2.setUserData(new AppSession());
+            Parent root2 = FXMLLoader.load(getClass().getResource("Main_Menu.fxml"));
             Scene scene2 = new Scene(root2);
-            scene2.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+            scene2.getStylesheets().add(
+                    MainController.class.getResource("style.css").toExternalForm());
 
-            Stage stage2 = new Stage();
-            stage2.setUserData(session2);
-            stage2.setTitle("TEST — Admin Amenities CRUD");
+            stage2.setTitle("Kempinski Hotel - User 2");
             stage2.setScene(scene2);
             stage2.getIcons().add(new Image("icon.png"));
-            stage2.setX(1020);
-            stage2.show();
 
+            stage2.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
