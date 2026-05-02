@@ -6,10 +6,9 @@ import javafx.scene.layout.*;
 
 import java.util.ArrayList;
 
-public class ViewRoomsController {
+public class ViewRoomsController implements SessionController {
 
     @FXML private GuestSidebarController sidebarController;
-
     @FXML private Button           btnToggleFilter;
     @FXML private HBox             filterBar;
     @FXML private ComboBox<String> filterCategory;
@@ -21,98 +20,79 @@ public class ViewRoomsController {
     @FXML private Label            lblPriceValue;
     @FXML private VBox             roomContainer;
 
-    private boolean filterBarVisible = false;
+    private boolean    filterBarVisible = false;
+    private AppSession session;
 
-    @FXML
-    public void initialize() {
-        ActionEvent event = new ActionEvent(btnToggleFilter, null);
+    @Override
+    public void initSession(AppSession session) {
+        this.session = session;
 
-        if (sidebarController != null) sidebarController.btnViewRooms.getStyleClass().add("sidebar-nav-btn-active");
-        renderRooms(HotelDataBase.rooms,roomContainer,event);
+        if (sidebarController != null) {
+            sidebarController.initSession(session);
+            sidebarController.btnViewRooms.getStyleClass().add("sidebar-nav-btn-active");
+        }
 
-        filterCategory.getItems().addAll("Price", "Amenities", "Room Type","Preferences");
+        ActionEvent dummy = new ActionEvent(btnToggleFilter, null);
+        renderRooms(HotelDataBase.getRooms(), roomContainer, dummy);
 
-
+        filterCategory.getItems().addAll("Price", "Amenities", "Room Type", "Preferences");
         buildAmenityTags();
         buildRoomTypeTags();
 
-
         filterCategory.getSelectionModel().selectedItemProperty().addListener(
-                (obs, oldVal, newVal) -> {
-                    hideAllToolPanes();
-                    if (newVal == null) return;
-                    switch (newVal) {
-                        case "Price"     -> { toolPrice.setVisible(true);     toolPrice.setManaged(true); }
-                        case "Amenities" -> { toolAmenities.setVisible(true); toolAmenities.setManaged(true); }
-                        case "Room Type" -> { toolRoomType.setVisible(true);  toolRoomType.setManaged(true); }
-
-                    }
+            (obs, oldVal, newVal) -> {
+                hideAllToolPanes();
+                if (newVal == null) return;
+                switch (newVal) {
+                    case "Price"     -> { toolPrice.setVisible(true);     toolPrice.setManaged(true); }
+                    case "Amenities" -> { toolAmenities.setVisible(true); toolAmenities.setManaged(true); }
+                    case "Room Type" -> { toolRoomType.setVisible(true);  toolRoomType.setManaged(true); }
                 }
-        );
-
+            });
 
         priceSlider.valueProperty().addListener((obs, oldVal, newVal) ->
-                lblPriceValue.setText((int) newVal.doubleValue() + "$")
-        );
+            lblPriceValue.setText((int) newVal.doubleValue() + "$"));
     }
-
 
     private void buildAmenityTags() {
         toolAmenities.getChildren().clear();
         ArrayList<Amenity> allAmenities = new ArrayList<>();
-        for (Room room : HotelDataBase.rooms) {
+        for (Room room : HotelDataBase.getRooms()) {
             for (Amenity amenity : room.getAmenities()) {
-
                 boolean alreadyAdded = allAmenities.stream()
-                        .anyMatch(a -> a.getName().equals(amenity.getName()));
-                if (!alreadyAdded) {
-                    allAmenities.add(amenity);
-                }
+                    .anyMatch(a -> a.getName().equals(amenity.getName()));
+                if (!alreadyAdded) allAmenities.add(amenity);
             }
         }
-
-
         for (Amenity amenity : allAmenities) {
             Button tag = new Button(amenity.getName());
             tag.getStyleClass().add("filter-tag");
-
             tag.setUserData(amenity);
-
             tag.setOnAction(e -> toggleTag(tag));
-
             toolAmenities.getChildren().add(tag);
         }
     }
 
-
     private void buildRoomTypeTags() {
         toolRoomType.getChildren().clear();
-
         ArrayList<RoomType> allTypes = new ArrayList<>();
-        for (Room room : HotelDataBase.rooms) {
+        for (Room room : HotelDataBase.getRooms()) {
             RoomType type = room.getType();
             boolean alreadyAdded = allTypes.stream()
-                    .anyMatch(t -> t.getSize().equals(type.getSize()));
-            if (!alreadyAdded) {
-                allTypes.add(type);
-            }
+                .anyMatch(t -> t.getSize().equals(type.getSize()));
+            if (!alreadyAdded) allTypes.add(type);
         }
-
         for (RoomType type : allTypes) {
             Button tag = new Button(type.getSize());
             tag.getStyleClass().add("filter-tag");
-
             tag.setUserData(type);
-
             tag.setOnAction(e -> toggleTag(tag));
-
             toolRoomType.getChildren().add(tag);
         }
     }
 
     private void toggleTag(Button tag) {
         if (tag.getStyleClass().contains("filter-tag-selected")) {
-
             tag.getStyleClass().remove("filter-tag-selected");
             tag.getStyleClass().add("filter-tag");
         } else {
@@ -127,61 +107,36 @@ public class ViewRoomsController {
         if (category == null) return;
 
         switch (category) {
-
             case "Price" -> {
-                double maxPrice = priceSlider.getValue();
-
-                renderRooms(HotelDataBase.filterRoomsByPrice(maxPrice),roomContainer,event);
+                renderRooms(HotelDataBase.filterRoomsByPrice(priceSlider.getValue()), roomContainer, event);
             }
-
             case "Amenities" -> {
-
-                ArrayList<Amenity> selectedAmenities = new ArrayList<>();
-
+                ArrayList<Amenity> selected = new ArrayList<>();
                 for (var node : toolAmenities.getChildren()) {
                     Button tag = (Button) node;
-                    if (tag.getStyleClass().contains("filter-tag-selected")) {
-
-                        selectedAmenities.add((Amenity) tag.getUserData());
-                    }
+                    if (tag.getStyleClass().contains("filter-tag-selected"))
+                        selected.add((Amenity) tag.getUserData());
                 }
-
-                if (selectedAmenities.isEmpty()) {
-
-                    renderRooms(HotelDataBase.rooms,roomContainer,event);
-                } else {
-                    renderRooms(HotelDataBase.filterRoomsByAmenities(selectedAmenities),roomContainer,event);
-                }
+                renderRooms(selected.isEmpty() ? HotelDataBase.getRooms() : HotelDataBase.filterRoomsByAmenities(selected), roomContainer, event);
             }
-
             case "Room Type" -> {
-
-                ArrayList<RoomType> selectedTypes = new ArrayList<>();
-
+                ArrayList<RoomType> selected = new ArrayList<>();
                 for (var node : toolRoomType.getChildren()) {
                     Button tag = (Button) node;
-                    if (tag.getStyleClass().contains("filter-tag-selected")) {
-
-                        selectedTypes.add((RoomType) tag.getUserData());
-                    }
+                    if (tag.getStyleClass().contains("filter-tag-selected"))
+                        selected.add((RoomType) tag.getUserData());
                 }
-
-                if (selectedTypes.isEmpty()) {
-                    renderRooms(HotelDataBase.rooms,roomContainer,event);
-                } else {
-
-                    renderRooms(HotelDataBase.filterRoomsByRoomType(selectedTypes),roomContainer,event);
-                }
+                renderRooms(selected.isEmpty() ? HotelDataBase.getRooms() : HotelDataBase.filterRoomsByRoomType(selected), roomContainer, event);
             }
-            case "Preferences"->{
-                renderRooms(HotelDataBase.filterRoomsByPreferences(HotelDataBase.rooms,((Guest)MainController.getUser()).getPrefered()),roomContainer,event);
+            case "Preferences" -> {
+                renderRooms(HotelDataBase.filterRoomsByPreferences(
+                    HotelDataBase.getRooms(), session.getCurrentGuest().getPrefered()),
+                    roomContainer, event);
             }
         }
     }
 
-
-    @FXML
-    private void toggleFilterBar(ActionEvent event) {
+    @FXML private void toggleFilterBar(ActionEvent event) {
         filterBarVisible = !filterBarVisible;
         filterBar.setVisible(filterBarVisible);
         filterBar.setManaged(filterBarVisible);
@@ -189,45 +144,33 @@ public class ViewRoomsController {
         if (!filterBarVisible) resetFilter(event);
     }
 
-
-    @FXML
-    private void handleResetFilter(ActionEvent event) {
-        resetFilter(event);
-    }
+    @FXML private void handleResetFilter(ActionEvent event) { resetFilter(event); }
 
     private void resetFilter(ActionEvent event) {
         filterCategory.getSelectionModel().clearSelection();
         priceSlider.setValue(2500);
         lblPriceValue.setText("2500$");
         hideAllToolPanes();
-
         for (var node : toolAmenities.getChildren()) {
             Button tag = (Button) node;
             tag.getStyleClass().remove("filter-tag-selected");
-            if (!tag.getStyleClass().contains("filter-tag"))
-                tag.getStyleClass().add("filter-tag");
+            if (!tag.getStyleClass().contains("filter-tag")) tag.getStyleClass().add("filter-tag");
         }
-
         for (var node : toolRoomType.getChildren()) {
             Button tag = (Button) node;
             tag.getStyleClass().remove("filter-tag-selected");
-            if (!tag.getStyleClass().contains("filter-tag"))
-                tag.getStyleClass().add("filter-tag");
+            if (!tag.getStyleClass().contains("filter-tag")) tag.getStyleClass().add("filter-tag");
         }
-
-        renderRooms(HotelDataBase.rooms,roomContainer,event);
+        renderRooms(HotelDataBase.getRooms(), roomContainer, event);
     }
 
     private void hideAllToolPanes() {
-        toolPrice.setVisible(false);
-        toolPrice.setManaged(false);
-        toolAmenities.setVisible(false);
-        toolAmenities.setManaged(false);
-        toolRoomType.setVisible(false);
-        toolRoomType.setManaged(false);
+        toolPrice.setVisible(false);     toolPrice.setManaged(false);
+        toolAmenities.setVisible(false); toolAmenities.setManaged(false);
+        toolRoomType.setVisible(false);  toolRoomType.setManaged(false);
     }
 
-    public void renderRooms(ArrayList<Room> rooms,VBox roomContainer,ActionEvent event) {
+    public void renderRooms(ArrayList<Room> rooms, VBox roomContainer, ActionEvent event) {
         roomContainer.getChildren().clear();
 
         if (rooms.isEmpty()) {
@@ -256,9 +199,8 @@ public class ViewRoomsController {
             header.getChildren().addAll(typeLabel, spacer, viewLabel);
 
             Label detailsLabel = new Label(String.format(
-                    "Room %d • Floor %d • Capacity: %d Guests",
-                    room.getRoomNumber(), room.getFloor(), room.getType().getCapacity()
-            ));
+                "Room %d • Floor %d • Capacity: %d Guests",
+                room.getRoomNumber(), room.getFloor(), room.getType().getCapacity()));
             detailsLabel.getStyleClass().add("room-card-price");
             detailsLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #2C2C2C;");
 
@@ -272,19 +214,17 @@ public class ViewRoomsController {
             selectBtn.getStyleClass().add("btn-select-room");
             selectBtn.setMaxWidth(Double.MAX_VALUE);
             selectBtn.setOnAction(e -> {
-                System.out.println("Selected Room: " + room.getRoomNumber());
-                MainController.setReservationContext(room,null,null);
-                MainController.navigate(event,"Reservation_Form.fxml");
+                session.getReservationContext().setSelectedRoom(room);
+                MainController.navigate(event, "Reservation_Form.fxml");
             });
+
             card.getChildren().addAll(header, detailsLabel, priceLabel, amenitiesLabel, selectBtn);
             roomContainer.getChildren().add(card);
         }
     }
 
     public static String formatAmenities(ArrayList<Amenity> amenities) {
-        if (amenities == null || amenities.isEmpty()) {
-            return "Standard Amenities";
-        }
+        if (amenities == null || amenities.isEmpty()) return "Standard Amenities";
         StringBuilder temp = new StringBuilder();
         for (int i = 0; i < Math.min(amenities.size(), 3); i++) {
             temp.append(amenities.get(i).getName());

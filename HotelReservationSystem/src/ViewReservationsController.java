@@ -6,16 +6,25 @@ import javafx.scene.layout.*;
 
 import java.util.ArrayList;
 
-public class ViewReservationsController {
+public class ViewReservationsController implements SessionController {
 
     @FXML private GuestSidebarController sidebarController;
-    @FXML VBox reservationController ;
-    @FXML
-    public void initialize() {
-        if (sidebarController != null)
+    @FXML VBox reservationController;
+
+    private AppSession session;
+
+    @Override
+    public void initSession(AppSession session) {
+        this.session = session;
+        if (sidebarController != null) {
+            sidebarController.initSession(session);
             sidebarController.btnViewReservations.getStyleClass().add("sidebar-nav-btn-active");
-        renderReservations(HotelDataBase.getGuestReservation((Guest) MainController.getUser()), reservationController);
+        }
+        renderReservations(
+            HotelDataBase.getGuestReservation(session.getCurrentGuest()),
+            reservationController);
     }
+
     public void renderReservations(ArrayList<Reservation> reservations, VBox reservationContainer) {
         reservationContainer.getChildren().clear();
 
@@ -40,32 +49,31 @@ public class ViewReservationsController {
             HBox.setHgrow(spacer, Priority.ALWAYS);
 
             Label statusBadge = new Label(res.getStatus().toString().toUpperCase());
-            statusBadge.getStyleClass().addAll("status-badge", "status-" + res.getStatus().toString().toLowerCase());
+            statusBadge.getStyleClass().addAll("status-badge",
+                "status-" + res.getStatus().toString().toLowerCase());
 
             header.getChildren().addAll(typeLabel, spacer, statusBadge);
 
             Label detailsLabel = new Label(String.format(
-                    "Room %d  •  Floor %d  •  Capacity: %d Guests",
-                    res.getRoom().getRoomNumber(),
-                    res.getRoom().getFloor(),
-                    res.getRoom().getType().getCapacity()
-            ));
+                "Room %d  •  Floor %d  •  Capacity: %d Guests",
+                res.getRoom().getRoomNumber(), res.getRoom().getFloor(),
+                res.getRoom().getType().getCapacity()));
             detailsLabel.getStyleClass().add("room-card-price");
             detailsLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #2C2C2C;");
 
-            long nights = java.time.temporal.ChronoUnit.DAYS.between(res.getCheckInDate(), res.getCheckOutDate());
+            long nights = java.time.temporal.ChronoUnit.DAYS.between(
+                res.getCheckInDate(), res.getCheckOutDate());
             Label dateLabel = new Label(String.format(
-                    "📅 %s  →  %s  (%d Night%s)",
-                    res.getCheckInDate(), res.getCheckOutDate(),
-                    nights, nights == 1 ? "" : "s"
-            ));
+                "📅 %s  →  %s  (%d Night%s)",
+                res.getCheckInDate(), res.getCheckOutDate(), nights, nights == 1 ? "" : "s"));
             dateLabel.getStyleClass().add("room-card-price");
 
             double totalPrice = nights * res.getRoom().getType().getBasePrice();
             Label totalLabel = new Label(String.format("Total Charged: $%.2f", totalPrice));
             totalLabel.getStyleClass().add("room-card-price");
 
-            Label amenitiesLabel = new Label("Includes: " + ViewRoomsController.formatAmenities(res.getRoom().getAmenities()));
+            Label amenitiesLabel = new Label(
+                "Includes: " + ViewRoomsController.formatAmenities(res.getRoom().getAmenities()));
             amenitiesLabel.getStyleClass().add("main-content-hint");
 
             card.getChildren().addAll(header, detailsLabel, dateLabel, totalLabel, amenitiesLabel);
@@ -82,10 +90,11 @@ public class ViewReservationsController {
                     cancelBtn.getStyleClass().remove("btn-cancel-reservation-hover");
                     cancelBtn.getStyleClass().add("btn-cancel-reservation");
                 });
+
                 ActionEvent event = new ActionEvent(cancelBtn, null);
                 cancelBtn.setOnAction(e -> {
-                    MainController.getReservationContext().setReservation(res);
-                    MainController.navigate(event,"CancelReservationForm.fxml");
+                    session.getReservationContext().setReservation(res);
+                    MainController.navigate(event, "CancelReservationForm.fxml");
                 });
 
                 HBox actionsRow = new HBox(cancelBtn);
