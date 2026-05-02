@@ -18,7 +18,7 @@ public class Amenity {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Amenity other)) return false;
-        return name.equals(other.name) && price == other.price;
+        return name.equals(other.name) ;
     }
 
     public static void create(Amenity a) throws InvalidInputException {
