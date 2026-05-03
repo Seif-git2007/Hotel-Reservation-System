@@ -12,7 +12,19 @@ public class HotelDataBase {
     static final List<RoomType>roomTypes= Collections.synchronizedList(new ArrayList<>());
     static final List<Amenity>amenities= Collections.synchronizedList(new ArrayList<>());
 
-    static {
+    public static ArrayList<Room> getRooms() {
+        synchronized (rooms) { return new ArrayList<>(rooms); }
+    }
+    public static ArrayList<RoomType> getRoomTypes() {
+        synchronized (roomTypes) { return new ArrayList<>(roomTypes); }
+    }
+    public static ArrayList<Amenity> getAmenities() {
+        synchronized (amenities) { return new ArrayList<>(amenities); }
+    }
+    public static ArrayList<User> getUsers() {
+        synchronized (users) { return new ArrayList<>(users); }
+    }
+    public static void  seedDefaultData(){
         Admin admin = new Admin("1", "1", LocalDate.parse("2000-12-05"), 8, User.Gender.MALE, "admin123@gmail.com");
         users.add(admin);
 
@@ -95,19 +107,29 @@ public class HotelDataBase {
         reservations.add(r3);
         reservations.add(r4);
     }
-    public static ArrayList<Room> getRooms() {
-        synchronized (rooms) { return new ArrayList<>(rooms); }
-    }
-    public static ArrayList<RoomType> getRoomTypes() {
-        synchronized (roomTypes) { return new ArrayList<>(roomTypes); }
-    }
-    public static ArrayList<Amenity> getAmenities() {
-        synchronized (amenities) { return new ArrayList<>(amenities); }
-    }
-    public static ArrayList<User> getUsers() {
-        synchronized (users) { return new ArrayList<>(users); }
+    public static RoomType findRoomType(String size) {
+        synchronized (roomTypes) {
+            for (RoomType rt : roomTypes)
+                if (rt.getSize().equals(size)) return rt;
+        }
+        return null;
     }
 
+    public static Amenity findAmenity(String name) {
+        synchronized (amenities) {
+            for (Amenity a : amenities)
+                if (a.getName().equals(name)) return a;
+        }
+        return null;
+    }
+
+    public static Room findRoom(int roomNumber) {
+        synchronized (rooms) {
+            for (Room r : rooms)
+                if (r.getRoomNumber() == roomNumber) return r;
+        }
+        return null;
+    }
 
     public static ArrayList<Room> getAvailableRooms(LocalDate checkIn, LocalDate checkOut) {
         ArrayList<Room> available = new ArrayList<>();

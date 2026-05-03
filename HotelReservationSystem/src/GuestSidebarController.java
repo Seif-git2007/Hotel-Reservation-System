@@ -9,6 +9,7 @@ public class GuestSidebarController implements SessionController {
     @FXML public Button btnViewReservations;
     @FXML public Button btnCancelReservation;
     @FXML public Button btnCheckOut;
+    @FXML public Button btnLiveChat;
 
     private AppSession session;
 
@@ -21,4 +22,5 @@ public class GuestSidebarController implements SessionController {
     @FXML private void goMakeReservation(ActionEvent e)   { MainController.navigate(e, "MakeReservation.fxml"); }
     @FXML private void goViewReservations(ActionEvent e)  { MainController.navigate(e, "ViewReservations.fxml"); }
     @FXML private void goCheckOut(ActionEvent e)          { MainController.navigate(e, "CheckOut.fxml"); }
+    @FXML private void goLiveChat(ActionEvent e)          { MainController.navigate(e, "GuestChat.fxml"); }
 }

@@ -1,3 +1,4 @@
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -11,6 +12,7 @@ public class ReceptionistReservationsController implements SessionController {
     @FXML private VBox reservationContainer;
 
     private AppSession session;
+    private final Runnable refreshListener = this::refresh;
 
     @Override
     public void initSession(AppSession session) {
@@ -20,12 +22,20 @@ public class ReceptionistReservationsController implements SessionController {
             sidebarController.initSession(session);
             sidebarController.btnReservations.getStyleClass().add("sidebar-nav-btn-active");
         }
+        refresh();
+        EventBus.subscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
 
-        renderReservations();
+        reservationContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                EventBus.unsubscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+            }
+        });
     }
 
-    // This is the same card-render logic used in ViewReservationsController and
-    // CancelReservationController — kept consistent on purpose
+    public void refresh(){
+        reservationContainer.getChildren().clear();
+        renderReservations();
+    }
     private void renderReservations() {
         reservationContainer.getChildren().clear();
 

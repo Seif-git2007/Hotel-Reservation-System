@@ -1114,3 +1114,155 @@
     -fx-text-fill: #6B6B6B;
     -fx-font-style: italic;
 }
+/* ───────── CHAT STYLES ───────── */
+
+.chat-header {
+    -fx-background-color: #0F2160;
+}
+
+.chat-header-title {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #F5F0E8;
+    -fx-letter-spacing: 0.2em;
+}
+
+.chat-header-status {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 11px;
+    -fx-font-style: italic;
+    -fx-text-fill: #C9A84C;
+}
+
+.chat-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.chat-scroll .viewport {
+    -fx-background-color: #F0EDE4;
+}
+
+.chat-messages-box {
+    -fx-background-color: #F0EDE4;
+}
+
+.chat-bubble-me {
+    -fx-background-color: #0F2160;
+    -fx-text-fill: #F5F0E8;
+    -fx-font-family: "Georgia";
+    -fx-font-size: 13px;
+    -fx-padding: 10 14;
+    -fx-background-radius: 14 14 2 14;
+}
+
+.chat-bubble-them {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #2C2C2C;
+    -fx-font-family: "Georgia";
+    -fx-font-size: 13px;
+    -fx-padding: 10 14;
+    -fx-background-radius: 14 14 14 2;
+    -fx-border-color: #E0D8C4;
+    -fx-border-radius: 14 14 14 2;
+    -fx-border-width: 1;
+}
+
+.chat-bubble-sender-me {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #C9A84C;
+    -fx-padding: 0 4 0 0;
+    -fx-alignment: CENTER_RIGHT;
+}
+
+.chat-bubble-sender-them {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0F2160;
+    -fx-padding: 0 0 0 4;
+}
+
+.chat-system-message {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 11px;
+    -fx-font-style: italic;
+    -fx-text-fill: #9A8F78;
+    -fx-padding: 4 0;
+}
+
+.chat-input-bar {
+    -fx-background-color: #FDFAF4;
+    -fx-border-color: transparent transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+.chat-input {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 13px;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D4C5A0;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 10 14;
+}
+
+.chat-input:focused {
+    -fx-border-color: #C9A84C;
+}
+
+.btn-chat-send {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 0.15em;
+    -fx-text-fill: #FDFAF4;
+    -fx-background-color: #0F2160;
+    -fx-background-radius: 4;
+    -fx-padding: 10 22;
+    -fx-cursor: hand;
+}
+
+.btn-chat-send:hover {
+    -fx-background-color: #1a3280;
+}
+
+.guests-panel {
+    -fx-background-color: #FDFAF4;
+}
+
+.guests-panel-title {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #9A8F78;
+    -fx-letter-spacing: 0.2em;
+}
+
+.guests-list {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E0D8C4;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.guests-list .list-cell {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 12px;
+    -fx-text-fill: #2C2C2C;
+    -fx-padding: 8 12;
+}
+
+.guests-list .list-cell:filled:selected {
+    -fx-background-color: #0F2160;
+    -fx-text-fill: #F5F0E8;
+}
+
+.guests-list .list-cell:filled:hover:!selected {
+    -fx-background-color: #F5EFE0;
+}

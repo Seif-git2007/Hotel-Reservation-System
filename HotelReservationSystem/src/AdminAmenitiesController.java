@@ -27,7 +27,6 @@ public class AdminAmenitiesController implements SessionController {
     // null  → Add mode      non-null → Edit mode
     private Amenity editingAmenity = null;
 
-    // ── SessionController ────────────────────────────────────────────────────
     @Override
     public void initSession(AppSession session) {
         this.session = session;
@@ -41,7 +40,6 @@ public class AdminAmenitiesController implements SessionController {
         renderCards();
     }
 
-    // ── Render ───────────────────────────────────────────────────────────────
     private void renderCards() {
         amenityGrid.getChildren().clear();
 

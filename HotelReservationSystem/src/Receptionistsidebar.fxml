@@ -63,6 +63,13 @@
             styleClass="sidebar-nav-btn"
             mnemonicParsing="false"/>
 
+    <Button fx:id="btnLiveChat"
+            text="💬  Live Chat"
+            onAction="#goLiveChat"
+            prefHeight="50" prefWidth="220"
+            styleClass="sidebar-nav-btn"
+            mnemonicParsing="false"/>
+
     <Pane VBox.vgrow="ALWAYS" />
     <Pane prefHeight="1" prefWidth="220"
           style="-fx-background-color: rgba(201,168,76,0.30);" />
