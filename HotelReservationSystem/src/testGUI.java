@@ -13,7 +13,7 @@ public class testGUI extends Application {
             Parent root = FXMLLoader.load(getClass().getResource("Main_Menu.fxml"));
             Scene scene = new Scene(root);
             scene.getStylesheets().add(
-                MainController.class.getResource("style.css").toExternalForm());
+                    MainController.class.getResource("style.css").toExternalForm());
 
             primaryStage.setTitle("Kempinski Hotel - User 1");
             primaryStage.setScene(scene);
