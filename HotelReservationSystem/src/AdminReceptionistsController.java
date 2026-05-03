@@ -2,7 +2,9 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.control.PasswordField;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,29 +16,137 @@ public class AdminReceptionistsController implements SessionController {
     @FXML private Label                  lblTotalReceptionists;
     @FXML private Label                  lblTotalHours;
 
+    // ── Form fields ──────────────────────────────────────────────────────────
+    @FXML private Label        feedbackLabel;
+    @FXML private VBox         formPanel;
+    @FXML private Label        formTitle;
+    @FXML private TextField    fieldUsername;
+    @FXML private PasswordField fieldPassword;
+    @FXML private TextField    fieldEmail;
+    @FXML private DatePicker   fieldDob;
+    @FXML private ComboBox<String> fieldGender;
+    @FXML private TextField    fieldHours;
+    @FXML private Label        usernameError;
+    @FXML private Label        passwordError;
+    @FXML private Label        emailError;
+    @FXML private Label        dobError;
+    @FXML private Label        genderError;
+    @FXML private Label        hoursError;
+
     private AppSession session;
+    private Admin      admin;
 
     @Override
     public void initSession(AppSession session) {
         this.session = session;
+        this.admin   = (Admin) session.getCurrentUser();
         if (sidebarController != null) {
             sidebarController.initSession(session);
             sidebarController.setActive(sidebarController.btnReceptionists);
         }
 
+        fieldGender.getItems().addAll("MALE", "FEMALE");
         searchField.textProperty().addListener((obs, oldVal, newVal) -> renderList());
 
         updateStats();
         renderList();
     }
 
+    // ── Form ─────────────────────────────────────────────────────────────────
+
+    @FXML
+    private void openAddForm() {
+        fieldUsername.clear();
+        fieldPassword.clear();
+        fieldEmail.clear();
+        fieldDob.setValue(null);
+        fieldGender.getSelectionModel().clearSelection();
+        fieldHours.clear();
+        clearErrors();
+        formPanel.setVisible(true);
+        formPanel.setManaged(true);
+        feedbackLabel.setVisible(false);
+    }
+
+    @FXML
+    private void closeForm() {
+        formPanel.setVisible(false);
+        formPanel.setManaged(false);
+        feedbackLabel.setVisible(false);
+    }
+
+    @FXML
+    private void submitForm() {
+        clearErrors();
+        boolean valid = true;
+
+        // Username
+        String username = fieldUsername.getText().trim();
+        if (username.isEmpty()) {
+            MainController.setFieldError(usernameError, "Username cannot be empty.");
+            valid = false;
+        }
+
+        // Password
+        String password = fieldPassword.getText();
+        try {
+            Authenticator.validatePassword(password);
+        } catch (InvalidInputException e) {
+            MainController.setFieldError(passwordError, e.getMessage());
+            valid = false;
+        }
+
+        // Email
+        String email = fieldEmail.getText().trim();
+        if (email.isEmpty()) {
+            MainController.setFieldError(emailError, "Email cannot be empty.");
+            valid = false;
+        }
+
+        // DOB
+        LocalDate dob = fieldDob.getValue();
+        if (dob == null) {
+            MainController.setFieldError(dobError, "Please select a date of birth.");
+            valid = false;
+        }
+
+        // Gender
+        String gender = fieldGender.getValue();
+        if (gender == null) {
+            MainController.setFieldError(genderError, "Please select a gender.");
+            valid = false;
+        }
+
+        // Hours
+        int hours = 0;
+        try {
+            hours = Integer.parseInt(fieldHours.getText().trim());
+            if (hours <= 0 || hours > 12)
+                throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            MainController.setFieldError(hoursError, "Enter a valid number between 1 and 12.");
+            valid = false;
+        }
+
+        if (!valid) return;
+
+        try {
+            admin.addReceptionists(username, password, dob, hours, gender, email);
+            closeForm();
+            updateStats();
+            renderList();
+            showFeedback("✔  Receptionist \"" + username + "\" added successfully.", false);
+        } catch (InvalidInputException e) {
+            showFeedback("❌  " + e.getMessage(), true);
+        }
+    }
+
+    // ── Stats + list (unchanged) ─────────────────────────────────────────────
+
     private void updateStats() {
         List<Receptionist> all = HotelDataBase.getReceptionists();
         lblTotalReceptionists.setText("Total Receptionists: " + all.size());
-
-        int totalHours = all.stream()
-                .mapToInt(Receptionist::getWorkingHours)
-                .sum();
+        int totalHours = all.stream().mapToInt(Receptionist::getWorkingHours).sum();
         lblTotalHours.setText("Combined Working Hours: " + totalHours + " hrs / week");
     }
 
@@ -63,6 +173,25 @@ public class AdminReceptionistsController implements SessionController {
         }
     }
 
+    // ── Helpers ──────────────────────────────────────────────────────────────
+
+    private void showFeedback(String msg, boolean isError) {
+        feedbackLabel.setText(msg);
+        feedbackLabel.setStyle(isError
+                ? "-fx-text-fill: #B00020; -fx-font-size: 13px; -fx-font-weight: bold;"
+                : "-fx-text-fill: #1D9E75; -fx-font-size: 13px; -fx-font-weight: bold;");
+        feedbackLabel.setVisible(true);
+    }
+
+    private void clearErrors() {
+        MainController.clearErrors(
+                usernameError, passwordError, emailError,
+                dobError, genderError, hoursError
+        );
+    }
+
+    // ── Card + detailCell (completely unchanged) ─────────────────────────────
+
     private HBox buildCard(Receptionist r) {
         HBox card = new HBox(0);
         card.setStyle(
@@ -74,7 +203,6 @@ public class AdminReceptionistsController implements SessionController {
                         "-fx-effect: dropshadow(three-pass-box, rgba(15,33,96,0.06), 8, 0, 0, 2);"
         );
 
-        // ── Left navy avatar panel ────────────────────────────────────────
         VBox avatarPanel = new VBox(0);
         avatarPanel.setAlignment(Pos.CENTER);
         avatarPanel.setMinWidth(80);
@@ -88,9 +216,7 @@ public class AdminReceptionistsController implements SessionController {
         topAccent.setPrefHeight(4);
         topAccent.setStyle("-fx-background-color: #C9A84C; -fx-background-radius: 10 0 0 0;");
 
-        Label avatarLabel = new Label(
-                r.getUsername().substring(0, 1).toUpperCase()
-        );
+        Label avatarLabel = new Label(r.getUsername().substring(0, 1).toUpperCase());
         avatarLabel.setStyle(
                 "-fx-text-fill: #C9A84C;" +
                         "-fx-font-family: 'Georgia', serif;" +
@@ -106,9 +232,7 @@ public class AdminReceptionistsController implements SessionController {
         avatarLabel.setMinSize(50, 50);
         avatarLabel.setAlignment(Pos.CENTER);
 
-        Label genderLabel = new Label(
-                r.getGender() == User.Gender.MALE ? "♂" : "♀"
-        );
+        Label genderLabel = new Label(r.getGender() == User.Gender.MALE ? "♂" : "♀");
         genderLabel.setStyle(
                 "-fx-text-fill: rgba(255,255,255,0.40);" +
                         "-fx-font-size: 13px;" +
@@ -118,14 +242,11 @@ public class AdminReceptionistsController implements SessionController {
         VBox avatarContent = new VBox(4, avatarLabel, genderLabel);
         avatarContent.setAlignment(Pos.CENTER);
         VBox.setVgrow(avatarContent, Priority.ALWAYS);
-
         avatarPanel.getChildren().addAll(topAccent, avatarContent);
 
-        // ── Right content panel ───────────────────────────────────────────
         VBox content = new VBox(0);
         HBox.setHgrow(content, Priority.ALWAYS);
 
-        // Content header
         HBox contentHeader = new HBox(0);
         contentHeader.setAlignment(Pos.CENTER_LEFT);
         contentHeader.setStyle("-fx-padding: 12 16 8 16;");
@@ -141,13 +262,9 @@ public class AdminReceptionistsController implements SessionController {
                         "-fx-font-weight: bold;"
         );
         Label emailLabel = new Label(r.getEmail());
-        emailLabel.setStyle(
-                "-fx-text-fill: #9B9589;" +
-                        "-fx-font-size: 11px;"
-        );
+        emailLabel.setStyle("-fx-text-fill: #9B9589; -fx-font-size: 11px;");
         nameBlock.getChildren().addAll(userName, emailLabel);
 
-        // Hours chip
         Label hoursChip = new Label(r.getWorkingHours() + " hrs / week");
         hoursChip.setStyle(
                 "-fx-text-fill: #0F2160;" +
@@ -160,19 +277,16 @@ public class AdminReceptionistsController implements SessionController {
 
         contentHeader.getChildren().addAll(nameBlock, hoursChip);
 
-        // Divider
         Pane divider = new Pane();
         divider.setPrefHeight(1);
         divider.setStyle("-fx-background-color: #F0EDE4;");
 
-        // Details row
         HBox details = new HBox(0);
         details.setStyle(
                 "-fx-padding: 10 16 12 16;" +
                         "-fx-background-color: #FDFAF4;" +
                         "-fx-background-radius: 0 0 10 0;"
         );
-
         details.getChildren().addAll(
                 detailCell("📅", "Date of Birth", r.getDateOfBirth().toString(), true),
                 detailCell("⚧", "Gender",
@@ -184,15 +298,12 @@ public class AdminReceptionistsController implements SessionController {
         content.getChildren().addAll(contentHeader, divider, details);
         card.getChildren().addAll(avatarPanel, content);
 
-        // Hover
-        card.setOnMouseEntered(e ->
-                card.setStyle(card.getStyle()
-                        .replace("-fx-border-color: #E0DAD0;", "-fx-border-color: #C9A84C;")
-                        .replace("rgba(15,33,96,0.06), 8", "rgba(15,33,96,0.12), 12")));
-        card.setOnMouseExited(e ->
-                card.setStyle(card.getStyle()
-                        .replace("-fx-border-color: #C9A84C;", "-fx-border-color: #E0DAD0;")
-                        .replace("rgba(15,33,96,0.12), 12", "rgba(15,33,96,0.06), 8")));
+        card.setOnMouseEntered(e -> card.setStyle(card.getStyle()
+                .replace("-fx-border-color: #E0DAD0;", "-fx-border-color: #C9A84C;")
+                .replace("rgba(15,33,96,0.06), 8", "rgba(15,33,96,0.12), 12")));
+        card.setOnMouseExited(e -> card.setStyle(card.getStyle()
+                .replace("-fx-border-color: #C9A84C;", "-fx-border-color: #E0DAD0;")
+                .replace("rgba(15,33,96,0.12), 12", "rgba(15,33,96,0.06), 8")));
 
         return card;
     }

@@ -74,7 +74,13 @@ public class MainController {
     }
 
     public void viewProfile(ActionEvent event) {
-        navigate(event, "Guest_Profile.fxml");
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        User user = ((AppSession) stage.getUserData()).getCurrentUser();
+        if (user instanceof Guest) {
+            navigate(event, "Guest_Profile.fxml");
+        } else {
+            navigate(event, "Staff_Profile.fxml");
+        }
     }
 
 

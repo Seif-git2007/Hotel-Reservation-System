@@ -68,7 +68,7 @@
     </Label>
 
     <Button fx:id="btnReceptionists"
-            text="🧑‍💼  Receptionists"
+            text=" 🧑‍💻 Receptionists"
             onAction="#goReceptionists"
             prefHeight="50" prefWidth="220"
             styleClass="sidebar-nav-btn"

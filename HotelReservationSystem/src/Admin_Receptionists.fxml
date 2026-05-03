@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -32,17 +36,21 @@
                 <VBox spacing="2">
                     <Label styleClass="label-dashboard-title" text="Receptionists" />
                     <Label styleClass="label-dashboard-sub"
-                           text="View all registered receptionists and their details" />
+                           text="View and manage hotel receptionists" />
                 </VBox>
                 <Pane HBox.hgrow="ALWAYS" />
-
-                <!-- Search field -->
                 <TextField fx:id="searchField"
                            promptText="🔍  Search by name…"
                            styleClass="text-field"
-                           prefHeight="36" prefWidth="180">
-                    <HBox.margin><Insets right="20" /></HBox.margin>
+                           prefHeight="36" prefWidth="160">
+                    <HBox.margin><Insets right="12" /></HBox.margin>
                 </TextField>
+                <Button text="＋  Add Receptionist"
+                        onAction="#openAddForm"
+                        styleClass="btn-select-room"
+                        mnemonicParsing="false">
+                    <HBox.margin><Insets right="20" /></HBox.margin>
+                </Button>
             </HBox>
 
             <!-- Stats strip -->
@@ -56,6 +64,124 @@
                        style="-fx-text-fill: #C9A84C;
                               -fx-font-size: 12px; -fx-font-weight: bold;" />
             </HBox>
+
+            <!-- Feedback label -->
+            <Label fx:id="feedbackLabel"
+                   text="" visible="false" wrapText="true">
+                <VBox.margin><Insets left="20" right="20" top="8" /></VBox.margin>
+            </Label>
+
+            <!-- Inline Add form -->
+            <VBox fx:id="formPanel"
+                  visible="false" managed="false"
+                  styleClass="section-card" spacing="0">
+                <VBox.margin><Insets top="12" left="20" right="20" /></VBox.margin>
+
+                <!-- Navy form header -->
+                <HBox alignment="CENTER_LEFT" spacing="0"
+                      style="-fx-background-color: #0F2160;
+                             -fx-background-radius: 10 10 0 0;
+                             -fx-padding: 14 18 14 18;">
+                    <Pane prefWidth="3" prefHeight="16"
+                          style="-fx-background-color: #C9A84C; -fx-background-radius: 2;">
+                        <HBox.margin><Insets right="12" /></HBox.margin>
+                    </Pane>
+                    <Label fx:id="formTitle" text="Add New Receptionist"
+                           style="-fx-text-fill: #FFFFFF;
+                                  -fx-font-family: 'Georgia', serif;
+                                  -fx-font-size: 15px;
+                                  -fx-font-weight: bold;" />
+                    <Pane HBox.hgrow="ALWAYS" />
+                    <Button onAction="#closeForm"
+                            style="-fx-background-color: transparent;
+                                   -fx-text-fill: rgba(255,255,255,0.55);
+                                   -fx-font-size: 16px;
+                                   -fx-cursor: hand;
+                                   -fx-padding: 0 4;"
+                            text="✕" />
+                </HBox>
+
+                <!-- Form body: row 1 -->
+                <VBox spacing="14"
+                      style="-fx-background-color: #FFFFFF;
+                             -fx-background-radius: 0 0 10 10;
+                             -fx-border-color: transparent #E0DAD0 #E0DAD0 #E0DAD0;
+                             -fx-border-radius: 0 0 10 10;
+                             -fx-border-width: 0 0.5 0.5 0.5;
+                             -fx-padding: 18 18 18 18;">
+
+                    <!-- Row 1: username, password, email -->
+                    <HBox spacing="14">
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="USERNAME" styleClass="label-field" />
+                            <TextField fx:id="fieldUsername"
+                                       promptText="Enter username"
+                                       styleClass="text-field"
+                                       prefHeight="42" maxWidth="Infinity" />
+                            <Label fx:id="usernameError" styleClass="label-error"
+                                   text="" visible="false" />
+                        </VBox>
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="PASSWORD" styleClass="label-field" />
+                            <PasswordField fx:id="fieldPassword"
+                                           promptText="Enter password"
+                                           styleClass="password-field"
+                                           prefHeight="42" maxWidth="Infinity" />
+                            <Label fx:id="passwordError" styleClass="label-error"
+                                   text="" visible="false" />
+                        </VBox>
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="EMAIL" styleClass="label-field" />
+                            <TextField fx:id="fieldEmail"
+                                       promptText="Enter email"
+                                       styleClass="text-field"
+                                       prefHeight="42" maxWidth="Infinity" />
+                            <Label fx:id="emailError" styleClass="label-error"
+                                   text="" visible="false" />
+                        </VBox>
+                    </HBox>
+
+                    <!-- Row 2: dob, gender, hours -->
+                    <HBox spacing="14">
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="DATE OF BIRTH" styleClass="label-field" />
+                            <DatePicker fx:id="fieldDob"
+                                        promptText="yyyy-mm-dd"
+                                        styleClass="register-datepicker"
+                                        prefHeight="42" maxWidth="Infinity" />
+                            <Label fx:id="dobError" styleClass="label-error"
+                                   text="" visible="false" />
+                        </VBox>
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="GENDER" styleClass="label-field" />
+                            <ComboBox fx:id="fieldGender"
+                                      promptText="Select gender"
+                                      styleClass="filter-combo"
+                                      prefHeight="42" maxWidth="Infinity" />
+                            <Label fx:id="genderError" styleClass="label-error"
+                                   text="" visible="false" />
+                        </VBox>
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="WORKING HOURS / WEEK" styleClass="label-field" />
+                            <TextField fx:id="fieldHours"
+                                       promptText="e.g. 40"
+                                       styleClass="text-field"
+                                       prefHeight="42" maxWidth="Infinity" />
+                            <Label fx:id="hoursError" styleClass="label-error"
+                                   text="" visible="false" />
+                        </VBox>
+                    </HBox>
+
+                    <!-- Buttons -->
+                    <HBox spacing="10" alignment="CENTER_RIGHT">
+                        <Button text="Cancel" onAction="#closeForm"
+                                styleClass="button-outline" prefHeight="40" />
+                        <Button fx:id="btnFormSubmit" text="Add Receptionist"
+                                onAction="#submitForm"
+                                styleClass="button" prefHeight="40" prefWidth="160" />
+                    </HBox>
+                </VBox>
+            </VBox>
 
             <!-- Receptionist list -->
             <VBox VBox.vgrow="ALWAYS" spacing="0">
