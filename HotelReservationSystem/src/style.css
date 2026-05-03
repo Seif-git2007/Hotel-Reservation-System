@@ -1263,6 +1263,6 @@
     -fx-text-fill: #F5F0E8;
 }
 
-.guests-list .list-cell:filled:hover:!selected {
+.guests-list .list-cell:filled:hover:selected {
     -fx-background-color: #F5EFE0;
 }
