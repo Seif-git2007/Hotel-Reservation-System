@@ -35,12 +35,14 @@ public class testGUI extends Application {
                 updateMessage("Loading hotel data from database...");
                 try {
                     DataBaseManager.loadAll();
+                    System.out.println("Database loaded successfully");
                 } catch (Exception ex) {
                     System.out.println("DB unavailable, running in offline mode");
                     HotelDataBase.seedDefaultData();
                 }
                 if (HotelDataBase.getUsers().isEmpty()) {
                     HotelDataBase.seedDefaultData();
+                    System.out.println("failed to load database");
                 }
                 return null;
             }

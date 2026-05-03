@@ -82,8 +82,10 @@ public class AdminReceptionistsController implements SessionController {
 
         // Username
         String username = fieldUsername.getText().trim();
-        if (username.isEmpty()) {
-            MainController.setFieldError(usernameError, "Username cannot be empty.");
+        try{
+            Authenticator.validateName(username);
+        }catch (InvalidInputException e){
+            MainController.setFieldError(usernameError, e.getMessage());
             valid = false;
         }
 
