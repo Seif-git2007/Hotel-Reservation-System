@@ -12,6 +12,7 @@ public class ReceptionistCheckInController implements SessionController {
 
     private AppSession   session;
     private Receptionist receptionist;
+    private final Runnable refreshListener = this::refresh;
 
     @Override
     public void initSession(AppSession session) {
@@ -22,10 +23,19 @@ public class ReceptionistCheckInController implements SessionController {
             sidebarController.initSession(session);
             sidebarController.btnCheckIn.getStyleClass().add("sidebar-nav-btn-active");
         }
+        refresh();
+        EventBus.subscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+        checkInContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                EventBus.unsubscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+            }
+        });
 
+    }
+    private void refresh() {
+        checkInContainer.getChildren().clear();
         renderGuests();
     }
-
     private void renderGuests() {
         checkInContainer.getChildren().clear();
 

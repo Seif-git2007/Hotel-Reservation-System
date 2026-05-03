@@ -19,7 +19,7 @@ public class ViewRoomsController implements SessionController {
     @FXML private Slider           priceSlider;
     @FXML private Label            lblPriceValue;
     @FXML private VBox             roomContainer;
-
+    private final Runnable refreshListener = this::refresh;
     private boolean    filterBarVisible = false;
     private AppSession session;
 
@@ -31,14 +31,27 @@ public class ViewRoomsController implements SessionController {
             sidebarController.initSession(session);
             sidebarController.btnViewRooms.getStyleClass().add("sidebar-nav-btn-active");
         }
+        refresh();
+        EventBus.subscribe(EventBus.Event.ROOM_CHANGED, refreshListener);
+        EventBus.subscribe(EventBus.Event.AMENITY_CHANGED, refreshListener);
+        EventBus.subscribe(EventBus.Event.ROOMTYPE_CHANGED, refreshListener);
 
-        ActionEvent dummy = new ActionEvent(btnToggleFilter, null);
-        renderRooms(HotelDataBase.getRooms(), roomContainer, dummy);
-
+        roomContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                EventBus.unsubscribe(EventBus.Event.ROOM_CHANGED, refreshListener);
+            }
+        });
+        toolAmenities.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                EventBus.unsubscribe(EventBus.Event.AMENITY_CHANGED, refreshListener);
+            }
+        });
+        toolRoomType.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                EventBus.unsubscribe(EventBus.Event.ROOMTYPE_CHANGED, refreshListener);
+            }
+        });
         filterCategory.getItems().addAll("Price", "Amenities", "Room Type", "Preferences");
-        buildAmenityTags();
-        buildRoomTypeTags();
-
         filterCategory.getSelectionModel().selectedItemProperty().addListener(
             (obs, oldVal, newVal) -> {
                 hideAllToolPanes();
@@ -53,7 +66,13 @@ public class ViewRoomsController implements SessionController {
         priceSlider.valueProperty().addListener((obs, oldVal, newVal) ->
             lblPriceValue.setText((int) newVal.doubleValue() + "$"));
     }
-
+    public void refresh(){
+        roomContainer.getChildren().clear();
+        ActionEvent dummy = new ActionEvent(btnToggleFilter, null);
+        renderRooms(HotelDataBase.getRooms(), roomContainer, dummy);
+        buildAmenityTags();
+        buildRoomTypeTags();
+    }
     private void buildAmenityTags() {
         toolAmenities.getChildren().clear();
         ArrayList<Amenity> allAmenities = new ArrayList<>();

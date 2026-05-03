@@ -31,51 +31,58 @@ public class Room {
     public void setAmenities(ArrayList<Amenity> a) { amenities = a; }
 
     public boolean isAvailable(LocalDate checkInDate, LocalDate checkOutDate) {
-
-            for (Reservation r : HotelDataBase.reservations) {
-                if (r.getRoom() == this && (r.getStatus() == Reservation.Status.PENDING || r.getStatus() == Reservation.Status.CONFIRMED)) {
-                    if (checkInDate.equals(checkOutDate)) {
-                        if (!checkInDate.isBefore(r.getCheckInDate()) && !checkInDate.isAfter(r.getCheckOutDate())){
-                            return false;
-                        }
-                    } else {
-                        if (!(checkOutDate.isBefore(r.getCheckInDate()) || checkOutDate.equals(r.getCheckInDate()) || checkInDate.isAfter(r.getCheckOutDate()) || checkInDate.equals(r.getCheckOutDate()))) return false;
+        for (Reservation r : HotelDataBase.reservations) {
+            if (r.getRoom() == this && (r.getStatus() == Reservation.Status.PENDING || r.getStatus() == Reservation.Status.CONFIRMED)) {
+                if (checkInDate.equals(checkOutDate)) {
+                    if (!checkInDate.isBefore(r.getCheckInDate()) && !checkInDate.isAfter(r.getCheckOutDate())){
+                        return false;
+                    }
+                } else {
+                    if (!(checkOutDate.isBefore(r.getCheckInDate()) || checkOutDate.equals(r.getCheckInDate()) || checkInDate.isAfter(r.getCheckOutDate()) || checkInDate.equals(r.getCheckOutDate()))){
+                        return false;
                     }
                 }
             }
-
+        }
         return true;
     }
 
     public static void create(Room newRoom) throws InvalidInputException {
-
-            for (Room R : HotelDataBase.rooms) {
-                if (R.equals(newRoom))
-                    throw new RoomInUseException("Room Already Exists");
-                if (R.getRoomNumber() == newRoom.getRoomNumber())
-                    throw new RoomInUseException("Room Number Already Exists");
+        for (Room R : HotelDataBase.rooms) {
+            if (R.equals(newRoom)){
+                throw new RoomInUseException("Room Already Exists");
             }
-            HotelDataBase.rooms.add(newRoom);
-
+            if (R.getRoomNumber() == newRoom.getRoomNumber()){
+                throw new RoomInUseException("Room Number Already Exists");
+            }
+        }
+        HotelDataBase.rooms.add(newRoom);
+        DataBaseManager.runAsync(() -> {
+            DataBaseManager.saveRoom(newRoom);
+            EventBus.fire(EventBus.Event.ROOM_CHANGED);
+        });
         System.out.println("Room Has Been Created Successfully");
     }
 
     public void update(Room modifiedRoom) throws InvalidInputException {
-
-            for (Room R : HotelDataBase.rooms)
-                if (R.equals(modifiedRoom))
-                    throw new RoomInUseException("No Modifications Are Performed");
-
-            for (Reservation res : HotelDataBase.reservations)
-                if (res.getRoom().equals(this)
-                        && (res.getStatus() == Reservation.Status.PENDING
-                            || res.getStatus() == Reservation.Status.CONFIRMED))
-                    throw new RoomInUseException("Can't Modify Room While It's In Use");
-
+        for (Room R : HotelDataBase.rooms){
+            if (R.equals(modifiedRoom)){
+                throw new RoomInUseException("No Modifications Are Performed");
+            }
+        }
+        for (Reservation res : HotelDataBase.reservations){
+            if (res.getRoom().equals(this) && (res.getStatus() == Reservation.Status.PENDING || res.getStatus() == Reservation.Status.CONFIRMED)){
+                throw new RoomInUseException("Can't Modify Room While It's In Use");
+            }
+        }
         this.type = modifiedRoom.getType();
         this.floor = modifiedRoom.getFloor();
         this.View = modifiedRoom.getView();
         this.amenities = modifiedRoom.getAmenities();
+        DataBaseManager.runAsync(() -> {
+            DataBaseManager.saveRoom(this);
+            EventBus.fire(EventBus.Event.ROOM_CHANGED);
+        });
         System.out.println("Room Has Been Modified Successfully");
     }
 
@@ -83,12 +90,16 @@ public class Room {
         synchronized (HotelDataBase.rooms) {
             synchronized (HotelDataBase.reservations) {
                 Room target = HotelDataBase.rooms.get(index);
-                for (Reservation res : HotelDataBase.reservations)
-                    if (res.getRoom().equals(target)
-                            && (res.getStatus() == Reservation.Status.PENDING
-                                || res.getStatus() == Reservation.Status.CONFIRMED))
+                for (Reservation res : HotelDataBase.reservations){
+                    if (res.getRoom().equals(target) && (res.getStatus() == Reservation.Status.PENDING || res.getStatus() == Reservation.Status.CONFIRMED)){
                         throw new RoomInUseException("Can't Delete Room While It's In Use");
+                    }
+                }
                 HotelDataBase.rooms.remove(index);
+                DataBaseManager.runAsync(() -> {
+                    DataBaseManager.deleteRoom(target);
+                    EventBus.fire(EventBus.Event.ROOM_CHANGED);
+                });
             }
         }
         System.out.println("Room Has Been Deleted Successfully");
@@ -96,15 +107,21 @@ public class Room {
 
     public double calcTotal(LocalDate checkInDate, LocalDate checkOutDate) {
         long days = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
-        if (days == 0) days = 1;
+        if (days == 0){
+            days = 1;
+        }
         double amenityTotal = 0;
-        for (Amenity a : amenities) amenityTotal += a.getPrice();
+        for (Amenity a : amenities){
+            amenityTotal += a.getPrice();
+        }
         return (days * type.getBasePrice()) + amenityTotal;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Room room)) return false;
+        if (!(o instanceof Room room)){
+            return false;
+        }
         return roomNumber == room.roomNumber && floor == room.floor
                 && Objects.equals(type, room.type)
                 && Objects.equals(amenities, room.amenities)

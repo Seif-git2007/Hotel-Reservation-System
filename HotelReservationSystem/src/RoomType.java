@@ -17,49 +17,63 @@ public class RoomType {
     public void setCapacity(int c)    { capacity = c; }
 
     public static void create(RoomType newRoomType) throws InvalidInputException {
-
-        for (RoomType r : HotelDataBase.roomTypes)
-                if (r.equals(newRoomType)){
-                    throw new RoomInUseException("RoomType Already Exists");
-                }
+        for (RoomType r : HotelDataBase.roomTypes){
+            if (r.equals(newRoomType)){
+                throw new RoomInUseException("RoomType Already Exists");
+            }
+        }
         HotelDataBase.roomTypes.add(newRoomType);
-
+        DataBaseManager.runAsync(() -> {
+            DataBaseManager.saveRoomType(newRoomType);
+            EventBus.fire(EventBus.Event.ROOMTYPE_CHANGED);
+        });
         System.out.println("RoomType Has Been Successfully Added");
     }
 
     public static void read() {
         int cnt = 1;
-        for (RoomType r : HotelDataBase.roomTypes)
+        for (RoomType r : HotelDataBase.roomTypes){
             System.out.println(cnt++ + ". " + r);
-
+        }
     }
 
     public void update(RoomType modifiedRoomType) throws InvalidInputException {
-
-        for (RoomType r : HotelDataBase.roomTypes)
-            if (r.equals(modifiedRoomType))
+        for (RoomType r : HotelDataBase.roomTypes){
+            if (r.equals(modifiedRoomType)){
                 throw new RoomInUseException("No Modifications Are Performed");
-
-
-        for (Reservation res : HotelDataBase.reservations)
+            }
+        }
+        for (Reservation res : HotelDataBase.reservations){
             if (res.getRoom().getType().equals(this)
                     && (res.getStatus() == Reservation.Status.PENDING
-                        || res.getStatus() == Reservation.Status.CONFIRMED))
+                        || res.getStatus() == Reservation.Status.CONFIRMED)){
                 throw new RoomInUseException("Can't Modify RoomType While It's In Use");
-
+            }
+        }
         this.basePrice = modifiedRoomType.getBasePrice();
         this.capacity  = modifiedRoomType.getCapacity();
         this.size      = modifiedRoomType.getSize();
+        DataBaseManager.runAsync(() -> {
+            DataBaseManager.saveRoomType(this);
+            EventBus.fire(EventBus.Event.ROOMTYPE_CHANGED);
+        });
         System.out.println("RoomType Has Been Modified Successfully");
     }
 
     public void delete(int index) throws InvalidInputException {
-        for (Reservation res : HotelDataBase.reservations)
-            if (res.getRoom().getType().equals(HotelDataBase.rooms.get(index).getType())
+        for (Reservation res : HotelDataBase.reservations){
+            if (res.getRoom().getType().getSize().equalsIgnoreCase(HotelDataBase.roomTypes.get(index).getSize())
                     && (res.getStatus() == Reservation.Status.PENDING
-                        || res.getStatus() == Reservation.Status.CONFIRMED))
+                        || res.getStatus() == Reservation.Status.CONFIRMED)){
                 throw new RoomInUseException("Can't Delete RoomType While It's In Use");
+            }
+        }
+        RoomType target = HotelDataBase.roomTypes.get(index);
         HotelDataBase.roomTypes.remove(index);
+        DataBaseManager.runAsync(() -> {
+            DataBaseManager.deleteRoomType(target);
+            EventBus.fire(EventBus.Event.ROOMTYPE_CHANGED);
+        });
         System.out.println("RoomType Has Been Deleted Successfully");
     }
 
@@ -70,9 +84,9 @@ public class RoomType {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof RoomType rt)) return false;
-        return Double.compare(basePrice, rt.basePrice) == 0
-                && capacity == rt.capacity
-                && Objects.equals(size, rt.size);
+        if (!(o instanceof RoomType rt)){
+            return false;
+        }
+        return Objects.equals(size.toLowerCase(), rt.size.toLowerCase());
     }
 }

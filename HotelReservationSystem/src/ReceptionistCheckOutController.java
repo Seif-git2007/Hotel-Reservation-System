@@ -12,7 +12,7 @@ public class ReceptionistCheckOutController implements SessionController {
 
     private AppSession   session;
     private Receptionist receptionist;
-
+    private final Runnable refreshListener = this::refresh;
     @Override
     public void initSession(AppSession session) {
         this.session      = session;
@@ -22,15 +22,22 @@ public class ReceptionistCheckOutController implements SessionController {
             sidebarController.initSession(session);
             sidebarController.btnCheckOut.getStyleClass().add("sidebar-nav-btn-active");
         }
-
+        refresh();
+        EventBus.subscribe(EventBus.Event.USER_CHANGED, refreshListener);
+        EventBus.subscribe(EventBus.Event.INVOICE_CHANGED, refreshListener);
+        checkOutContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                EventBus.unsubscribe(EventBus.Event.USER_CHANGED, refreshListener);
+                EventBus.unsubscribe(EventBus.Event.INVOICE_CHANGED, refreshListener);
+            }
+        });
+    }
+    public void refresh(){
         renderGuests();
     }
-
     private void renderGuests() {
         checkOutContainer.getChildren().clear();
 
-        // checktodayinvoices() returns guests whose invoices are due today
-        // and who have AWAITING_CONFIRMATION reservations (they've already called guest.checkOut())
         ArrayList<Guest> guests = HotelDataBase.checktodayinvoices();
 
         if (guests.isEmpty()) {

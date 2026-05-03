@@ -63,13 +63,13 @@
             mnemonicParsing="false"/>
 
     <!-- Section: Staff -->
-    <Label styleClass="sidebar-section-label" text="STAFF">
+    <Label styleClass="sidebar-section-label" text="RECEPTIONISTS">
         <VBox.margin><Insets bottom="4" left="20" top="12" /></VBox.margin>
     </Label>
 
-    <Button fx:id="btnStaff"
-            text="👥  Staff"
-            onAction="#goStaff"
+    <Button fx:id="btnReceptionists"
+            text="🧑‍💼  Receptionists"
+            onAction="#goReceptionists"
             prefHeight="50" prefWidth="220"
             styleClass="sidebar-nav-btn"
             mnemonicParsing="false"/>
