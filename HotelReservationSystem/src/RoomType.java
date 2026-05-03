@@ -61,8 +61,8 @@ public class RoomType {
     }
 
     public void delete(int index) throws InvalidInputException {
-        for (Reservation res : HotelDataBase.reservations){4
-            if (res.getRoom().getType().equals(HotelDataBase.rooms.get(index).getType())
+        for (Reservation res : HotelDataBase.reservations){
+            if (res.getRoom().getType().getSize().equalsIgnoreCase(HotelDataBase.roomTypes.get(index).getSize())
                     && (res.getStatus() == Reservation.Status.PENDING
                         || res.getStatus() == Reservation.Status.CONFIRMED)){
                 throw new RoomInUseException("Can't Delete RoomType While It's In Use");
@@ -87,8 +87,6 @@ public class RoomType {
         if (!(o instanceof RoomType rt)){
             return false;
         }
-        return Double.compare(basePrice, rt.basePrice) == 0
-                && capacity == rt.capacity
-                && Objects.equals(size, rt.size);
+        return Objects.equals(size.toLowerCase(), rt.size.toLowerCase());
     }
 }

@@ -32,7 +32,15 @@ public class testGUI extends Application {
             @Override
             protected Void call() {
                 updateMessage("Loading hotel data from database...");
-                DataBaseManager.loadAll();
+                try {
+                    DataBaseManager.loadAll();
+                } catch (Exception ex) {
+                    System.out.println("DB unavailable, running in offline mode");
+                    HotelDataBase.seedDefaultData();
+                }
+                if (HotelDataBase.getUsers().isEmpty()) {
+                    HotelDataBase.seedDefaultData();
+                }
                 return null;
             }
         };

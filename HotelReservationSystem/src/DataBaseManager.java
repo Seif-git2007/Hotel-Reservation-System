@@ -41,7 +41,7 @@ public class DataBaseManager {
                         r.getDouble("base_price"),
                         r.getInt("capacity")));
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {  }
     }
 
     private static void loadAmenities() {
@@ -52,7 +52,7 @@ public class DataBaseManager {
                 HotelDataBase.amenities.add(
                         new Amenity(r.getString("name"), r.getDouble("price")));
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {  }
     }
 
     private static void loadRooms() {
@@ -67,7 +67,7 @@ public class DataBaseManager {
                 ArrayList<Amenity> amenities = loadRoomAmenities(c, num);
                 HotelDataBase.rooms.add(new Room(type, amenities, num, floor, view));
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {  }
     }
 
     private static ArrayList<Amenity> loadRoomAmenities(
@@ -120,7 +120,7 @@ public class DataBaseManager {
                 };
                 if (user != null) HotelDataBase.users.add(user);
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {  }
     }
 
     private static void loadReservations() {
@@ -141,7 +141,7 @@ public class DataBaseManager {
                 res.setSpecialRequests(r.getString("special_requests"));
                 HotelDataBase.reservations.add(res);
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {  }
     }
 
 
@@ -156,7 +156,7 @@ public class DataBaseManager {
             ps.setDouble(2, rt.getBasePrice());
             ps.setInt   (3, rt.getCapacity());
             ps.executeUpdate();
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {  }
         EventBus.fire(EventBus.Event.ROOMTYPE_CHANGED);
     }
 
@@ -165,7 +165,7 @@ public class DataBaseManager {
                 "DELETE FROM room_types WHERE size = ?")) {
             ps.setString(1, rt.getSize());
             ps.executeUpdate();
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {  }
         EventBus.fire(EventBus.Event.ROOMTYPE_CHANGED);
     }
 
@@ -179,7 +179,7 @@ public class DataBaseManager {
             ps.setString(1, a.getName());
             ps.setDouble(2, a.getPrice());
             ps.executeUpdate();
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {  }
         EventBus.fire(EventBus.Event.AMENITY_CHANGED);
     }
 
@@ -188,7 +188,7 @@ public class DataBaseManager {
                 "DELETE FROM amenities WHERE name = ?")) {
             ps.setString(1, a.getName());
             ps.executeUpdate();
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {  }
         EventBus.fire(EventBus.Event.AMENITY_CHANGED);
     }
 
@@ -206,7 +206,7 @@ public class DataBaseManager {
             ps.setString(4, room.getType().getSize());
             ps.executeUpdate();
             saveRoomAmenities(c, room);
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {  }
         EventBus.fire(EventBus.Event.ROOM_CHANGED);
     }
 
@@ -242,7 +242,7 @@ public class DataBaseManager {
                 ps.setInt(1, room.getRoomNumber());
                 ps.executeUpdate();
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {  }
         EventBus.fire(EventBus.Event.ROOM_CHANGED);
     }
 
@@ -290,7 +290,7 @@ public class DataBaseManager {
                 ps.setInt   (12, adm.getWorkingHours());
             }
             ps.executeUpdate();
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {  }
         EventBus.fire(EventBus.Event.USER_CHANGED);
     }
 
@@ -310,7 +310,7 @@ public class DataBaseManager {
             ps.setString(5, r.getStatus().name());
             ps.setString(6, r.getSpecialRequests());
             ps.executeUpdate();
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {  }
         EventBus.fire(EventBus.Event.RESERVATION_CHANGED);
     }
 
@@ -325,7 +325,7 @@ public class DataBaseManager {
             ps.setInt   (3, r.getRoom().getRoomNumber());
             ps.setDate  (4, Date.valueOf(r.getCheckInDate()));
             ps.executeUpdate();
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {  }
         EventBus.fire(EventBus.Event.RESERVATION_CHANGED);
     }
 
@@ -379,7 +379,7 @@ public class DataBaseManager {
                 saveInvoiceReservations(c, dbId, inv);
             }
 
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {  }
         EventBus.fire(EventBus.Event.INVOICE_CHANGED);
     }
 
@@ -411,7 +411,7 @@ public class DataBaseManager {
             ps.setString(8, inv.getGuest().getUsername());
             ps.setDouble(9, inv.getTotal());
             ps.executeUpdate();
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {  }
         EventBus.fire(EventBus.Event.INVOICE_CHANGED);
     }
 
@@ -443,7 +443,7 @@ public class DataBaseManager {
             ps.setString(2, receiver);
             ps.setString(3, message);
             ps.executeUpdate();
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {  }
     }
 
     public static void seedFromHotelDataBase() {
