@@ -14,6 +14,7 @@ public class testGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        ChatServer.start();
         ProgressIndicator spinner = new ProgressIndicator();
         Label status = new Label("Loading hotel data...");
         VBox loadingPane = new VBox(20, spinner, status);

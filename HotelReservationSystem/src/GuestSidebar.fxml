@@ -31,7 +31,7 @@
     <Button fx:id="btnViewReservations" mnemonicParsing="false" onAction="#goViewReservations" prefHeight="50" prefWidth="220" styleClass="sidebar-nav-btn" text="📋  View Reservations" />
 
     <Button fx:id="btnCheckOut" mnemonicParsing="false" onAction="#goCheckOut" prefHeight="50" prefWidth="220" styleClass="sidebar-nav-btn" text="🚪  Check Out" />
-   <Button fx:id="btnCheckOut1" mnemonicParsing="false" prefHeight="50" prefWidth="220" styleClass="sidebar-nav-btn" text="💬Live Chat" />
+   <Button fx:id="btnLiveChat" mnemonicParsing="false" onAction="#goLiveChat" prefHeight="50" prefWidth="220" styleClass="sidebar-nav-btn" text="💬  Live Chat" />
 
     <Pane VBox.vgrow="ALWAYS" />
     <Pane prefHeight="1" prefWidth="220" style="-fx-background-color: rgba(201,168,76,0.30);" />

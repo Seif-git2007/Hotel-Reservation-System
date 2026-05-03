@@ -15,6 +15,7 @@ public class AppSession {
     //for guest only
     public ReservationContext getReservationContext() { return reservationContext; }
     public Guest getCurrentGuest()               { return (Guest) currentUser; }
+    public Receptionist getCurrentReceptionist() { return (Receptionist) currentUser; }
     // for receptionist
     public Guest getSelectedGuest()               { return selectedGuest; }
     public void  setSelectedGuest(Guest g)        { selectedGuest = g; }
