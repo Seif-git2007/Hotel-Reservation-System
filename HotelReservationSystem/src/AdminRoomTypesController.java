@@ -189,8 +189,10 @@ public class AdminRoomTypesController implements SessionController {
                         .replace("-fx-background-color: rgba(176,0,32,0.06);",
                                 "-fx-background-color: transparent;")));
         deleteBtn.setOnAction(e -> handleDelete(rt));
-        boolean typeInUse = HotelDataBase.getRooms().stream()
-                .anyMatch(r -> r.getType().getSize().equalsIgnoreCase(rt.getSize()));
+        boolean typeInUse = HotelDataBase.reservations.stream()
+                .anyMatch(r -> r.getRoom().getType().getSize().equalsIgnoreCase(rt.getSize())
+                        && (r.getStatus() == Reservation.Status.PENDING
+                        ||  r.getStatus() == Reservation.Status.CONFIRMED));
         deleteBtn.setDisable(typeInUse);
         deleteBtn.setOpacity(typeInUse ? 0.3 : 1.0);
 
@@ -322,11 +324,13 @@ public class AdminRoomTypesController implements SessionController {
         }
 
         // Check if in use before even showing dialog
-        boolean inUse = HotelDataBase.getRooms().stream()
-                .anyMatch(r -> r.getType().getSize().equalsIgnoreCase(rt.getSize()));
+        boolean inUse = HotelDataBase.reservations.stream()
+                .anyMatch(r -> r.getRoom().getType().getSize().equalsIgnoreCase(rt.getSize())
+                        && (r.getStatus() == Reservation.Status.PENDING
+                        ||  r.getStatus() == Reservation.Status.CONFIRMED));
 
         if (inUse) {
-            showFeedback("❌  Cannot delete \"" + rt.getSize() + "\" — it is assigned to one or more rooms.", true);
+            showFeedback("❌  Cannot delete \"" + rt.getSize() + "\" — it has active reservations.", true);
             return;
         }
 
@@ -387,7 +391,7 @@ public class AdminRoomTypesController implements SessionController {
         confirm.showAndWait().ifPresent(btn -> {
             if (btn != btnConfirm) return;
             try {
-                HotelDataBase.roomTypes.remove(liveIdx);
+                rt.delete(liveIdx);
                 showFeedback("✔  \"" + rt.getSize() + "\" deleted successfully.", false);
                 renderCards();
             } catch (Exception ex) {
