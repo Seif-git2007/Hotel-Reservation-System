@@ -1,3 +1,4 @@
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -85,11 +86,39 @@ public class MakeReservationController implements SessionController {
         MainController.clearErrors(errorLabel);
         try {
             Authenticator.validateReservationDates(checkInDate.getValue(), checkOutDate.getValue());
-            renderRooms(
-                HotelDataBase.getAvailableRooms(checkInDate.getValue(), checkOutDate.getValue()),
-                roomContainer, event);
         } catch (InvalidInputException e) {
             MainController.setFieldError(errorLabel, e.getMessage());
+            return;
         }
+
+        roomContainer.getChildren().clear();
+        ProgressIndicator spinner = new ProgressIndicator();
+        spinner.setMaxSize(60, 60);
+        VBox loadingBox = new VBox(spinner);
+        loadingBox.setAlignment(Pos.CENTER);
+        loadingBox.setStyle("-fx-padding: 60;");
+        roomContainer.getChildren().add(loadingBox);
+
+        Task<ArrayList<Room>> task = new Task<>() {
+            @Override
+            protected ArrayList<Room> call() {
+                return HotelDataBase.getAvailableRooms(checkInDate.getValue(), checkOutDate.getValue());
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            roomContainer.getChildren().remove(loadingBox);
+            renderRooms(task.getValue(), roomContainer, event);
+        });
+
+        task.setOnFailed(e -> {
+            roomContainer.getChildren().remove(loadingBox);
+            MainController.setFieldError(errorLabel, "Search failed");
+            task.getException().printStackTrace();
+        });
+
+        Thread t = new Thread(task, "Room-Search");
+        t.setDaemon(true);
+        t.start();
     }
 }

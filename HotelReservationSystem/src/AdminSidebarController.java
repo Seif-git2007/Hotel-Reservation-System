@@ -8,7 +8,7 @@ public class AdminSidebarController implements SessionController {
     @FXML public Button btnRooms;
     @FXML public Button btnRoomTypes;
     @FXML public Button btnAmenities;
-    @FXML public Button btnStaff;
+    @FXML public Button btnReceptionists;
     @FXML public Button btnGuests;
     @FXML public Button btnReservations;
 
@@ -27,7 +27,7 @@ public class AdminSidebarController implements SessionController {
 
     private void clearActive() {
         Button[] all = { btnDashboard, btnRooms, btnRoomTypes,
-                         btnAmenities, btnStaff, btnGuests, btnReservations };
+                         btnAmenities, btnReceptionists, btnGuests, btnReservations };
         for (Button b : all) b.getStyleClass().remove("sidebar-nav-btn-active");
     }
 
@@ -35,7 +35,7 @@ public class AdminSidebarController implements SessionController {
     @FXML private void goRooms(ActionEvent e)        { MainController.navigate(e, "Admin_Rooms.fxml"); }
     @FXML private void goRoomTypes(ActionEvent e)    { MainController.navigate(e, "AdminRoomTypes.fxml"); }
     @FXML private void goAmenities(ActionEvent e)    { MainController.navigate(e, "AdminAmenities.fxml"); }
-    @FXML private void goStaff(ActionEvent e)        { MainController.navigate(e, "Admin_Staff.fxml"); }
+    @FXML private void goReceptionists(ActionEvent e) { MainController.navigate(e, "Admin_Receptionists.fxml"); }
     @FXML private void goGuests(ActionEvent e)       { MainController.navigate(e, "Admin_Guests.fxml"); }
     @FXML private void goReservations(ActionEvent e) { MainController.navigate(e, "Admin_Reservations.fxml"); }
 }
