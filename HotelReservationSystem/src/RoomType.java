@@ -55,9 +55,9 @@ public class RoomType {
 
     public void delete(int index) throws InvalidInputException {
         for (Reservation res : HotelDataBase.reservations)
-            if (res.getRoom().getType().equals(HotelDataBase.rooms.get(index).getType())
+            if (res.getRoom().getType().getSize().equalsIgnoreCase(HotelDataBase.roomTypes.get(index).getSize())
                     && (res.getStatus() == Reservation.Status.PENDING
-                        || res.getStatus() == Reservation.Status.CONFIRMED))
+                    || res.getStatus() == Reservation.Status.CONFIRMED))
                 throw new RoomInUseException("Can't Delete RoomType While It's In Use");
         HotelDataBase.roomTypes.remove(index);
         System.out.println("RoomType Has Been Deleted Successfully");
