@@ -66,7 +66,7 @@ public class ViewReservationsController implements SessionController {
                 res.getCheckInDate(), res.getCheckOutDate(), nights, nights == 1 ? "" : "s"));
             dateLabel.getStyleClass().add("room-card-price");
 
-            double totalPrice = nights * res.getRoom().getType().getBasePrice();
+            double totalPrice =res.getRoom().calcTotal(res.getCheckInDate(), res.getCheckOutDate());
             Label totalLabel = new Label(String.format("Total Charged: $%.2f", totalPrice));
             totalLabel.getStyleClass().add("room-card-price");
 

@@ -47,7 +47,7 @@ public class ReceptionistReservationsController implements SessionController {
             header.setAlignment(Pos.CENTER_LEFT);
 
             // Guest name as title
-            Label guestLabel = new Label(res.getGuest().getUsername().toUpperCase());
+            Label guestLabel = new Label(res.getGuest().getDisplayname());
             guestLabel.getStyleClass().add("room-card-title");
 
             Pane spacer = new Pane();
@@ -77,7 +77,7 @@ public class ReceptionistReservationsController implements SessionController {
                     nights, nights == 1 ? "" : "s"));
             dateLabel.getStyleClass().add("room-card-price");
 
-            double total = nights * res.getRoom().getType().getBasePrice();
+            double total = res.getRoom().calcTotal(res.getCheckInDate(), res.getCheckOutDate());
             Label totalLabel = new Label(String.format("Total: $%.2f", total));
             totalLabel.getStyleClass().add("room-card-price");
 

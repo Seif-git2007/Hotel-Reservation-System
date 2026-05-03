@@ -61,7 +61,8 @@ public class ReceptionistCheckOutController implements SessionController {
 
             // Show the reservations about to complete
             for (Reservation res : HotelDataBase.getGuestReservation(guest)) {
-                if (res.getStatus() == Reservation.Status.AWAITING_CONFIRMATION) {
+                if (res.getStatus().equals(Reservation.Status.AWAITING_CONFIRMATION) ) {
+                    System.out.println("i looped");
                     long nights = java.time.temporal.ChronoUnit.DAYS.between(
                             res.getCheckInDate(), res.getCheckOutDate());
                     double total = res.getRoom().calcTotal(res.getCheckInDate(), res.getCheckOutDate());
