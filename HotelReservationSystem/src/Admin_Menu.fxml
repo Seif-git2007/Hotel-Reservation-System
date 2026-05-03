@@ -3,76 +3,176 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-
 
 <AnchorPane
         prefHeight="660.0" prefWidth="900.0"
         style="-fx-background-color: #F0EDE4;"
         stylesheets="@style.css"
-        xmlns="http://javafx.com/javafx/21"
-        xmlns:fx="http://javafx.com/fxml/1">
+        xmlns="http://javafx.com/javafx/17.0.12"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="AdminMenuController">
 
+    <fx:include source="NavgationBar.fxml" layoutX="0" layoutY="0" fx:id="navBar" />
 
-   <fx:include source="NavgationBar.fxml" layoutX="0" layoutY="0" fx:id="navBar" />
+    <HBox layoutX="0" layoutY="71" prefHeight="589" prefWidth="900" spacing="0">
 
-   <VBox
-           layoutX="0" layoutY="71"
-           prefWidth="900" prefHeight="589"
-           styleClass="content-area"
-           spacing="0">
+        <!-- Admin sidebar -->
+        <fx:include fx:id="sidebar" source="AdminSidebar.fxml" />
 
+        <!-- Main content -->
+        <VBox prefHeight="589" prefWidth="680" HBox.hgrow="ALWAYS" spacing="0"
+              style="-fx-background-color: #F0EDE4;">
 
-      <HBox styleClass="page-header-strip" prefWidth="900" alignment="CENTER_LEFT" spacing="14">
+            <!-- Page header -->
+            <HBox alignment="CENTER_LEFT" prefWidth="680" spacing="12" styleClass="page-header-strip">
+                <Pane prefHeight="32" prefWidth="4"
+                      style="-fx-background-color: #C9A84C; -fx-background-radius: 2;" />
+                <VBox spacing="2">
+                    <Label styleClass="label-dashboard-title" text="Admin Dashboard" />
+                    <Label styleClass="label-dashboard-sub" text="Overview of hotel operations" />
+                </VBox>
+            </HBox>
 
-         <Pane styleClass="page-title-accent" prefHeight="46" />
+            <!-- 2×2 Big KPI card grid -->
+            <GridPane VBox.vgrow="ALWAYS" hgap="16" vgap="16">
+                <VBox.margin><Insets top="24" left="24" right="24" bottom="24" /></VBox.margin>
+                <columnConstraints>
+                    <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+                    <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints vgrow="ALWAYS" percentHeight="50" />
+                    <RowConstraints vgrow="ALWAYS" percentHeight="50" />
+                </rowConstraints>
 
-         <VBox spacing="4">
-            <Label text="Admin Dashboard" styleClass="label-dashboard-title" />
-            <Label text="Manage hotel operations, staff, and system settings" styleClass="label-dashboard-sub" />
-         </VBox>
-      </HBox>
+                <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="0"
+                      style="-fx-background-color: #FFFFFF;
+                             -fx-background-radius: 14;
+                             -fx-border-color: #E0DAD0;
+                             -fx-border-radius: 14;
+                             -fx-border-width: 0.5;
+                             -fx-effect: dropshadow(three-pass-box,rgba(15,33,96,0.07),10,0,0,3);">
+                    <Pane prefHeight="5"
+                          style="-fx-background-color: #C9A84C; -fx-background-radius: 14 14 0 0;" />
+                    <VBox spacing="0" VBox.vgrow="ALWAYS" style="-fx-padding: 28 28 24 28;">
+                        <Label text="👤"
+                               style="-fx-font-size: 32px; -fx-padding: 0 0 16 0;" />
+                        <Label text="TOTAL USERS"
+                               style="-fx-text-fill: #9B9589;
+                                      -fx-font-size: 10px;
+                                      -fx-font-weight: bold;
+                                      -fx-letter-spacing: 0.16em;" />
+                        <Label fx:id="labelUserCount" text="—"
+                               style="-fx-text-fill: #0F2160;
+                                      -fx-font-family: 'Georgia', serif;
+                                      -fx-font-size: 56px;
+                                      -fx-font-weight: bold;
+                                      -fx-padding: 6 0 0 0;" />
+                        <Pane VBox.vgrow="ALWAYS" />
+                        <Label text="Registered guests &amp; staff"
+                               style="-fx-text-fill: #BBBBBB; -fx-font-size: 11px;" />
+                    </VBox>
+                </VBox>
 
+                <!-- ACTIVE BOOKINGS — top right, white -->
+                <VBox GridPane.columnIndex="1" GridPane.rowIndex="0" spacing="0"
+                      style="-fx-background-color: #FFFFFF;
+                             -fx-background-radius: 14;
+                             -fx-border-color: #E0DAD0;
+                             -fx-border-radius: 14;
+                             -fx-border-width: 0.5;
+                             -fx-effect: dropshadow(three-pass-box,rgba(15,33,96,0.07),10,0,0,3);">
+                    <Pane prefHeight="5"
+                          style="-fx-background-color: #C9A84C; -fx-background-radius: 14 14 0 0;" />
+                    <VBox spacing="0" VBox.vgrow="ALWAYS" style="-fx-padding: 28 28 24 28;">
+                        <Label text="📋"
+                               style="-fx-font-size: 32px; -fx-padding: 0 0 16 0;" />
+                        <Label text="ACTIVE BOOKINGS"
+                               style="-fx-text-fill: #9B9589;
+                                      -fx-font-size: 10px;
+                                      -fx-font-weight: bold;
+                                      -fx-letter-spacing: 0.16em;" />
+                        <Label fx:id="labelBookingCount" text="—"
+                               style="-fx-text-fill: #0F2160;
+                                      -fx-font-family: 'Georgia', serif;
+                                      -fx-font-size: 56px;
+                                      -fx-font-weight: bold;
+                                      -fx-padding: 6 0 0 0;" />
+                        <Pane VBox.vgrow="ALWAYS" />
+                        <Label text="Pending &amp; confirmed"
+                               style="-fx-text-fill: #BBBBBB; -fx-font-size: 11px;" />
+                    </VBox>
+                </VBox>
 
-      <HBox spacing="20" prefWidth="900">
-         <VBox.margin><Insets top="20" left="24" right="24" bottom="16" /></VBox.margin>
+                <!-- TOTAL REVENUE — bottom left, white -->
+                <VBox GridPane.columnIndex="0" GridPane.rowIndex="1" spacing="0"
+                      style="-fx-background-color: #FFFFFF;
+                             -fx-background-radius: 14;
+                             -fx-border-color: #E0DAD0;
+                             -fx-border-radius: 14;
+                             -fx-border-width: 0.5;
+                             -fx-effect: dropshadow(three-pass-box,rgba(15,33,96,0.07),10,0,0,3);">
+                    <Pane prefHeight="5"
+                          style="-fx-background-color: #C9A84C; -fx-background-radius: 14 14 0 0;" />
+                    <VBox spacing="0" VBox.vgrow="ALWAYS" style="-fx-padding: 28 28 24 28;">
+                        <Label text="💰"
+                               style="-fx-font-size: 32px; -fx-padding: 0 0 16 0;" />
+                        <Label text="TOTAL REVENUE"
+                               style="-fx-text-fill: #9B9589;
+                                      -fx-font-size: 10px;
+                                      -fx-font-weight: bold;
+                                      -fx-letter-spacing: 0.16em;" />
+                        <Label fx:id="labelRevenue" text="—"
+                               style="-fx-text-fill: #0F2160;
+                                      -fx-font-family: 'Georgia', serif;
+                                      -fx-font-size: 56px;
+                                      -fx-font-weight: bold;
+                                      -fx-padding: 6 0 0 0;" />
+                        <Pane VBox.vgrow="ALWAYS" />
+                        <Label text="Confirmed &amp; completed stays"
+                               style="-fx-text-fill: #BBBBBB; -fx-font-size: 11px;" />
+                    </VBox>
+                </VBox>
 
+                <!-- AVAILABLE ROOMS — bottom right, white -->
+                <VBox GridPane.columnIndex="1" GridPane.rowIndex="1" spacing="0"
+                      style="-fx-background-color: #FFFFFF;
+                             -fx-background-radius: 14;
+                             -fx-border-color: #E0DAD0;
+                             -fx-border-radius: 14;
+                             -fx-border-width: 0.5;
+                             -fx-effect: dropshadow(three-pass-box,rgba(15,33,96,0.07),10,0,0,3);">
+                    <Pane prefHeight="5"
+                          style="-fx-background-color: #C9A84C; -fx-background-radius: 14 14 0 0;" />
+                    <VBox spacing="0" VBox.vgrow="ALWAYS" style="-fx-padding: 28 28 24 28;">
+                        <Label text="🛏"
+                               style="-fx-font-size: 32px; -fx-padding: 0 0 16 0;" />
+                        <Label text="AVAILABLE ROOMS"
+                               style="-fx-text-fill: #9B9589;
+                                      -fx-font-size: 10px;
+                                      -fx-font-weight: bold;
+                                      -fx-letter-spacing: 0.16em;" />
+                        <Label fx:id="labelAvailableRooms" text="—"
+                               style="-fx-text-fill: #0F2160;
+                                      -fx-font-family: 'Georgia', serif;
+                                      -fx-font-size: 56px;
+                                      -fx-font-weight: bold;
+                                      -fx-padding: 6 0 0 0;" />
+                        <Pane VBox.vgrow="ALWAYS" />
+                        <Label text="Ready to book tonight"
+                               style="-fx-text-fill: #BBBBBB; -fx-font-size: 11px;" />
+                    </VBox>
+                </VBox>
 
-         <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="10">
-            <Label text="Users" styleClass="section-card-title" />
-            <Pane styleClass="section-card-accent" />
+            </GridPane>
 
-            <Pane prefHeight="140" />
-         </VBox>
-
-
-         <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="10">
-            <Label text="Bookings" styleClass="section-card-title" />
-            <Pane styleClass="section-card-accent" />
-
-            <Pane prefHeight="140" />
-         </VBox>
-
-
-         <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="10">
-            <Label text="Revenue" styleClass="section-card-title" />
-            <Pane styleClass="section-card-accent" />
-
-            <Pane prefHeight="140" />
-         </VBox>
-
-      </HBox>
-
-      <VBox styleClass="main-content-card" prefWidth="852" VBox.vgrow="ALWAYS" alignment="CENTER">
-         <VBox.margin><Insets left="24" right="24" bottom="24" /></VBox.margin>
-         <Label text="Main content area — add your components here"
-                styleClass="main-content-hint" />
-      </VBox>
-
-   </VBox>
+        </VBox>
+    </HBox>
 
 </AnchorPane>

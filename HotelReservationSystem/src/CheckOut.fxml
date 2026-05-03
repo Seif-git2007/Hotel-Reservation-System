@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<AnchorPane prefHeight="660.0" prefWidth="900.0" style="-fx-background-color: #F0EDE4;"
+            stylesheets="@style.css" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="CheckOutController">
+
+    <fx:include source="NavgationBar.fxml" />
+
+    <HBox layoutY="71" prefHeight="589" prefWidth="900">
+        <fx:include fx:id="sidebar" source="GuestSidebar.fxml" />
+
+        <ScrollPane fitToWidth="true" prefWidth="680" styleClass="register-scroll">
+            <VBox spacing="28" style="-fx-background-color: #F0EDE4;">
+                <padding><Insets bottom="50" left="36" right="36" top="30" /></padding>
+
+                <!-- ERROR STATE -->
+                <VBox fx:id="errorPane" alignment="CENTER" managed="false" spacing="16"
+                      visible="false" styleClass="checkout-error-pane">
+                    <Label styleClass="checkout-error-title" text="CHECK-OUT UNAVAILABLE" />
+                    <Pane styleClass="invoice-divider-gold" prefHeight="1" maxWidth="120" />
+                    <Label fx:id="errorLabel" styleClass="checkout-error-body" textAlignment="CENTER" wrapText="true" />
+                </VBox>
+
+                <!-- MAIN CONTENT -->
+                <VBox fx:id="mainContent" spacing="24">
+
+                    <!-- ══════════════ INVOICE PAPER ══════════════ -->
+                    <VBox styleClass="invoice-paper" spacing="0">
+
+                        <!-- Letterhead -->
+                        <VBox alignment="TOP_CENTER" spacing="4" styleClass="invoice-letterhead">
+                            <Label styleClass="invoice-hotel-name" text="KEMPINSKI" />
+                            <Label styleClass="invoice-hotel-sub" text="HOTELS  ✦  RESORTS" />
+                        </VBox>
+
+                        <!-- Gold top rule -->
+                        <Pane styleClass="invoice-rule-gold" prefHeight="2" />
+                        <Pane styleClass="invoice-rule-thin" prefHeight="1" />
+
+                        <VBox spacing="24" styleClass="invoice-body">
+
+                            <!-- Invoice meta row -->
+                            <HBox>
+                                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                    <Label styleClass="invoice-meta-label" text="INVOICE TO" />
+                                    <Label fx:id="lblGuestName" styleClass="invoice-guest-name" />
+                                </VBox>
+                                <VBox spacing="4" alignment="TOP_RIGHT">
+                                    <Label styleClass="invoice-meta-label" text="INVOICE NO." />
+                                    <Label fx:id="lblInvoiceNumber" styleClass="invoice-meta-value" text="—" />
+                                    <Label styleClass="invoice-meta-label" text="DATE" style="-fx-padding: 6 0 0 0;" />
+                                    <Label fx:id="lblDate" styleClass="invoice-meta-value" text="—" />
+                                </VBox>
+                            </HBox>
+
+                            <!-- Section divider -->
+                            <Pane styleClass="invoice-rule-light" prefHeight="1" />
+
+                            <!-- Column headers -->
+                            <GridPane styleClass="invoice-col-header-row">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="ALWAYS" />
+                                    <ColumnConstraints minWidth="80" />
+                                    <ColumnConstraints minWidth="90" halignment="RIGHT" />
+                                </columnConstraints>
+                                <Label text="DESCRIPTION" styleClass="invoice-col-header" GridPane.columnIndex="0" />
+                                <Label text="NIGHTS" styleClass="invoice-col-header" GridPane.columnIndex="1" />
+                                <Label text="AMOUNT" styleClass="invoice-col-header" GridPane.columnIndex="2" />
+                            </GridPane>
+
+                            <Pane styleClass="invoice-rule-light" prefHeight="1" />
+
+                            <!-- Dynamic reservation rows injected here -->
+                            <VBox fx:id="invoiceItems" spacing="0" />
+
+                            <Pane styleClass="invoice-rule-light" prefHeight="1" />
+
+                            <!-- Totals block -->
+                            <VBox spacing="0" alignment="CENTER_RIGHT">
+                                <HBox spacing="0" alignment="CENTER_RIGHT" styleClass="invoice-total-row">
+                                    <Label text="TOTAL DUE" styleClass="invoice-total-label" />
+                                    <Label fx:id="lblTotal" text="0.00" styleClass="invoice-total-amount" />
+                                </HBox>
+                            </VBox>
+
+                        </VBox>
+
+                        <!-- Bottom gold rule -->
+                        <Pane styleClass="invoice-rule-thin" prefHeight="1" />
+                        <Pane styleClass="invoice-rule-gold" prefHeight="2" />
+
+                        <!-- Footer -->
+                        <Label styleClass="invoice-footer" text="Thank you for staying with us  ✦  We hope to welcome you again"
+                               maxWidth="Infinity" alignment="CENTER" />
+                    </VBox>
+
+                    <!-- ══════════════ PAYMENT SECTION ══════════════ -->
+                    <VBox styleClass="section-card" spacing="20">
+                        <Label styleClass="section-card-title" text="SELECT PAYMENT METHOD" />
+                        <Pane styleClass="invoice-divider-gold" prefHeight="1" maxWidth="80" />
+
+                        <!-- Radio toggle row -->
+                        <HBox spacing="12">
+                            <RadioButton fx:id="rdoCredit"  text="Credit Card"      styleClass="payment-radio" />
+                            <RadioButton fx:id="rdoBalance" text="Account Balance"  styleClass="payment-radio" />
+                            <RadioButton fx:id="rdoCash"    text="Cash at Desk"     styleClass="payment-radio" />
+                        </HBox>
+
+                        <!-- Credit card form — shown only when rdoCredit selected -->
+                        <VBox fx:id="visaForm" spacing="14" managed="false" visible="false"
+                              styleClass="visa-form-container">
+                            <TextField fx:id="txtHolderName" promptText="Card Holder Name"
+                                       styleClass="field-input" />
+                            <TextField fx:id="txtCardNumber" promptText="Card Number (16 digits)"
+                                       styleClass="field-input" />
+                            <HBox spacing="12">
+                                <TextField fx:id="txtExpiry" promptText="MM / YY"
+                                           styleClass="field-input" HBox.hgrow="ALWAYS" />
+                                <PasswordField fx:id="txtCVV" promptText="CVV"
+                                               styleClass="field-input" HBox.hgrow="ALWAYS" />
+                            </HBox>
+                            <Button text="Verify Card Details" onAction="#handleConfirmVisa"
+                                    styleClass="btn-verify-card" />
+                        </VBox>
+
+                        <!-- Balance info — shown only when rdoBalance selected -->
+                        <VBox fx:id="balancePane" spacing="8" managed="false" visible="false"
+                              styleClass="balance-info-pane">
+                            <Label styleClass="invoice-meta-label" text="AVAILABLE BALANCE" />
+                            <Label fx:id="lblBalanceAmount" styleClass="invoice-guest-name" text="0.00" />
+                        </VBox>
+
+                        <!-- Cash note — shown only when rdoCash selected -->
+                        <VBox fx:id="cashPane" spacing="8" managed="false" visible="false"
+                              styleClass="balance-info-pane">
+                            <Label styleClass="invoice-meta-label" text="INSTRUCTIONS" />
+                            <Label styleClass="invoice-value" wrapText="true"
+                                   text="Please proceed to the front desk. A receptionist will process your cash payment and confirm your check-out." />
+                        </VBox>
+
+                    </VBox>
+
+                    <!-- Confirm button -->
+                    <Button fx:id="btnComplete" text="COMPLETE CHECK-OUT"
+                            onAction="#handleFinalPayment"
+                            prefWidth="Infinity" styleClass="btn-checkout-confirm"
+                            maxWidth="Infinity" />
+
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </HBox>
+
+
+</AnchorPane>

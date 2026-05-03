@@ -6,46 +6,77 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-import java.time.LocalDate;
-import java.util.Stack;
-
 public class MainController {
-    static Stack<String> history = new Stack<>();
-    private static User user;
-
-    private static ReservationContext reservationContext = new ReservationContext();
-
-    public static User getUser() {
-        return user;
-    }
-
-    public static void setUser(User user) {
-        MainController.user = user;
-    }
-
-    public static ReservationContext getReservationContext() {
-        return reservationContext;
-    }
-
-    public static void setReservationContext(Room room, LocalDate checkIn, LocalDate checkOut) {
-        reservationContext.setSelectedRoom(room);
-        reservationContext.setCheckInDate(checkIn);
-        reservationContext.setCheckOutDate(checkOut);
-    }
-
-    public static void loadScene(ActionEvent event, String file) {
+    public static void load(ActionEvent event , String file){
         try {
-            Parent root = FXMLLoader.load(MainController.class.getResource(file));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene =new Scene(root);
-            String css = MainController.class.getResource("style.css").toExternalForm();
-            scene.getStylesheets().add(css);
+            AppSession session = (AppSession) stage.getUserData();
+            FXMLLoader loader = new FXMLLoader(MainController.class.getResource(file));
+            Parent root = loader.load();
+            if (loader.getController() instanceof SessionController sc) {
+                sc.initSession(session);
+            }
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(
+                    MainController.class.getResource("style.css").toExternalForm());
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    public static void navigate(ActionEvent event, String file) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        AppSession session = (AppSession) stage.getUserData();
+        session.history.push(file);
+        load(event, file);
+
+    }
+
+
+    public void logout(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        ((AppSession) stage.getUserData()).logout();
+        navigate(event, "Main_Menu.fxml");
+    }
+
+    public void home(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        AppSession session = (AppSession) stage.getUserData();
+        User user = session.getCurrentUser();
+        if (user instanceof Guest){
+            navigate(event, "Guest_Dashboard.fxml");
+        }
+        else if (user instanceof Receptionist){
+            navigate(event, "Receptionist_Menu.fxml");
+        }
+        else if (user instanceof Admin){
+            navigate(event, "Admin_Menu.fxml");
+        }
+    }
+
+    public void back(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        AppSession session = (AppSession) stage.getUserData();
+
+        if(!session.history.isEmpty()){
+            session.history.pop();
+            if(!session.history.isEmpty()){
+                if(session.history.peek().equals("Login_Menu.fxml")) {
+                    load(event, "Login_Menu.fxml");
+                    session.logout();
+                }else {
+                    load(event, session.history.peek());
+                }
+            }
+        }
+
+    }
+
+    public void viewProfile(ActionEvent event) {
+        navigate(event, "Guest_Profile.fxml");
+    }
+
 
     public void ChooseLogin(ActionEvent event) {
         navigate(event, "Login_Menu.fxml");
@@ -55,49 +86,12 @@ public class MainController {
         navigate(event, "Register_Menu.fxml");
     }
 
-    public static void navigate(ActionEvent event, String file) {
-        history.push(file);
-        loadScene(event, file);
-    }
-
-    public void back(ActionEvent event) {
-
-        if (!history.isEmpty()) {
-            history.pop();
-            if(!history.isEmpty()) {
-                loadScene(event, history.peek());
-            }
-        }
-    }
-
-    public void logout(ActionEvent event) {
-        history.clear();
-        loadScene(event, "Main_Menu.fxml");
-    }
-    public void home(ActionEvent event){
-        if(user instanceof Guest){
-            navigate(event, "Guest_Dashboard.fxml");
-        }else if(user instanceof Receptionist){
-            navigate(event,"Receptionist_Menu.fxml");
-        }else if(user instanceof Admin){
-            navigate(event,"Admin_Menu.fxml");
-        }
-    }
-    public static void setFieldError(Label label, String message){
+    public static void setFieldError(Label label, String message) {
         label.setText(message);
         label.setVisible(true);
     }
+
     public static void clearErrors(Label... labels) {
-        for (Label l : labels) {
-            l.setVisible(false);
-        }
+        for (Label l : labels) l.setVisible(false);
     }
-    public void viewProfile(ActionEvent event){
-        navigate(event,"Guest_Profile.fxml");
-    }
-
-
-
 }
-
-

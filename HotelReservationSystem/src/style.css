@@ -602,7 +602,25 @@
     -fx-cursor: hand;
     -fx-effect: none;
 }
+.btn-confirm-inline {
+    -fx-background-color: #2E7D32;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 14;
+    -fx-background-radius: 4;
+}
+.btn-confirm-inline:hover { -fx-background-color: #1B5E20; }
 
+.btn-abort-inline {
+    -fx-background-color: #B00020;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 14;
+    -fx-background-radius: 4;
+}
+.btn-abort-inline:hover { -fx-background-color: #7F0000; }
 .btn-cancel-reservation:hover {
     -fx-background-color: rgba(176,0,32,0.06);
     -fx-text-fill: rgba(255,120,120,0.90);
@@ -696,6 +714,24 @@
 }
 .filter-tag:hover {
     -fx-border-color: #C9A84C;
+    -fx-text-fill: #C9A84C;
+}
+
+/* ── Amenity tags (room card pills) ──────────────────────────── */
+.amenity-tag {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #0F2160;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 0.06em;
+    -fx-background-radius: 20;
+    -fx-border-color: #C9A84C;
+    -fx-border-radius: 20;
+    -fx-border-width: 1.2;
+    -fx-padding: 4 12;
+}
+.amenity-tag:hover {
+    -fx-background-color: rgba(201,168,76,0.10);
     -fx-text-fill: #C9A84C;
 }
 
@@ -814,3 +850,267 @@
 .status-awaiting_confirmation { -fx-background-color: #3B6B7A; }
 .status-cancelled { -fx-background-color: #B00020; }
 .status-completed { -fx-background-color: #6B6B6B; }
+/* ═══════════════════════════════════════════════════════════════
+   INVOICE PAPER
+═══════════════════════════════════════════════════════════════ */
+.invoice-paper {
+    -fx-background-color: #FDFAF4;
+    -fx-border-color: #D4C5A0 #D4C5A0 #D4C5A0 #D4C5A0;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(15, 33, 96, 0.14), 28, 0, 0, 8);
+}
+
+/* ── Letterhead ─────────────────────────────────────────────── */
+.invoice-letterhead {
+    -fx-background-color: #0F2160;
+    -fx-padding: 28 40 22 40;
+    -fx-alignment: CENTER;
+}
+
+.invoice-hotel-name {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #F5F0E8;
+    -fx-letter-spacing: 0.25em;
+}
+
+.invoice-hotel-sub {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 11px;
+    -fx-text-fill: #C9A84C;
+    -fx-letter-spacing: 0.35em;
+}
+
+/* ── Rules ─────────────────────────────────────────────────── */
+.invoice-rule-gold {
+    -fx-background-color: #C9A84C;
+    -fx-pref-height: 2;
+    -fx-max-width: Infinity;
+}
+
+.invoice-rule-thin {
+    -fx-background-color: #E8E0CC;
+    -fx-pref-height: 1;
+    -fx-max-width: Infinity;
+}
+
+.invoice-rule-light {
+    -fx-background-color: #EDE7D6;
+    -fx-pref-height: 1;
+    -fx-max-width: Infinity;
+}
+
+.invoice-divider-gold {
+    -fx-background-color: #C9A84C;
+    -fx-pref-height: 2;
+}
+
+/* ── Body ───────────────────────────────────────────────────── */
+.invoice-body {
+    -fx-padding: 32 40 32 40;
+}
+
+/* ── Meta labels / values ───────────────────────────────────── */
+.invoice-meta-label {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 9px;
+    -fx-text-fill: #9A8F78;
+    -fx-letter-spacing: 0.2em;
+    -fx-font-weight: bold;
+}
+
+.invoice-meta-value {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 13px;
+    -fx-text-fill: #2C2C2C;
+}
+
+.invoice-guest-name {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 19px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0F2160;
+}
+
+/* ── Column headers ─────────────────────────────────────────── */
+.invoice-col-header-row {
+    -fx-padding: 0;
+}
+
+.invoice-col-header {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #9A8F78;
+    -fx-letter-spacing: 0.15em;
+}
+
+/* ── Item rows ──────────────────────────────────────────────── */
+.invoice-item-row {
+    -fx-padding: 14 0 14 0;
+    -fx-border-color: transparent transparent #F0EBE0 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.invoice-label {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 11px;
+    -fx-text-fill: #6B6B6B;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 0.1em;
+}
+
+.invoice-value {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 13px;
+    -fx-text-fill: #2C2C2C;
+    -fx-line-spacing: 3;
+}
+
+/* ── Total row ──────────────────────────────────────────────── */
+.invoice-total-row {
+    -fx-background-color: #0F2160;
+    -fx-padding: 18 28;
+    -fx-spacing: 16;
+}
+
+.invoice-total-label {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: rgba(255,255,255,0.8);
+    -fx-letter-spacing: 0.2em;
+}
+
+.invoice-total-amount {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #C9A84C;
+}
+
+/* ── Footer ─────────────────────────────────────────────────── */
+.invoice-footer {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 11px;
+    -fx-font-style: italic;
+    -fx-text-fill: #9A8F78;
+    -fx-padding: 14 40;
+    -fx-background-color: #F5EFE0;
+    -fx-letter-spacing: 0.05em;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PAYMENT SECTION
+═══════════════════════════════════════════════════════════════ */
+
+/* Radio buttons styled as pill toggles */
+.payment-radio {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 13px;
+    -fx-text-fill: #2C2C2C;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D4C5A0;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+}
+
+.payment-radio:selected {
+    -fx-background-color: #0F2160;
+    -fx-text-fill: #FFFFFF;
+    -fx-border-color: #0F2160;
+}
+
+.payment-radio:hover:selected {
+    -fx-background-color: #F5EFE0;
+    -fx-border-color: #C9A84C;
+}
+
+/* Credit card form */
+.visa-form-container {
+    -fx-background-color: #F8F4EC;
+    -fx-border-color: #E0D8C4;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 20;
+}
+
+/* Balance / cash info pane */
+.balance-info-pane {
+    -fx-background-color: #F8F4EC;
+    -fx-border-color: #E0D8C4;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 16 20;
+}
+
+/* Verify card button */
+.btn-verify-card {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 12px;
+    -fx-letter-spacing: 0.1em;
+    -fx-text-fill: #0F2160;
+    -fx-background-color: transparent;
+    -fx-border-color: #0F2160;
+    -fx-border-width: 1;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+.btn-verify-card:hover {
+    -fx-background-color: #0F2160;
+    -fx-text-fill: #FFFFFF;
+}
+
+/* Final checkout button */
+.btn-checkout-confirm {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 0.2em;
+    -fx-text-fill: #FDFAF4;
+    -fx-background-color: #0F2160;
+    -fx-background-radius: 3;
+    -fx-padding: 18 0;
+    -fx-cursor: hand;
+}
+
+.btn-checkout-confirm:hover {
+    -fx-background-color: #1a3280;
+    -fx-effect: dropshadow(gaussian, rgba(15,33,96,0.35), 12, 0, 0, 4);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ERROR STATE
+═══════════════════════════════════════════════════════════════ */
+.checkout-error-pane {
+    -fx-background-color: #FDFAF4;
+    -fx-border-color: #D4C5A0;
+    -fx-border-width: 1;
+    -fx-padding: 48 40;
+    -fx-alignment: CENTER;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);
+}
+
+.checkout-error-title {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0F2160;
+    -fx-letter-spacing: 0.2em;
+}
+
+.checkout-error-body {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 13px;
+    -fx-text-fill: #6B6B6B;
+    -fx-font-style: italic;
+}

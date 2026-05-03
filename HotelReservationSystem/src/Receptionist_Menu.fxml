@@ -2,71 +2,95 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane
-        prefHeight="660.0" prefWidth="900.0"
-        style="-fx-background-color: #F0EDE4;"
-        stylesheets="@style.css"
-        xmlns="http://javafx.com/javafx/21"
-        xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="660.0" prefWidth="900.0"
+            style="-fx-background-color: #F0EDE4;"
+            stylesheets="@style.css"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ReceptionistMenuController">
 
+    <fx:include fx:id="navBar" layoutX="0" layoutY="0" source="NavgationBar.fxml" />
 
-    <fx:include source="NavgationBar.fxml" layoutX="0" layoutY="0" fx:id="navBar" />
+    <HBox layoutX="0" layoutY="71" prefHeight="589" prefWidth="900" spacing="0">
 
+        <!-- Sidebar (220px) -->
+        <fx:include fx:id="sidebar" source="Receptionistsidebar.fxml" />
 
-    <VBox
-            layoutX="0" layoutY="71"
-            prefWidth="900" prefHeight="589"
-            styleClass="content-area"
-            spacing="0">
+        <!-- Content area (680px) — same width as every guest screen -->
+        <VBox prefWidth="680" prefHeight="589" spacing="0"
+              style="-fx-background-color: #F0EDE4;">
 
+            <!-- Page header strip — same pattern as ViewRooms, CancelReservation etc. -->
+            <HBox alignment="CENTER_LEFT" prefWidth="680" spacing="12" styleClass="page-header-strip">
+                <Pane prefHeight="32" prefWidth="4"
+                      style="-fx-background-color: #C9A84C; -fx-background-radius: 2;" />
+                <VBox spacing="2">
+                    <Label styleClass="label-dashboard-title" text="Receptionist Panel" />
+                    <Label styleClass="label-dashboard-sub"
+                           text="Manage today's arrivals, departures and all reservations" />
+                </VBox>
+            </HBox>
 
-        <HBox styleClass="page-header-strip" prefWidth="900" alignment="CENTER_LEFT" spacing="14">
-            <Pane styleClass="page-title-accent" prefHeight="46" />
-            <VBox spacing="4">
-                <Label text="Receptionist Panel" styleClass="label-dashboard-title" />
-                <Label text="Handle check-ins, check-outs, and guest requests" styleClass="label-dashboard-sub" />
+            <!-- Three stat cards at the top — same pattern as Admin_Menu.fxml -->
+            <HBox spacing="16" prefWidth="680">
+                <VBox.margin><Insets top="16" left="20" right="20" bottom="0" /></VBox.margin>
+
+                <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="6" alignment="CENTER">
+                    <Label text="CHECK-INS TODAY" styleClass="register-section-label" />
+                    <Label fx:id="lblCheckInCount"
+                           style="-fx-text-fill: #1D9E75; -fx-font-size: 32px; -fx-font-weight: bold;"
+                           text="0" />
+                    <Label text="pending arrivals" styleClass="main-content-hint" />
+                </VBox>
+
+                <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="6" alignment="CENTER">
+                    <Label text="CHECK-OUTS TODAY" styleClass="register-section-label" />
+                    <Label fx:id="lblCheckOutCount"
+                           style="-fx-text-fill: #C9A84C; -fx-font-size: 32px; -fx-font-weight: bold;"
+                           text="0" />
+                    <Label text="departures due" styleClass="main-content-hint" />
+                </VBox>
+
+                <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="6" alignment="CENTER">
+                    <Label text="TOTAL RESERVATIONS" styleClass="register-section-label" />
+                    <Label fx:id="lblReservationCount"
+                           style="-fx-text-fill: #0F2160; -fx-font-size: 32px; -fx-font-weight: bold;"
+                           text="0" />
+                    <Label text="in the system" styleClass="main-content-hint" />
+                </VBox>
+
+            </HBox>
+
+            <!-- Recent reservations list — main content area -->
+            <VBox styleClass="section-card" VBox.vgrow="ALWAYS" spacing="10">
+                <VBox.margin><Insets top="16" left="20" right="20" bottom="20" /></VBox.margin>
+
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <Pane prefWidth="4" prefHeight="18"
+                          style="-fx-background-color: #0F2160; -fx-background-radius: 2;" />
+                    <Label text="All Reservations" styleClass="section-card-title" />
+                </HBox>
+
+                <ScrollPane fitToWidth="true"
+                            VBox.vgrow="ALWAYS"
+                            styleClass="register-scroll"
+                            style="-fx-background-color: transparent; -fx-background: transparent;">
+                    <content>
+                        <VBox fx:id="reservationContainer" spacing="12"
+                              style="-fx-background-color: transparent;">
+                            <padding><Insets top="4" bottom="4" /></padding>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+
             </VBox>
-        </HBox>
 
-
-        <HBox spacing="20" prefWidth="900">
-            <VBox.margin><Insets top="20" left="24" right="24" bottom="16" /></VBox.margin>
-
-
-            <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="10">
-                <Label text="Check-In" styleClass="section-card-title" />
-
-                <Pane prefHeight="148" />
-            </VBox>
-
-
-            <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="10">
-                <Label text="Check-Out" styleClass="section-card-title" />
-
-                <Pane prefHeight="148" />
-            </VBox>
-
-
-            <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="10">
-                <Label text="Reservations" styleClass="section-card-title" />
-
-                <Pane prefHeight="148" />
-            </VBox>
-
-        </HBox>
-
-
-        <VBox styleClass="main-content-card" prefWidth="852" VBox.vgrow="ALWAYS" alignment="CENTER">
-            <VBox.margin><Insets left="24" right="24" bottom="24" /></VBox.margin>
-            <Label text="Main content area — add your components here"
-                   styleClass="main-content-hint" />
         </VBox>
-
-    </VBox>
-
+    </HBox>
 </AnchorPane>

@@ -6,16 +6,31 @@ import javafx.scene.layout.*;
 
 import java.util.ArrayList;
 
-public class ViewReservationsController {
+public class ViewReservationsController implements SessionController {
 
     @FXML private GuestSidebarController sidebarController;
-    @FXML VBox reservationController ;
-    @FXML
-    public void initialize() {
-        if (sidebarController != null)
+    @FXML VBox reservationController;
+
+    private AppSession session;
+    private final Runnable refreshListener = this::refresh;
+
+    @Override
+    public void initSession(AppSession session) {
+        this.session = session;
+        if (sidebarController != null) {
+            sidebarController.initSession(session);
             sidebarController.btnViewReservations.getStyleClass().add("sidebar-nav-btn-active");
-        renderReservations(HotelDataBase.getGuestReservation((Guest) MainController.getUser()), reservationController);
+        }
+        refresh();
+        EventBus.subscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+        reservationController.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                EventBus.unsubscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+            }
+        });
+
     }
+
     public void renderReservations(ArrayList<Reservation> reservations, VBox reservationContainer) {
         reservationContainer.getChildren().clear();
 
@@ -40,37 +55,40 @@ public class ViewReservationsController {
             HBox.setHgrow(spacer, Priority.ALWAYS);
 
             Label statusBadge = new Label(res.getStatus().toString().toUpperCase());
-            statusBadge.getStyleClass().addAll("status-badge", "status-" + res.getStatus().toString().toLowerCase());
+            statusBadge.getStyleClass().addAll("status-badge",
+                "status-" + res.getStatus().toString().toLowerCase());
 
             header.getChildren().addAll(typeLabel, spacer, statusBadge);
 
             Label detailsLabel = new Label(String.format(
-                    "Room %d  •  Floor %d  •  Capacity: %d Guests",
-                    res.getRoom().getRoomNumber(),
-                    res.getRoom().getFloor(),
-                    res.getRoom().getType().getCapacity()
-            ));
+                "Room %d  •  Floor %d  •  Capacity: %d Guests",
+                res.getRoom().getRoomNumber(), res.getRoom().getFloor(),
+                res.getRoom().getType().getCapacity()));
             detailsLabel.getStyleClass().add("room-card-price");
             detailsLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #2C2C2C;");
 
-            long nights = java.time.temporal.ChronoUnit.DAYS.between(res.getCheckInDate(), res.getCheckOutDate());
+            long nights = java.time.temporal.ChronoUnit.DAYS.between(
+                res.getCheckInDate(), res.getCheckOutDate());
             Label dateLabel = new Label(String.format(
-                    "📅 %s  →  %s  (%d Night%s)",
-                    res.getCheckInDate(), res.getCheckOutDate(),
-                    nights, nights == 1 ? "" : "s"
-            ));
+                "📅 %s  →  %s  (%d Night%s)",
+                res.getCheckInDate(), res.getCheckOutDate(), nights, nights == 1 ? "" : "s"));
             dateLabel.getStyleClass().add("room-card-price");
 
-            double totalPrice = nights * res.getRoom().getType().getBasePrice();
+            double totalPrice =res.getRoom().calcTotal(res.getCheckInDate(), res.getCheckOutDate());
             Label totalLabel = new Label(String.format("Total Charged: $%.2f", totalPrice));
             totalLabel.getStyleClass().add("room-card-price");
 
-            Label amenitiesLabel = new Label("Includes: " + ViewRoomsController.formatAmenities(res.getRoom().getAmenities()));
+            Label amenitiesLabel = new Label(
+                "Includes: " + ViewRoomsController.formatAmenities(res.getRoom().getAmenities()));
             amenitiesLabel.getStyleClass().add("main-content-hint");
 
             card.getChildren().addAll(header, detailsLabel, dateLabel, totalLabel, amenitiesLabel);
 
             if (res.getStatus() == Reservation.Status.PENDING) {
+                HBox actionsRow = new HBox();
+                actionsRow.setAlignment(Pos.CENTER_RIGHT);
+                actionsRow.setSpacing(10);
+
                 Button cancelBtn = new Button("Request Cancellation");
                 cancelBtn.getStyleClass().add("btn-cancel-reservation");
 
@@ -82,18 +100,47 @@ public class ViewReservationsController {
                     cancelBtn.getStyleClass().remove("btn-cancel-reservation-hover");
                     cancelBtn.getStyleClass().add("btn-cancel-reservation");
                 });
-                ActionEvent event = new ActionEvent(cancelBtn, null);
+
+                Button confirmBtn = new Button("Confirm");
+                confirmBtn.getStyleClass().add("btn-confirm-inline");
+
+                Button abortBtn = new Button("Abort");
+                abortBtn.getStyleClass().add("btn-abort-inline");
+
                 cancelBtn.setOnAction(e -> {
-                    MainController.getReservationContext().setReservation(res);
-                    MainController.navigate(event,"CancelReservationForm.fxml");
+                    actionsRow.getChildren().clear();
+                    actionsRow.getChildren().addAll(abortBtn, confirmBtn);
+                });
+                abortBtn.setOnAction(e -> {
+                    actionsRow.getChildren().clear();
+                    actionsRow.getChildren().add(cancelBtn);
                 });
 
-                HBox actionsRow = new HBox(cancelBtn);
-                actionsRow.setAlignment(Pos.CENTER_RIGHT);
+                confirmBtn.setOnAction(e -> {
+                    Alert confirmPopup = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirmPopup.setTitle("Confirm Cancellation");
+                    confirmPopup.setHeaderText("Wait!");
+                    confirmPopup.setContentText("Are you sure you want to permanently cancel this reservation?");
+
+                    if (confirmPopup.showAndWait().get() == ButtonType.OK) {
+                        session.getCurrentGuest().cancelReservation(res);
+                        refresh();
+                        System.out.println("User confirmed they definitely want to cancel.");
+                    }else {
+                        refresh();
+                    }
+                });
+
+                actionsRow.getChildren().add(cancelBtn);
                 card.getChildren().add(actionsRow);
             }
 
-            reservationContainer.getChildren().add(card);
+                reservationContainer.getChildren().add(card);
         }
     }
+    public void refresh(){
+        reservationController.getChildren().clear();
+        renderReservations(HotelDataBase.getGuestReservation(session.getCurrentGuest()), reservationController);
+    }
 }
+

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="589" prefWidth="220"
+      spacing="0"
+      styleClass="sidebar-panel"
+      stylesheets="@style.css"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="AdminSidebarController">
+
+    <!-- Brand block -->
+    <VBox alignment="CENTER" spacing="4" styleClass="sidebar-brand-card">
+        <VBox.margin><Insets bottom="6" left="16" right="16" top="24" /></VBox.margin>
+        <Label styleClass="sidebar-brand-wordmark" text="Kempinski" />
+        <Label styleClass="sidebar-brand-sub" text="ADMIN PORTAL" />
+        <Pane prefHeight="1.5" prefWidth="80" style="-fx-background-color: #C9A84C;">
+            <VBox.margin><Insets top="6" /></VBox.margin>
+        </Pane>
+    </VBox>
+
+    <!-- Section: Overview -->
+    <Label styleClass="sidebar-section-label" text="OVERVIEW">
+        <VBox.margin><Insets bottom="4" left="20" top="16" /></VBox.margin>
+    </Label>
+
+    <Button fx:id="btnDashboard"
+            text="📊  Dashboard"
+            onAction="#goDashboard"
+            prefHeight="50" prefWidth="220"
+            styleClass="sidebar-nav-btn"
+            mnemonicParsing="false"/>
+
+    <!-- Section: Manage -->
+    <Label styleClass="sidebar-section-label" text="MANAGE">
+        <VBox.margin><Insets bottom="4" left="20" top="12" /></VBox.margin>
+    </Label>
+
+    <Button fx:id="btnRooms"
+            text="🛏  Rooms"
+            onAction="#goRooms"
+            prefHeight="50" prefWidth="220"
+            styleClass="sidebar-nav-btn"
+            mnemonicParsing="false"/>
+
+    <Button fx:id="btnRoomTypes"
+            text="🏷  Room Types"
+            onAction="#goRoomTypes"
+            prefHeight="50" prefWidth="220"
+            styleClass="sidebar-nav-btn"
+            mnemonicParsing="false"/>
+
+    <Button fx:id="btnAmenities"
+            text="✨  Amenities"
+            onAction="#goAmenities"
+            prefHeight="50" prefWidth="220"
+            styleClass="sidebar-nav-btn"
+            mnemonicParsing="false"/>
+
+    <!-- Section: Staff -->
+    <Label styleClass="sidebar-section-label" text="RECEPTIONISTS">
+        <VBox.margin><Insets bottom="4" left="20" top="12" /></VBox.margin>
+    </Label>
+
+    <Button fx:id="btnReceptionists"
+            text="🧑‍💼  Receptionists"
+            onAction="#goReceptionists"
+            prefHeight="50" prefWidth="220"
+            styleClass="sidebar-nav-btn"
+            mnemonicParsing="false"/>
+
+    <!-- Section: Guests -->
+    <Label styleClass="sidebar-section-label" text="GUESTS">
+        <VBox.margin><Insets bottom="4" left="20" top="12" /></VBox.margin>
+    </Label>
+
+    <Button fx:id="btnGuests"
+            text="🧳  Guests"
+            onAction="#goGuests"
+            prefHeight="50" prefWidth="220"
+            styleClass="sidebar-nav-btn"
+            mnemonicParsing="false"/>
+
+    <Button fx:id="btnReservations"
+            text="📋  Reservations"
+            onAction="#goReservations"
+            prefHeight="50" prefWidth="220"
+            styleClass="sidebar-nav-btn"
+            mnemonicParsing="false"/>
+
+    <!-- Spacer + gold divider at bottom -->
+    <Pane VBox.vgrow="ALWAYS" />
+    <Pane prefHeight="1" prefWidth="220"
+          style="-fx-background-color: rgba(201,168,76,0.30);" />
+
+</VBox>
