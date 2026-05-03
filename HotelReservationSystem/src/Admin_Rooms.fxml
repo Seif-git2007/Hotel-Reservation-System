@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="660.0" prefWidth="900.0" style="-fx-background-color: #F0EDE4;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AdminRoomsController">
+<AnchorPane prefHeight="660.0" prefWidth="900.0" style="-fx-background-color: #F0EDE4;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AdminRoomsController">
 
     <fx:include fx:id="navBar" layoutX="0" layoutY="0" source="NavgationBar.fxml" />
 
     <HBox layoutX="0" layoutY="71" prefHeight="589" prefWidth="900" spacing="0">
 
-        <!-- Admin sidebar — controller injected as sidebarController -->
-        <fx:include fx:id="sidebar" source="AdminSidebar.fxml" />
+        <!-- Sidebar placeholder — swapped at runtime -->
+        <Pane fx:id="sidebarPlaceholder" prefHeight="589" prefWidth="220" style="-fx-background-color: #0F2160;" />
 
-        <!-- Main content -->
+        <!-- Content: header + toolbar + (cards | form) -->
         <VBox prefHeight="589" prefWidth="680" spacing="0" style="-fx-background-color: #F0EDE4;">
 
             <!-- Page header -->
-            <HBox alignment="CENTER_LEFT" prefWidth="680" spacing="12" styleClass="page-header-strip">
-                <Pane prefHeight="32" prefWidth="4" style="-fx-background-color: #C9A84C; -fx-background-radius: 2;" />
-                <VBox spacing="2">
+            <HBox alignment="CENTER_LEFT" prefWidth="680" spacing="14" styleClass="page-header-strip">
+                <VBox spacing="4">
                     <Label styleClass="label-dashboard-title" text="Rooms" />
                     <Label styleClass="label-dashboard-sub" text="Add, edit, and remove hotel rooms" />
                 </VBox>
@@ -27,32 +32,44 @@
 
             <!-- Toolbar -->
             <HBox alignment="CENTER_LEFT" spacing="10">
-                <VBox.margin><Insets bottom="8" left="20" right="20" top="16" /></VBox.margin>
-                <Button fx:id="btnAdd" onAction="#onAdd" styleClass="nav-action-button" text="+ Add Room" />
-                <Button fx:id="btnEdit" onAction="#onEdit" styleClass="nav-action-button" text="✎ Edit" />
-                <Button fx:id="btnDelete" onAction="#onDelete" styleClass="nav-action-button" text="✕ Delete" />
+                <VBox.margin><Insets bottom="10" left="20" right="20" top="14" /></VBox.margin>
+                <Button fx:id="btnAdd" onAction="#onAdd" styleClass="decrement-button" text="+ Add Room" />
                 <Pane HBox.hgrow="ALWAYS" />
                 <Label fx:id="lblStatus" styleClass="main-content-hint" />
             </HBox>
 
-            <!-- Table -->
-            <VBox VBox.vgrow="ALWAYS">
+            <!-- Main area: card grid + collapsible form panel side by side -->
+            <HBox spacing="0" VBox.vgrow="ALWAYS">
                 <VBox.margin><Insets bottom="20" left="20" right="20" /></VBox.margin>
-                <TableView fx:id="table" styleClass="main-content-card" VBox.vgrow="ALWAYS">
-                    <columns>
-                        <TableColumn fx:id="colNo" prefWidth="80" text="Room #" />
-                        <TableColumn fx:id="colType" prefWidth="110" text="Type" />
-                        <TableColumn fx:id="colFloor" prefWidth="70" text="Floor" />
-                        <TableColumn fx:id="colView" prefWidth="80" text="View" />
-                        <TableColumn fx:id="colPrice" prefWidth="100" text="Base Price" />
-                        <TableColumn fx:id="colCap" prefWidth="80" text="Capacity" />
-                        <TableColumn fx:id="colAmen" text="Amenities" />
-                    </columns>
-                    <placeholder>
-                        <Label styleClass="main-content-hint" text="No rooms found." />
-                    </placeholder>
-                </TableView>
-            </VBox>
+
+                <!-- Card grid -->
+                <ScrollPane fx:id="scrollPane" fitToWidth="true" styleClass="register-scroll" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                    <FlowPane fx:id="cardGrid" hgap="0" prefWrapLength="9999" style="-fx-background-color: transparent; -fx-padding: 2 0 2 0;" vgap="12" />
+                </ScrollPane>
+
+                <!-- Inline form panel (hidden by default) -->
+                <VBox fx:id="formPanel" managed="false" minWidth="260" prefWidth="260" spacing="0" style="-fx-background-color: #FFFFFF;                              -fx-border-color: #E0DAD0;                              -fx-border-radius: 12;                              -fx-background-radius: 12;                              -fx-border-width: 0.5;" visible="false">
+                    <VBox.margin><Insets left="14" /></VBox.margin>
+
+                    <!-- Form header -->
+                    <HBox alignment="CENTER_LEFT" spacing="0" style="-fx-background-color: #0F2160;                                  -fx-background-radius: 12 12 0 0;                                  -fx-padding: 14 16 14 16;">
+                        <Label fx:id="formTitle" style="-fx-text-fill: #FFFFFF;                                       -fx-font-family: 'Georgia', serif;                                       -fx-font-size: 15px;                                       -fx-font-weight: bold;" text="Add Room" />
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Button onAction="#onCancelForm" style="-fx-background-color: transparent;                                        -fx-text-fill: rgba(255,255,255,0.55);                                        -fx-font-size: 14px;                                        -fx-cursor: hand;                                        -fx-padding: 0;" text="✕" />
+                    </HBox>
+
+                    <!-- Scrollable form body -->
+                    <ScrollPane fitToWidth="true" styleClass="register-scroll" VBox.vgrow="ALWAYS">
+                        <VBox fx:id="formBody" spacing="14" style="-fx-padding: 18 16 18 16;                                      -fx-background-color: transparent;" />
+                    </ScrollPane>
+
+                    <!-- Save / Cancel -->
+                    <HBox spacing="8" style="-fx-padding: 12 16 14 16;                                              -fx-border-color: #E8E3DA transparent transparent transparent;                                              -fx-border-width: 0.5 0 0 0;">
+                        <Button fx:id="btnSave" maxWidth="Infinity" onAction="#onSave" style="-fx-background-color: #C9A84C;                                        -fx-text-fill: #FFFFFF;                                        -fx-font-weight: bold;                                        -fx-font-size: 12px;                                        -fx-padding: 9 18;                                        -fx-background-radius: 6;                                        -fx-cursor: hand;" text="Save Room" HBox.hgrow="ALWAYS" />
+                        <Button onAction="#onCancelForm" style="-fx-background-color: transparent;                                        -fx-text-fill: #6B6B6B;                                        -fx-font-size: 12px;                                        -fx-font-weight: bold;                                        -fx-padding: 9 14;                                        -fx-border-color: #E0DAD0;                                        -fx-border-radius: 6;                                        -fx-border-width: 0.5;                                        -fx-cursor: hand;" text="Cancel" />
+                    </HBox>
+                </VBox>
+            </HBox>
 
         </VBox>
     </HBox>
