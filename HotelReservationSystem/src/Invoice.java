@@ -9,11 +9,20 @@ public class Invoice {
     public enum paymentMethod{CREDIT,CASH,ONLINE}
     private paymentMethod method;
     private boolean isPaid;
+    VisaCard cardInfo;
     public Invoice(Guest guest, ArrayList<Reservation> reservation, double total) {
         this.guest = guest;
         this.reservation = reservation;
         this.total = total;
 
+    }
+
+    public VisaCard getCardInfo() {
+        return cardInfo;
+    }
+
+    public void setCardInfo(VisaCard cardInfo) {
+        this.cardInfo = cardInfo;
     }
 
     public Guest getGuest() {
