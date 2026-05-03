@@ -15,19 +15,14 @@ public class Amenity {
     public String toString() { return "Amenity: name: '" + name + "', price: " + price; }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj){
-            return true;
-        }
-        if (!(obj instanceof Amenity other)){
-            return false;
-        }
-        return name.equals(other.name);
+    public boolean equals(Object o) {
+        if (!(o instanceof Amenity amenity)) return false;
+        return Double.compare(price, amenity.price) == 0 && Objects.equals(name.toLowerCase(), amenity.name.toLowerCase());
     }
 
     public static void create(Amenity a) throws InvalidInputException {
         for (Amenity am : HotelDataBase.amenities){
-            if (am.equals(a)){
+            if (am.getName().equalsIgnoreCase(a.getName())){
                 throw new RoomInUseException("Amenity '" + a.getName() + "' already exists.");
             }
         }
