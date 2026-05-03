@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="660.0" prefWidth="900.0"
+            style="-fx-background-color: #F0EDE4;"
+            stylesheets="@style.css"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="AdminAmenitiesController">
+
+    <fx:include fx:id="navBar" layoutX="0" layoutY="0" source="NavgationBar.fxml" />
+
+    <HBox layoutX="0" layoutY="71" prefHeight="589" prefWidth="900" spacing="0">
+
+        <fx:include fx:id="sidebar" source="AdminSidebar.fxml" />
+
+        <!-- Content: 680 × 589 -->
+        <VBox prefWidth="680" prefHeight="589" spacing="0"
+              style="-fx-background-color: #F0EDE4;">
+
+            <!-- Page header -->
+            <HBox alignment="CENTER_LEFT" prefWidth="680" spacing="12" styleClass="page-header-strip">
+                <Pane prefHeight="32" prefWidth="4"
+                      style="-fx-background-color: #C9A84C; -fx-background-radius: 2;" />
+                <VBox spacing="2">
+                    <Label styleClass="label-dashboard-title" text="Amenities" />
+                    <Label styleClass="label-dashboard-sub" text="View, add, edit and remove hotel amenities" />
+                </VBox>
+                <Pane HBox.hgrow="ALWAYS" />
+                <!-- Add Amenity button — gold, top-right, same as "Reserve This Room" style -->
+                <Button text="＋  Add Amenity"
+                        onAction="#openAddForm"
+                        styleClass="btn-select-room"
+                        mnemonicParsing="false">
+                    <HBox.margin><Insets right="20" /></HBox.margin>
+                </Button>
+            </HBox>
+
+            <!-- Error / success feedback label (hidden by default) -->
+            <Label fx:id="feedbackLabel"
+                   styleClass="label-error"
+                   text=""
+                   visible="false"
+                   wrapText="true">
+                <VBox.margin><Insets left="20" right="20" top="8" /></VBox.margin>
+            </Label>
+
+            <!-- Inline Add / Edit form (hidden by default, slides in) -->
+            <VBox fx:id="formPanel"
+                  visible="false" managed="false"
+                  styleClass="section-card" spacing="14">
+                <VBox.margin><Insets top="12" left="20" right="20" /></VBox.margin>
+
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <Pane prefWidth="4" prefHeight="16"
+                          style="-fx-background-color: #C9A84C; -fx-background-radius: 2;" />
+                    <Label fx:id="formTitle" text="Add Amenity" styleClass="section-card-title" />
+                </HBox>
+
+                <!-- Name field -->
+                <VBox spacing="6">
+                    <Label text="Amenity Name" styleClass="label-field" />
+                    <TextField
+                            fx:id="fieldName"
+                            promptText="e.g. Jacuzzi"
+                            styleClass="text-field"
+                            prefHeight="42" />
+                    <Label fx:id="nameError" styleClass="label-error" text="" visible="false" />
+                </VBox>
+
+                <!-- Price field -->
+                <VBox spacing="6">
+                    <Label text="Price (USD)" styleClass="label-field" />
+                    <TextField
+                            fx:id="fieldPrice"
+                            promptText="e.g. 150"
+                            styleClass="text-field"
+                            prefHeight="42" />
+                    <Label fx:id="priceError" styleClass="label-error" text="" visible="false" />
+                </VBox>
+
+                <!-- Form buttons -->
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <Button text="Cancel" onAction="#closeForm"
+                            styleClass="button-outline" />
+                    <Button fx:id="btnFormSubmit" text="Save Amenity"
+                            onAction="#submitForm"
+                            styleClass="button" />
+                </HBox>
+
+            </VBox>
+
+            <!-- Amenity cards grid — FlowPane so cards wrap like photo tiles -->
+            <VBox VBox.vgrow="ALWAYS" spacing="0">
+                <ScrollPane fitToWidth="true"
+                            style="-fx-background-color: transparent; -fx-background: #F0EDE4;"
+                            VBox.vgrow="ALWAYS" styleClass="register-scroll">
+                    <content>
+                        <FlowPane fx:id="amenityGrid"
+                                  hgap="16" vgap="16"
+                                  style="-fx-background-color: #F0EDE4;">
+                            <padding>
+                                <Insets bottom="24" left="20" right="20" top="20" />
+                            </padding>
+                        </FlowPane>
+                    </content>
+                </ScrollPane>
+            </VBox>
+
+        </VBox>
+    </HBox>
+</AnchorPane>

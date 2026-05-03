@@ -34,7 +34,7 @@ public class AdminSidebarController implements SessionController {
     @FXML private void goDashboard(ActionEvent e)    { MainController.navigate(e, "Admin_Menu.fxml"); }
     @FXML private void goRooms(ActionEvent e)        { MainController.navigate(e, "Admin_Rooms.fxml"); }
     @FXML private void goRoomTypes(ActionEvent e)    { MainController.navigate(e, "Admin_RoomTypes.fxml"); }
-    @FXML private void goAmenities(ActionEvent e)    { MainController.navigate(e, "Admin_Amenities.fxml"); }
+    @FXML private void goAmenities(ActionEvent e)    { MainController.navigate(e, "AdminAmenities.fxml"); }
     @FXML private void goStaff(ActionEvent e)        { MainController.navigate(e, "Admin_Staff.fxml"); }
     @FXML private void goGuests(ActionEvent e)       { MainController.navigate(e, "Admin_Guests.fxml"); }
     @FXML private void goReservations(ActionEvent e) { MainController.navigate(e, "Admin_Reservations.fxml"); }
