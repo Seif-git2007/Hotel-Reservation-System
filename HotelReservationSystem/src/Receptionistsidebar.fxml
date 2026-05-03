@@ -14,7 +14,6 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ReceptionistSidebarController">
 
-    <!-- Brand card — identical structure to GuestSidebar -->
     <VBox alignment="CENTER" spacing="4" styleClass="sidebar-brand-card">
         <VBox.margin><Insets bottom="6" left="16" right="16" top="24" /></VBox.margin>
         <Label styleClass="sidebar-brand-wordmark" text="Kempinski" />
@@ -56,9 +55,16 @@
             styleClass="sidebar-nav-btn"
             mnemonicParsing="false"/>
 
-    <Button fx:id="btnGuestSearch"
-            text="🔍  Find Guest"
-            onAction="#goGuestSearch"
+    <Button fx:id="btnGuests"
+            text="🧳  View Guests"
+            onAction="#goGuests"
+            prefHeight="50" prefWidth="220"
+            styleClass="sidebar-nav-btn"
+            mnemonicParsing="false"/>
+
+    <Button fx:id="btnRooms"
+            text="🛏  View Rooms"
+            onAction="#goRooms"
             prefHeight="50" prefWidth="220"
             styleClass="sidebar-nav-btn"
             mnemonicParsing="false"/>

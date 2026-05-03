@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="660.0" prefWidth="900.0"
+            style="-fx-background-color: #F0EDE4;"
+            stylesheets="@style.css"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ReceptionistGuestsController">
+
+    <fx:include fx:id="navBar" layoutX="0" layoutY="0" source="NavgationBar.fxml" />
+
+    <HBox layoutX="0" layoutY="71" prefHeight="589" prefWidth="900" spacing="0">
+
+        <fx:include fx:id="sidebar" source="Receptionistsidebar.fxml" />
+
+        <VBox prefWidth="680" prefHeight="589" spacing="0"
+              style="-fx-background-color: #F0EDE4;">
+
+            <HBox alignment="CENTER_LEFT" prefWidth="680" spacing="12" styleClass="page-header-strip">
+                <Pane prefHeight="32" prefWidth="4"
+                      style="-fx-background-color: #C9A84C; -fx-background-radius: 2;" />
+                <VBox spacing="2">
+                    <Label styleClass="label-dashboard-title" text="Guests" />
+                    <Label styleClass="label-dashboard-sub"
+                           text="View all registered guests and their details" />
+                </VBox>
+                <Pane HBox.hgrow="ALWAYS" />
+                <TextField fx:id="searchField"
+                           promptText="🔍  Search by name…"
+                           styleClass="text-field"
+                           prefHeight="36" prefWidth="180">
+                    <HBox.margin><Insets right="20" /></HBox.margin>
+                </TextField>
+            </HBox>
+
+            <HBox spacing="0" prefWidth="680"
+                  style="-fx-background-color: #0F2160; -fx-padding: 10 20 10 20;">
+                <Label fx:id="lblTotalGuests"
+                       style="-fx-text-fill: rgba(255,255,255,0.70);
+                              -fx-font-size: 12px; -fx-font-weight: bold;" />
+                <Pane HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblTotalBalance"
+                       style="-fx-text-fill: #C9A84C;
+                              -fx-font-size: 12px; -fx-font-weight: bold;" />
+            </HBox>
+
+            <VBox VBox.vgrow="ALWAYS" spacing="0">
+                <ScrollPane fitToWidth="true"
+                            style="-fx-background-color: transparent; -fx-background: #F0EDE4;"
+                            VBox.vgrow="ALWAYS" styleClass="register-scroll">
+                    <content>
+                        <VBox fx:id="guestList" spacing="12"
+                              style="-fx-background-color: #F0EDE4;">
+                            <padding>
+                                <Insets bottom="24" left="20" right="20" top="20" />
+                            </padding>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </VBox>
+
+        </VBox>
+    </HBox>
+</AnchorPane>

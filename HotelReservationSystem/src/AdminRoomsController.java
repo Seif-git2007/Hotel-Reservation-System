@@ -5,6 +5,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.DialogPane;
 
 import java.util.ArrayList;
 
@@ -176,6 +178,7 @@ public class AdminRoomsController extends MainController implements SessionContr
                         (r.getStatus() == Reservation.Status.CONFIRMED || r.getStatus() == Reservation.Status.PENDING));
         footer.getChildren().add(statusBadge(occupied));
 
+
         Pane fSpacer = new Pane(); HBox.setHgrow(fSpacer, Priority.ALWAYS);
 
         Button btnEdit = new Button("✎  Edit");
@@ -199,6 +202,8 @@ public class AdminRoomsController extends MainController implements SessionContr
                         "-fx-padding: 7 12; -fx-cursor: hand;"
         );
         btnDel.setOnAction(e -> onDeleteRoom(room));
+        btnDel.setDisable(occupied);
+        btnDel.setOpacity(occupied ? 0.3 : 1.0);
 
         footer.getChildren().addAll(fSpacer, btnEdit, btnDel);
         rightPanel.getChildren().addAll(metaRow, pills, footer);
@@ -321,12 +326,70 @@ public class AdminRoomsController extends MainController implements SessionContr
     }
 
     private void onDeleteRoom(Room room) {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        boolean inUse = HotelDataBase.reservations.stream()
+                .anyMatch(r -> r.getRoom() != null &&
+                        r.getRoom().getRoomNumber() == room.getRoomNumber() &&
+                        (r.getStatus() == Reservation.Status.PENDING ||
+                                r.getStatus() == Reservation.Status.CONFIRMED));
+
+        if (inUse) {
+            setStatus("❌  Cannot delete Room " + room.getRoomNumber() + " — it has active reservations.");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.NONE);
         confirm.setTitle("Delete Room");
-        confirm.setHeaderText("Delete Room " + room.getRoomNumber() + "?");
-        confirm.setContentText("This cannot be undone.");
-        confirm.showAndWait().ifPresent(bt -> {
-            if (bt != ButtonType.OK) return;
+        confirm.setHeaderText(null);
+
+        DialogPane pane = confirm.getDialogPane();
+        pane.setStyle(
+                "-fx-background-color: #0F2160;" +
+                        "-fx-border-color: #C9A84C;" +
+                        "-fx-border-width: 1.5;"
+        );
+
+        Label msg = new Label(
+                "You are about to delete Room " + room.getRoomNumber() + ".\n\nThis action cannot be undone."
+        );
+        msg.setStyle(
+                "-fx-text-fill: #FFFFFF;" +
+                        "-fx-font-size: 13px;" +
+                        "-fx-font-family: 'Georgia', serif;" +
+                        "-fx-padding: 10 16 10 16;"
+        );
+        pane.setContent(msg);
+
+        ButtonType btnConfirm = new ButtonType("Delete", ButtonBar.ButtonData.OK_DONE);
+        ButtonType btnCancel  = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        confirm.getButtonTypes().setAll(btnConfirm, btnCancel);
+
+        confirm.setOnShown(ev -> {
+            Button deleteButton = (Button) pane.lookupButton(btnConfirm);
+            deleteButton.setStyle(
+                    "-fx-background-color: #B00020;" +
+                            "-fx-text-fill: #FFFFFF;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-font-size: 13px;" +
+                            "-fx-padding: 8 20;" +
+                            "-fx-background-radius: 6;" +
+                            "-fx-cursor: hand;"
+            );
+            Button cancelButton = (Button) pane.lookupButton(btnCancel);
+            cancelButton.setStyle(
+                    "-fx-background-color: transparent;" +
+                            "-fx-text-fill: #C9A84C;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-font-size: 13px;" +
+                            "-fx-padding: 8 20;" +
+                            "-fx-border-color: #C9A84C;" +
+                            "-fx-border-radius: 6;" +
+                            "-fx-border-width: 1.5;" +
+                            "-fx-cursor: hand;"
+            );
+        });
+
+        confirm.showAndWait().ifPresent(btn -> {
+            if (btn != btnConfirm) return;
             try {
                 if (editingRoom != null && editingRoom.getRoomNumber() == room.getRoomNumber())
                     onCancelForm();

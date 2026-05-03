@@ -2,6 +2,8 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.DialogPane;
 
 import java.util.ArrayList;
 
@@ -24,9 +26,9 @@ public class AdminAmenitiesController implements SessionController {
     private AppSession session;
     private Admin      admin;
 
-    // null  → Add mode      non-null → Edit mode
     private Amenity editingAmenity = null;
 
+    // ── SessionController ────────────────────────────────────────────────────
     @Override
     public void initSession(AppSession session) {
         this.session = session;
@@ -40,13 +42,13 @@ public class AdminAmenitiesController implements SessionController {
         renderCards();
     }
 
+    // ── Card rendering ────────────────────────────────────────────────────────
     private void renderCards() {
         amenityGrid.getChildren().clear();
 
         ArrayList<Amenity> list = HotelDataBase.getAmenities();
 
         if (list.isEmpty()) {
-            // BUG FIX: no curly/smart quotes inside Java string literals
             Label empty = new Label("No amenities yet. Use '+ Add Amenity' to create one.");
             empty.getStyleClass().add("main-content-hint");
             amenityGrid.getChildren().add(empty);
@@ -60,12 +62,10 @@ public class AdminAmenitiesController implements SessionController {
             card.setMaxWidth(190);
             card.getStyleClass().add("room-card");
 
-            // Gold top-strip acts as the photo accent
             Pane strip = new Pane();
             strip.setPrefHeight(6);
             strip.setStyle("-fx-background-color: #C9A84C; -fx-background-radius: 6 6 0 0;");
 
-            // Large emoji icon — the "photo"
             Label icon = new Label(amenityIcon(amenity.getName()));
             icon.setStyle("-fx-font-size: 36px; -fx-padding: 10 0 4 0;");
             icon.setMaxWidth(Double.MAX_VALUE);
@@ -90,14 +90,20 @@ public class AdminAmenitiesController implements SessionController {
             editBtn.getStyleClass().add("filter-btn-outline");
             editBtn.setMaxWidth(Double.MAX_VALUE);
             HBox.setHgrow(editBtn, Priority.ALWAYS);
-            // BUG FIX: pass the object, not an index captured from a copy-list iteration
             editBtn.setOnAction(e -> openEditForm(amenity));
+
+            boolean amenityInUse = HotelDataBase.reservations.stream()
+                    .anyMatch(r -> r.getRoom().getAmenities().contains(amenity) &&
+                            (r.getStatus() == Reservation.Status.PENDING ||
+                                    r.getStatus() == Reservation.Status.CONFIRMED));
 
             Button deleteBtn = new Button("Delete");
             deleteBtn.getStyleClass().add("btn-cancel-reservation");
             deleteBtn.setMaxWidth(Double.MAX_VALUE);
             HBox.setHgrow(deleteBtn, Priority.ALWAYS);
             deleteBtn.setOnAction(e -> handleDelete(amenity));
+            deleteBtn.setDisable(amenityInUse);
+            deleteBtn.setOpacity(amenityInUse ? 0.3 : 1.0);
 
             HBox actions = new HBox(8, editBtn, deleteBtn);
             actions.setAlignment(Pos.CENTER);
@@ -107,7 +113,7 @@ public class AdminAmenitiesController implements SessionController {
         }
     }
 
-    // ── Form ─────────────────────────────────────────────────────────────────
+    // ── Form ──────────────────────────────────────────────────────────────────
     @FXML
     private void openAddForm() {
         editingAmenity = null;
@@ -124,7 +130,6 @@ public class AdminAmenitiesController implements SessionController {
         formTitle.setText("Edit Amenity");
         btnFormSubmit.setText("Update Amenity");
         fieldName.setText(amenity.getName());
-        // Cast to int so "400.0" shows as "400"
         fieldPrice.setText(String.valueOf((int) amenity.getPrice()));
         clearErrors();
         showForm();
@@ -161,11 +166,9 @@ public class AdminAmenitiesController implements SessionController {
 
         try {
             if (editingAmenity == null) {
-                // CREATE
                 admin.addAmenity(name, price);
-                showFeedback("Amenity \"" + name + "\" added successfully.", false);
+                showFeedback("✔  Amenity \"" + name + "\" added successfully.", false);
             } else {
-                // UPDATE — find the live index at submit time, not at card-render time
                 int liveIndex = HotelDataBase.amenities.indexOf(editingAmenity);
                 if (liveIndex == -1) {
                     showFeedback("Amenity no longer exists. Refreshing.", true);
@@ -174,7 +177,7 @@ public class AdminAmenitiesController implements SessionController {
                     return;
                 }
                 admin.updateAmenityPrice(name, price, liveIndex);
-                showFeedback("Amenity updated successfully.", false);
+                showFeedback("✔  Amenity updated successfully.", false);
             }
             closeForm();
             renderCards();
@@ -183,27 +186,83 @@ public class AdminAmenitiesController implements SessionController {
         }
     }
 
+    // ── Delete ────────────────────────────────────────────────────────────────
     private void handleDelete(Amenity amenity) {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                "Delete amenity \"" + amenity.getName() + "\"? This cannot be undone.",
-                ButtonType.YES, ButtonType.CANCEL);
-        confirm.setHeaderText("Confirm Delete");
+        boolean inUse = HotelDataBase.reservations.stream()
+                .anyMatch(r -> r.getRoom().getAmenities().contains(amenity) &&
+                        (r.getStatus() == Reservation.Status.PENDING ||
+                                r.getStatus() == Reservation.Status.CONFIRMED));
+
+        if (inUse) {
+            showFeedback("❌  Cannot delete \"" + amenity.getName() + "\" — it is in an active reservation.", true);
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.NONE);
+        confirm.setTitle("Delete Amenity");
+        confirm.setHeaderText(null);
+
+        DialogPane pane = confirm.getDialogPane();
+        pane.setStyle(
+                "-fx-background-color: #0F2160;" +
+                        "-fx-border-color: #C9A84C;" +
+                        "-fx-border-width: 1.5;"
+        );
+
+        Label msg = new Label(
+                "You are about to delete \"" + amenity.getName() + "\".\n\nThis action cannot be undone."
+        );
+        msg.setStyle(
+                "-fx-text-fill: #FFFFFF;" +
+                        "-fx-font-size: 13px;" +
+                        "-fx-font-family: 'Georgia', serif;" +
+                        "-fx-padding: 10 16 10 16;"
+        );
+        pane.setContent(msg);
+
+        ButtonType btnConfirm = new ButtonType("Delete", ButtonBar.ButtonData.OK_DONE);
+        ButtonType btnCancel  = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        confirm.getButtonTypes().setAll(btnConfirm, btnCancel);
+
+        confirm.setOnShown(ev -> {
+            Button deleteButton = (Button) pane.lookupButton(btnConfirm);
+            deleteButton.setStyle(
+                    "-fx-background-color: #B00020;" +
+                            "-fx-text-fill: #FFFFFF;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-font-size: 13px;" +
+                            "-fx-padding: 8 20;" +
+                            "-fx-background-radius: 6;" +
+                            "-fx-cursor: hand;"
+            );
+            Button cancelButton = (Button) pane.lookupButton(btnCancel);
+            cancelButton.setStyle(
+                    "-fx-background-color: transparent;" +
+                            "-fx-text-fill: #C9A84C;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-font-size: 13px;" +
+                            "-fx-padding: 8 20;" +
+                            "-fx-border-color: #C9A84C;" +
+                            "-fx-border-radius: 6;" +
+                            "-fx-border-width: 1.5;" +
+                            "-fx-cursor: hand;"
+            );
+        });
+
         confirm.showAndWait().ifPresent(btn -> {
-            if (btn == ButtonType.YES) {
-                // BUG FIX: resolve the live index at delete-time, not card-render time
-                int liveIndex = HotelDataBase.amenities.indexOf(amenity);
-                if (liveIndex == -1) {
-                    showFeedback("Amenity already removed.", true);
-                    renderCards();
-                    return;
-                }
-                try {
-                    admin.removeAmenity(liveIndex);
-                    showFeedback("Amenity deleted.", false);
-                    renderCards();
-                } catch (InvalidInputException ex) {
-                    showFeedback(ex.getMessage(), true);
-                }
+            if (btn != btnConfirm) return;
+            int liveIndex = HotelDataBase.amenities.indexOf(amenity);
+            if (liveIndex == -1) {
+                showFeedback("Amenity already removed.", true);
+                renderCards();
+                return;
+            }
+            try {
+                admin.removeAmenity(liveIndex);
+                showFeedback("✔  \"" + amenity.getName() + "\" deleted successfully.", false);
+                renderCards();
+            } catch (InvalidInputException ex) {
+                showFeedback("❌  " + ex.getMessage(), true);
             }
         });
     }
@@ -229,17 +288,17 @@ public class AdminAmenitiesController implements SessionController {
 
     private String amenityIcon(String name) {
         String n = name.toLowerCase();
-        if (n.contains("jac") || n.contains("tub"))    return "\uD83D\uDEC1"; // 🛁
-        if (n.contains("spa") || n.contains("mass"))   return "\uD83D\uDC86"; // 💆
-        if (n.contains("wifi") || n.contains("web"))   return "\uD83D\uDCF6"; // 📶
-        if (n.contains("fridge") || n.contains("mini"))return "\uD83E\uDDCA"; // 🧊
-        if (n.contains("pool") || n.contains("swim"))  return "\uD83C\uDFCA"; // 🏊
-        if (n.contains("gym") || n.contains("fit"))    return "\uD83C\uDFCB"; // 🏋
-        if (n.contains("bar") || n.contains("drink"))  return "\uD83C\uDF78"; // 🍸
-        if (n.contains("breakfast") || n.contains("food")) return "\uD83C\uDF73"; // 🍳
-        if (n.contains("park"))                        return "\uD83D\uDE97"; // 🚗
-        if (n.contains("tv") || n.contains("view"))    return "\uD83D\uDCFA"; // 📺
-        return "\u2728"; // ✨ default
+        if (n.contains("jac") || n.contains("tub"))     return "\uD83D\uDEC1";
+        if (n.contains("spa") || n.contains("mass"))    return "\uD83D\uDC86";
+        if (n.contains("wifi") || n.contains("web"))    return "\uD83D\uDCF6";
+        if (n.contains("fridge") || n.contains("mini")) return "\uD83E\uDDCA";
+        if (n.contains("pool") || n.contains("swim"))   return "\uD83C\uDFCA";
+        if (n.contains("gym") || n.contains("fit"))     return "\uD83C\uDFCB";
+        if (n.contains("bar") || n.contains("drink"))   return "\uD83C\uDF78";
+        if (n.contains("breakfast") || n.contains("food")) return "\uD83C\uDF73";
+        if (n.contains("park"))                         return "\uD83D\uDE97";
+        if (n.contains("tv") || n.contains("view"))     return "\uD83D\uDCFA";
+        return "\u2728";
     }
 
     private String capitalize(String s) {
@@ -247,4 +306,3 @@ public class AdminAmenitiesController implements SessionController {
         return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 }
-

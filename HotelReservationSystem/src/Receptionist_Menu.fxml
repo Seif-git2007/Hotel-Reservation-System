@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -19,14 +18,12 @@
 
     <HBox layoutX="0" layoutY="71" prefHeight="589" prefWidth="900" spacing="0">
 
-        <!-- Sidebar (220px) -->
         <fx:include fx:id="sidebar" source="Receptionistsidebar.fxml" />
 
-        <!-- Content area (680px) — same width as every guest screen -->
         <VBox prefWidth="680" prefHeight="589" spacing="0"
               style="-fx-background-color: #F0EDE4;">
 
-            <!-- Page header strip — same pattern as ViewRooms, CancelReservation etc. -->
+            <!-- Page header -->
             <HBox alignment="CENTER_LEFT" prefWidth="680" spacing="12" styleClass="page-header-strip">
                 <Pane prefHeight="32" prefWidth="4"
                       style="-fx-background-color: #C9A84C; -fx-background-radius: 2;" />
@@ -37,58 +34,142 @@
                 </VBox>
             </HBox>
 
-            <!-- Three stat cards at the top — same pattern as Admin_Menu.fxml -->
-            <HBox spacing="16" prefWidth="680">
-                <VBox.margin><Insets top="16" left="20" right="20" bottom="0" /></VBox.margin>
+            <!-- Welcome block -->
+            <VBox alignment="CENTER_LEFT" spacing="4">
+                <VBox.margin><Insets left="32" top="24" bottom="8" /></VBox.margin>
+                <Label style="-fx-text-fill: #0F2160;
+                              -fx-font-family: 'Georgia';
+                              -fx-font-size: 20px;
+                              -fx-font-style: italic;"
+                       text="Welcome back," />
+                <Label fx:id="welcomeName"
+                       style="-fx-text-fill: #C9A84C;
+                              -fx-font-size: 16px;
+                              -fx-font-weight: bold;"
+                       text="Receptionist" />
+            </VBox>
 
-                <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="6" alignment="CENTER">
-                    <Label text="CHECK-INS TODAY" styleClass="register-section-label" />
-                    <Label fx:id="lblCheckInCount"
-                           style="-fx-text-fill: #1D9E75; -fx-font-size: 32px; -fx-font-weight: bold;"
-                           text="0" />
-                    <Label text="pending arrivals" styleClass="main-content-hint" />
+            <!-- Three luxury stat boxes -->
+            <HBox spacing="16" prefWidth="680" alignment="CENTER">
+                <VBox.margin><Insets top="20" left="24" right="24" bottom="0" /></VBox.margin>
+
+                <!-- Check-ins -->
+                <VBox HBox.hgrow="ALWAYS" spacing="0"
+                      style="-fx-background-color: #FFFFFF;
+                             -fx-background-radius: 12;
+                             -fx-border-color: #E0DAD0;
+                             -fx-border-radius: 12;
+                             -fx-border-width: 0.5;
+                             -fx-effect: dropshadow(three-pass-box, rgba(15,33,96,0.06), 8, 0, 0, 2);">
+
+                    <Pane prefHeight="4"
+                          style="-fx-background-color: #C9A84C;
+                                 -fx-background-radius: 12 12 0 0;" />
+
+                    <VBox spacing="6" alignment="CENTER"
+                          style="-fx-padding: 24 20 24 20;">
+                        <Label text="🛎" style="-fx-font-size: 28px;" />
+                        <Label text="CHECK-INS TODAY"
+                               style="-fx-text-fill: #9B9589;
+                                      -fx-font-size: 10px;
+                                      -fx-font-weight: bold;
+                                      -fx-letter-spacing: 0.14em;" />
+                        <Label fx:id="lblCheckInCount"
+                               style="-fx-text-fill: #0F2160;
+                                      -fx-font-family: 'Georgia', serif;
+                                      -fx-font-size: 42px;
+                                      -fx-font-weight: bold;"
+                               text="0" />
+                        <Label text="pending arrivals"
+                               style="-fx-text-fill: #9B9589;
+                                      -fx-font-size: 11px;
+                                      -fx-font-style: italic;" />
+                    </VBox>
                 </VBox>
 
-                <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="6" alignment="CENTER">
-                    <Label text="CHECK-OUTS TODAY" styleClass="register-section-label" />
-                    <Label fx:id="lblCheckOutCount"
-                           style="-fx-text-fill: #C9A84C; -fx-font-size: 32px; -fx-font-weight: bold;"
-                           text="0" />
-                    <Label text="departures due" styleClass="main-content-hint" />
+                <!-- Check-outs -->
+                <VBox HBox.hgrow="ALWAYS" spacing="0"
+                      style="-fx-background-color: #FFFFFF;
+                             -fx-background-radius: 12;
+                             -fx-border-color: #E0DAD0;
+                             -fx-border-radius: 12;
+                             -fx-border-width: 0.5;
+                             -fx-effect: dropshadow(three-pass-box, rgba(15,33,96,0.06), 8, 0, 0, 2);">
+
+                    <Pane prefHeight="4"
+                          style="-fx-background-color: #C9A84C;
+                                 -fx-background-radius: 12 12 0 0;" />
+
+                    <VBox spacing="6" alignment="CENTER"
+                          style="-fx-padding: 24 20 24 20;">
+                        <Label text="🚪" style="-fx-font-size: 28px;" />
+                        <Label text="CHECK-OUTS TODAY"
+                               style="-fx-text-fill: #9B9589;
+                                      -fx-font-size: 10px;
+                                      -fx-font-weight: bold;
+                                      -fx-letter-spacing: 0.14em;" />
+                        <Label fx:id="lblCheckOutCount"
+                               style="-fx-text-fill: #C9A84C;
+                                      -fx-font-family: 'Georgia', serif;
+                                      -fx-font-size: 42px;
+                                      -fx-font-weight: bold;"
+                               text="0" />
+                        <Label text="departures due"
+                               style="-fx-text-fill: #9B9589;
+                                      -fx-font-size: 11px;
+                                      -fx-font-style: italic;" />
+                    </VBox>
                 </VBox>
 
-                <VBox styleClass="section-card" HBox.hgrow="ALWAYS" spacing="6" alignment="CENTER">
-                    <Label text="TOTAL RESERVATIONS" styleClass="register-section-label" />
-                    <Label fx:id="lblReservationCount"
-                           style="-fx-text-fill: #0F2160; -fx-font-size: 32px; -fx-font-weight: bold;"
-                           text="0" />
-                    <Label text="in the system" styleClass="main-content-hint" />
+                <!-- Total reservations -->
+                <VBox HBox.hgrow="ALWAYS" spacing="0"
+                      style="-fx-background-color: #FFFFFF;
+                             -fx-background-radius: 12;
+                             -fx-border-color: #E0DAD0;
+                             -fx-border-radius: 12;
+                             -fx-border-width: 0.5;
+                             -fx-effect: dropshadow(three-pass-box, rgba(15,33,96,0.06), 8, 0, 0, 2);">
+
+                    <Pane prefHeight="4"
+                          style="-fx-background-color: #C9A84C;
+                                 -fx-background-radius: 12 12 0 0;" />
+
+                    <VBox spacing="6" alignment="CENTER"
+                          style="-fx-padding: 24 20 24 20;">
+                        <Label text="📋" style="-fx-font-size: 28px;" />
+                        <Label text="TOTAL RESERVATIONS"
+                               style="-fx-text-fill: #9B9589;
+                                      -fx-font-size: 10px;
+                                      -fx-font-weight: bold;
+                                      -fx-letter-spacing: 0.14em;" />
+                        <Label fx:id="lblReservationCount"
+                               style="-fx-text-fill: #0F2160;
+                                      -fx-font-family: 'Georgia', serif;
+                                      -fx-font-size: 42px;
+                                      -fx-font-weight: bold;"
+                               text="0" />
+                        <Label text="in the system"
+                               style="-fx-text-fill: #9B9589;
+                                      -fx-font-size: 11px;
+                                      -fx-font-style: italic;" />
+                    </VBox>
                 </VBox>
 
             </HBox>
 
-            <!-- Recent reservations list — main content area -->
-            <VBox styleClass="section-card" VBox.vgrow="ALWAYS" spacing="10">
-                <VBox.margin><Insets top="16" left="20" right="20" bottom="20" /></VBox.margin>
+            <!-- Gold divider line -->
+            <Pane prefHeight="1.5" prefWidth="640"
+                  style="-fx-background-color: rgba(201,168,76,0.25);">
+                <VBox.margin><Insets top="28" left="24" right="24" /></VBox.margin>
+            </Pane>
 
-                <HBox alignment="CENTER_LEFT" spacing="8">
-                    <Pane prefWidth="4" prefHeight="18"
-                          style="-fx-background-color: #0F2160; -fx-background-radius: 2;" />
-                    <Label text="All Reservations" styleClass="section-card-title" />
-                </HBox>
-
-                <ScrollPane fitToWidth="true"
-                            VBox.vgrow="ALWAYS"
-                            styleClass="register-scroll"
-                            style="-fx-background-color: transparent; -fx-background: transparent;">
-                    <content>
-                        <VBox fx:id="reservationContainer" spacing="12"
-                              style="-fx-background-color: transparent;">
-                            <padding><Insets top="4" bottom="4" /></padding>
-                        </VBox>
-                    </content>
-                </ScrollPane>
-
+            <!-- Footer hint -->
+            <VBox alignment="CENTER" VBox.vgrow="ALWAYS">
+                <Label style="-fx-text-fill: rgba(107,107,107,0.45);
+                              -fx-font-family: 'Georgia', serif;
+                              -fx-font-size: 13px;
+                              -fx-font-style: italic;"
+                       text="Use the sidebar to manage check-ins, check-outs, guests and rooms." />
             </VBox>
 
         </VBox>
