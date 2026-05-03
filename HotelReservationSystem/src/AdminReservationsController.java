@@ -19,6 +19,8 @@ public class AdminReservationsController implements SessionController {
     @FXML private Label                  lblCompleted;
 
     private AppSession session;
+    private final Runnable refreshListener = this::refresh;
+
 
     @Override
     public void initSession(AppSession session) {
@@ -33,11 +35,20 @@ public class AdminReservationsController implements SessionController {
         );
         filterCombo.setValue("All");
         filterCombo.setOnAction(e -> renderList());
+        updateStats();
+        renderList();
+        EventBus.subscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
 
+        reservationList.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                EventBus.unsubscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+            }
+        });
+    }
+    public void refresh(){
         updateStats();
         renderList();
     }
-
     private void updateStats() {
         List<Reservation> all = new ArrayList<>(HotelDataBase.reservations);
         lblTotal.setText("Total: " + all.size());

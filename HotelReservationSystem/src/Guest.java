@@ -1,5 +1,4 @@
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class Guest extends User {
@@ -42,37 +41,58 @@ public class Guest extends User {
         this.displayname = displayname;
         setEmail(email);
         HotelDataBase.users.add(this);
+        DataBaseManager.runAsync(() -> {
+            DataBaseManager.saveUser(this);
+            EventBus.fire(EventBus.Event.USER_CHANGED);
+        });
     }
 
     public void viewAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate) throws InvalidInputException {
         ArrayList<Room> available = HotelDataBase.getAvailableRooms(checkInDate, checkOutDate);
-        if (available.isEmpty()) throw new RoomNotAvailableException("No available rooms in this duration");
+        if (available.isEmpty()){
+            throw new RoomNotAvailableException("No available rooms in this duration");
+        }
         int cnt = 1;
-        for (Room r : available) System.out.println(cnt++ + ". " + r);
+        for (Room r : available){
+            System.out.println(cnt++ + ". " + r);
+        }
     }
 
     public void viewAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate,
                                     roomPreferences preferred) throws InvalidInputException {
         ArrayList<Room> available = HotelDataBase.getAvailableRooms(checkInDate, checkOutDate);
-        if (available.isEmpty()) throw new RoomNotAvailableException("No available rooms in this duration");
+        if (available.isEmpty()){
+            throw new RoomNotAvailableException("No available rooms in this duration");
+        }
         ArrayList<Room> filtered = HotelDataBase.filterRoomsByPreferences(available, preferred);
-        if (filtered.isEmpty()) throw new RoomNotAvailableException("No available rooms with your preferences");
+        if (filtered.isEmpty()){
+            throw new RoomNotAvailableException("No available rooms with your preferences");
+        }
         int cnt = 1;
-        for (Room r : filtered) System.out.println(cnt++ + ". " + r);
+        for (Room r : filtered){
+            System.out.println(cnt++ + ". " + r);
+        }
     }
 
     public void makeReservation(Room room, LocalDate checkInDate, LocalDate checkOutDate, String specialRequests) {
         Reservation reservation = new Reservation(this, room, checkInDate, checkOutDate);
         reservation.setSpecialRequests(specialRequests);
         HotelDataBase.reservations.add(reservation);
+        DataBaseManager.runAsync(() -> {
+            DataBaseManager.saveReservation(reservation);
+            EventBus.fire(EventBus.Event.RESERVATION_CHANGED);
+        });
         System.out.println("Reservation is made successfully");
     }
 
     public void viewReservations() {
         int cnt = 1;
         synchronized (HotelDataBase.reservations) {
-            for (Reservation r : HotelDataBase.reservations)
-                if (r.getGuest() == this) System.out.println(cnt++ + ". " + r);
+            for (Reservation r : HotelDataBase.reservations){
+                if (r.getGuest() == this){
+                    System.out.println(cnt++ + ". " + r);
+                }
+            }
         }
     }
 
@@ -90,49 +110,71 @@ public class Guest extends User {
 
     public void cancelReservation(Reservation r) {
         r.setStatus(Reservation.Status.CANCELLED);
+        DataBaseManager.runAsync(() -> {
+            DataBaseManager.updateReservationStatus(r);
+            EventBus.fire(EventBus.Event.RESERVATION_CHANGED);
+        });
         System.out.println("Reservation Cancelled");
     }
 
     public Invoice checkOut() throws InvalidInputException {
         ArrayList<Reservation> confirmed = new ArrayList<>();
         double total = 0;
-            for (Reservation r : HotelDataBase.reservations) {
-                if (r.getGuest() == this && r.getStatus() == Reservation.Status.CONFIRMED) {
-                    confirmed.add(r);
-                }
+        for (Reservation r : HotelDataBase.reservations) {
+            if (r.getGuest() == this && r.getStatus() == Reservation.Status.CONFIRMED) {
+                confirmed.add(r);
             }
+        }
         if (confirmed.isEmpty()) {
             throw new InvalidInputException("You are not checked in");
         }
-        for (Reservation r : confirmed)
-            if (!r.getCheckOutDate().equals(JumpInTime.now))
+        for (Reservation r : confirmed){
+            if (!r.getCheckOutDate().equals(JumpInTime.now)){
                 throw new InvalidInputException("You can't check out before your check out date");
-
+            }
+        }
         for (Reservation r : confirmed){
             total += r.getRoom().calcTotal(r.getCheckInDate(), r.getCheckOutDate());
         }
-        for (Reservation r : confirmed){
-            r.setStatus(Reservation.Status.AWAITING_CONFIRMATION);
-        }
 
         Invoice invoice = new Invoice(this, confirmed, total);
-        HotelDataBase.invoices.add(invoice);
+
         System.out.println(invoice.toSummary());
         return invoice;
     }
 
-    public void pay(Invoice invoice, Invoice.paymentMethod method,VisaCard cardinfo) throws InvalidInputException {
+    public void pay(Invoice invoice, Invoice.paymentMethod method, VisaCard cardinfo) throws InvalidInputException {
         if (method == Invoice.paymentMethod.ONLINE) {
-            if (balance < invoice.getTotal())
+            if (balance < invoice.getTotal()){
                 throw new InvalidInputException("Insufficient balance, please choose another method");
+            }
             this.balance -= invoice.getTotal();
         }
         if (method == Invoice.paymentMethod.CREDIT) {
             invoice.setCardInfo(cardinfo);
         }
+        ArrayList<Reservation> confirmed = new ArrayList<>();
+        for (Reservation r : HotelDataBase.reservations) {
+            if (r.getGuest() == this && r.getStatus() == Reservation.Status.CONFIRMED) {
+                confirmed.add(r);
+            }
+        }
+        for (Reservation r : confirmed){
+            r.setStatus(Reservation.Status.AWAITING_CONFIRMATION);
+            DataBaseManager.runAsync(() -> {
+                DataBaseManager.updateReservationStatus(r);
+                EventBus.fire(EventBus.Event.RESERVATION_CHANGED);
+            });
+        }
+
         invoice.setPaymentDate(JumpInTime.now);
         invoice.setPaid(true);
         invoice.setMethod(method);
+        HotelDataBase.invoices.add(invoice);
+        DataBaseManager.runAsync(() -> {
+            DataBaseManager.saveInvoice(invoice);
+            EventBus.fire(EventBus.Event.INVOICE_CHANGED);
+        });
         System.out.println("Payment Done Successfully\nAwaiting Receptionist Confirmation");
         System.out.println(invoice);
     }

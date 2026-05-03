@@ -12,6 +12,7 @@ public class ViewReservationsController implements SessionController {
     @FXML VBox reservationController;
 
     private AppSession session;
+    private final Runnable refreshListener = this::refresh;
 
     @Override
     public void initSession(AppSession session) {
@@ -21,6 +22,13 @@ public class ViewReservationsController implements SessionController {
             sidebarController.btnViewReservations.getStyleClass().add("sidebar-nav-btn-active");
         }
         refresh();
+        EventBus.subscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+        reservationController.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                EventBus.unsubscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+            }
+        });
+
     }
 
     public void renderReservations(ArrayList<Reservation> reservations, VBox reservationContainer) {
