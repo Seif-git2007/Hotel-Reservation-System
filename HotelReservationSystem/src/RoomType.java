@@ -18,7 +18,7 @@ public class RoomType {
 
     public static void create(RoomType newRoomType) throws InvalidInputException {
         for (RoomType r : HotelDataBase.roomTypes){
-            if (r.equals(newRoomType)){
+            if (r.getSize().equalsIgnoreCase(newRoomType.getSize())){
                 throw new RoomInUseException("RoomType Already Exists");
             }
         }
@@ -84,9 +84,12 @@ public class RoomType {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof RoomType rt)){
-            return false;
-        }
-        return Objects.equals(size.toLowerCase(), rt.size.toLowerCase());
+        if (!(o instanceof RoomType roomType)) return false;
+        return Double.compare(basePrice, roomType.basePrice) == 0 && capacity == roomType.capacity && Objects.equals(size.toLowerCase(), roomType.size.toLowerCase());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(size, basePrice, capacity);
     }
 }
