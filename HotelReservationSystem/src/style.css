@@ -717,6 +717,24 @@
     -fx-text-fill: #C9A84C;
 }
 
+/* ── Amenity tags (room card pills) ──────────────────────────── */
+.amenity-tag {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #0F2160;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 0.06em;
+    -fx-background-radius: 20;
+    -fx-border-color: #C9A84C;
+    -fx-border-radius: 20;
+    -fx-border-width: 1.2;
+    -fx-padding: 4 12;
+}
+.amenity-tag:hover {
+    -fx-background-color: rgba(201,168,76,0.10);
+    -fx-text-fill: #C9A84C;
+}
+
 .filter-btn-solid {
     -fx-background-color: #C9A84C;
     -fx-text-fill: #FFFFFF;
