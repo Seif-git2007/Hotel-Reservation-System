@@ -34,12 +34,12 @@ public class StaffProfileController implements SessionController {
 
         if (user instanceof Admin admin) {
             nameLabel.setText(admin.getUsername());
-            workingHoursLabel.setText(admin.getWorkingHours() + " hrs / week");
+            workingHoursLabel.setText(admin.getWorkingHours() + " hrs / day");
             roleLabel.setText("Kempinski Administrator Account");
             roleFooter.setText("Administrator Account");
         } else if (user instanceof Receptionist receptionist) {
             nameLabel.setText(receptionist.getUsername());
-            workingHoursLabel.setText(receptionist.getWorkingHours() + " hrs / week");
+            workingHoursLabel.setText(receptionist.getWorkingHours() + " hrs / day");
             roleLabel.setText("Kempinski Receptionist Account");
             roleFooter.setText("Receptionist Account");
         }

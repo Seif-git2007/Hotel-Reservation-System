@@ -181,7 +181,7 @@ public class AdminReceptionistsController implements SessionController {
         List<Receptionist> all = HotelDataBase.getReceptionists();
         lblTotalReceptionists.setText("Total Receptionists: " + all.size());
         int totalHours = all.stream().mapToInt(Receptionist::getWorkingHours).sum();
-        lblTotalHours.setText("Combined Working Hours: " + totalHours + " hrs / week");
+        lblTotalHours.setText("Combined Working Hours: " + totalHours + " hrs");
     }
 
     private void renderList() {
@@ -299,7 +299,7 @@ public class AdminReceptionistsController implements SessionController {
         emailLabel.setStyle("-fx-text-fill: #9B9589; -fx-font-size: 11px;");
         nameBlock.getChildren().addAll(userName, emailLabel);
 
-        Label hoursChip = new Label(r.getWorkingHours() + " hrs / week");
+        Label hoursChip = new Label(r.getWorkingHours() + " hrs / day");
         hoursChip.setStyle(
                 "-fx-text-fill: #0F2160;" +
                         "-fx-background-color: #C9A84C;" +
@@ -326,7 +326,7 @@ public class AdminReceptionistsController implements SessionController {
                 detailCell("Gender", "Gender",
                         r.getGender().toString().substring(0, 1).toUpperCase() +
                                 r.getGender().toString().substring(1).toLowerCase(),                       true),
-                detailCell("Hours",  "Working Hours",  r.getWorkingHours() + " hours per week",   false)
+                detailCell("Hours",  "Working Hours",  r.getWorkingHours() + " hours per day",   false)
         );
 
         content.getChildren().addAll(contentHeader, divider, details);
