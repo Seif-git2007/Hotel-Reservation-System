@@ -170,6 +170,12 @@ public class AdminRoomTypesController implements SessionController {
                         .replace("-fx-background-color: rgba(201,168,76,0.10);",
                                 "-fx-background-color: transparent;")));
         editBtn.setOnAction(e -> openEditForm(rt));
+        boolean typeEditLocked = HotelDataBase.reservations.stream()
+                .anyMatch(r -> r.getRoom().getType().getSize().equalsIgnoreCase(rt.getSize())
+                        && (r.getStatus() == Reservation.Status.PENDING
+                        ||  r.getStatus() == Reservation.Status.CONFIRMED));
+        editBtn.setDisable(typeEditLocked);
+        editBtn.setOpacity(typeEditLocked ? 0.3 : 1.0);
         HBox.setHgrow(editBtn, Priority.ALWAYS);
         editBtn.setMaxWidth(Double.MAX_VALUE);
 
@@ -189,12 +195,8 @@ public class AdminRoomTypesController implements SessionController {
                         .replace("-fx-background-color: rgba(176,0,32,0.06);",
                                 "-fx-background-color: transparent;")));
         deleteBtn.setOnAction(e -> handleDelete(rt));
-        boolean typeInUse = HotelDataBase.reservations.stream()
-                .anyMatch(r -> r.getRoom().getType().getSize().equalsIgnoreCase(rt.getSize())
-                        && (r.getStatus() == Reservation.Status.PENDING
-                        ||  r.getStatus() == Reservation.Status.CONFIRMED));
-        deleteBtn.setDisable(typeInUse);
-        deleteBtn.setOpacity(typeInUse ? 0.3 : 1.0);
+        deleteBtn.setDisable(typeEditLocked);
+        deleteBtn.setOpacity(typeEditLocked ? 0.3 : 1.0);
 
         HBox actions = new HBox(8, editBtn, deleteBtn);
         actions.setAlignment(Pos.CENTER);
@@ -293,11 +295,11 @@ public class AdminRoomTypesController implements SessionController {
 
         try {
             if (editingRoomType == null) {
-                // ── CREATE ────────────────────────────────────────────────
                 RoomType.create(updated);
+                closeForm();
+                renderCards();
                 showFeedback("✔  Room type \"" + size + "\" added successfully.", false);
             } else {
-                // ── UPDATE ────────────────────────────────────────────────
                 int liveIdx = HotelDataBase.getRoomTypes().indexOf(editingRoomType);
                 if (liveIdx == -1) {
                     showFeedback("Room type no longer exists. Refreshing.", true);
@@ -306,10 +308,10 @@ public class AdminRoomTypesController implements SessionController {
                     return;
                 }
                 editingRoomType.update(updated);
+                closeForm();
+                renderCards();
                 showFeedback("✔  Room type updated successfully.", false);
             }
-            closeForm();
-            renderCards();
         } catch (InvalidInputException ex) {
             showFeedback(ex.getMessage(), true);
         }

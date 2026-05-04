@@ -193,6 +193,13 @@ public class AdminRoomsController extends MainController implements SessionContr
         btnEdit.setOnMouseExited(e -> btnEdit.setStyle(btnEdit.getStyle()
                 .replace("-fx-background-color: rgba(201,168,76,0.10);", "-fx-background-color: transparent;")));
         btnEdit.setOnAction(e -> openForm(room));
+        boolean roomEditLocked = HotelDataBase.reservations.stream()
+                .anyMatch(r -> r.getRoom() != null
+                        && r.getRoom().getRoomNumber() == room.getRoomNumber()
+                        && (r.getStatus() == Reservation.Status.PENDING
+                        ||  r.getStatus() == Reservation.Status.CONFIRMED));
+        btnEdit.setDisable(roomEditLocked);
+        btnEdit.setOpacity(roomEditLocked ? 0.3 : 1.0);
 
         Button btnDel = new Button("✕");
         btnDel.setStyle(
@@ -202,8 +209,9 @@ public class AdminRoomsController extends MainController implements SessionContr
                         "-fx-padding: 7 12; -fx-cursor: hand;"
         );
         btnDel.setOnAction(e -> onDeleteRoom(room));
-        btnDel.setDisable(occupied);
-        btnDel.setOpacity(occupied ? 0.3 : 1.0);
+        boolean delLocked = roomEditLocked || occupied;
+        btnDel.setDisable(delLocked);
+        btnDel.setOpacity(delLocked ? 0.3 : 1.0);
 
         footer.getChildren().addAll(fSpacer, btnEdit, btnDel);
         rightPanel.getChildren().addAll(metaRow, pills, footer);
@@ -308,15 +316,16 @@ public class AdminRoomsController extends MainController implements SessionContr
 
             if (editingRoom == null) {
                 admin.addRoom(roomNo, floor, view, type, amenities);
-                setStatus("Room " + roomNo + " added.");
+                onCancelForm();
+                refresh();
+                setStatus("✔  Room " + roomNo + " added successfully.");
             } else {
                 int idx = HotelDataBase.getRooms().indexOf(editingRoom);
                 admin.updateRoom(roomNo, floor, view, type, amenities, idx);
-                setStatus("Room " + roomNo + " updated.");
+                onCancelForm();
+                refresh();
+                setStatus("✔  Room " + roomNo + " updated successfully.");
             }
-
-            onCancelForm();
-            refresh();
 
         } catch (NumberFormatException ex) {
             showError("Room number and floor must be whole numbers.");

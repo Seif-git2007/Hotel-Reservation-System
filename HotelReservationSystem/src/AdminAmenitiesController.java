@@ -91,6 +91,13 @@ public class AdminAmenitiesController implements SessionController {
             editBtn.setMaxWidth(Double.MAX_VALUE);
             HBox.setHgrow(editBtn, Priority.ALWAYS);
             editBtn.setOnAction(e -> openEditForm(amenity));
+            boolean amenityEditLocked = HotelDataBase.reservations.stream()
+                    .anyMatch(r -> r.getRoom().getAmenities().stream()
+                            .anyMatch(a -> a.getName().equalsIgnoreCase(amenity.getName()))
+                            && (r.getStatus() == Reservation.Status.PENDING
+                            ||  r.getStatus() == Reservation.Status.CONFIRMED));
+            editBtn.setDisable(amenityEditLocked);
+            editBtn.setOpacity(amenityEditLocked ? 0.3 : 1.0);
 
             boolean amenityInUse = HotelDataBase.reservations.stream()
                     .anyMatch(r -> r.getRoom().getAmenities().contains(amenity) &&
@@ -102,8 +109,9 @@ public class AdminAmenitiesController implements SessionController {
             deleteBtn.setMaxWidth(Double.MAX_VALUE);
             HBox.setHgrow(deleteBtn, Priority.ALWAYS);
             deleteBtn.setOnAction(e -> handleDelete(amenity));
-            deleteBtn.setDisable(amenityInUse);
-            deleteBtn.setOpacity(amenityInUse ? 0.3 : 1.0);
+            boolean deleteLocked = amenityEditLocked || amenityInUse;
+            deleteBtn.setDisable(deleteLocked);
+            deleteBtn.setOpacity(deleteLocked ? 0.3 : 1.0);
 
             HBox actions = new HBox(8, editBtn, deleteBtn);
             actions.setAlignment(Pos.CENTER);
@@ -167,6 +175,8 @@ public class AdminAmenitiesController implements SessionController {
         try {
             if (editingAmenity == null) {
                 admin.addAmenity(name, price);
+                closeForm();
+                renderCards();
                 showFeedback("✔  Amenity \"" + name + "\" added successfully.", false);
             } else {
                 int liveIndex = HotelDataBase.amenities.indexOf(editingAmenity);
@@ -177,10 +187,10 @@ public class AdminAmenitiesController implements SessionController {
                     return;
                 }
                 admin.updateAmenityPrice(name, price, liveIndex);
+                closeForm();
+                renderCards();
                 showFeedback("✔  Amenity updated successfully.", false);
             }
-            closeForm();
-            renderCards();
         } catch (InvalidInputException ex) {
             showFeedback(ex.getMessage(), true);
         }
