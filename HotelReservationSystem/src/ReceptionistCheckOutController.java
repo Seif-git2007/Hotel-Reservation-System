@@ -26,12 +26,16 @@ public class ReceptionistCheckOutController implements SessionController {
         EventBus.subscribe(EventBus.Event.USER_CHANGED, refreshListener);
         EventBus.subscribe(EventBus.Event.INVOICE_CHANGED, refreshListener);
         EventBus.subscribe(EventBus.Event.TIME_JUMPED, refreshListener);
+        EventBus.subscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+
 
         checkOutContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene == null) {
                 EventBus.unsubscribe(EventBus.Event.USER_CHANGED, refreshListener);
                 EventBus.unsubscribe(EventBus.Event.INVOICE_CHANGED, refreshListener);
                 EventBus.unsubscribe(EventBus.Event.TIME_JUMPED, refreshListener);
+                EventBus.unsubscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+
             }
         });
     }
@@ -72,7 +76,6 @@ public class ReceptionistCheckOutController implements SessionController {
             // Show the reservations about to complete
             for (Reservation res : HotelDataBase.getGuestReservation(guest)) {
                 if (res.getStatus().equals(Reservation.Status.AWAITING_CONFIRMATION) ) {
-                    System.out.println("i looped");
                     long nights = java.time.temporal.ChronoUnit.DAYS.between(
                             res.getCheckInDate(), res.getCheckOutDate());
                     double total = res.getRoom().calcTotal(res.getCheckInDate(), res.getCheckOutDate());

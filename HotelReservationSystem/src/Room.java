@@ -114,7 +114,7 @@ public class Room {
         for (Amenity a : amenities) amenityTotal += a.getPrice();
 
         double normal = plannedDays * type.getBasePrice() + amenityTotal;
-        double late   = lateDays * (type.getBasePrice() + type.getBasePrice() * 0.2) + amenityTotal;
+        double late   = lateDays * (type.getBasePrice() + type.getBasePrice() * 0.2);
         return normal + late;
     }
 
