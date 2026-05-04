@@ -26,8 +26,6 @@ public class RegisterController implements Initializable {
     private double      validBalance;
     private int         validFloor;
     private Room.view   view;
-    private int cnt = 0;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         UnaryOperator<TextFormatter.Change> decimalFilter = c ->
@@ -47,41 +45,62 @@ public class RegisterController implements Initializable {
     }
 
     public void Register(ActionEvent event) {
+
         MainController.clearErrors(nameError, passwordError, genderEmpty, dateEmpty,
             addressEmpty, balanceError, floorError, viewEmpty, displayNameEmpty, emailError);
-        cnt = 0;
+        boolean valid=true;
 
-        if (!displayName.getText().isEmpty()) { validDisplayName = displayName.getText(); cnt++; }
-        else MainController.setFieldError(displayNameEmpty, "Please enter Display Name");
+        if (!displayName.getText().isEmpty()) { validDisplayName = displayName.getText(); }
+        else{
+            valid=false;
+            MainController.setFieldError(displayNameEmpty, "Please enter Display Name");
+        }
 
-        try { validname = Authenticator.validateName(name.getText()); cnt++; }
-        catch (InvalidInputException e) { MainController.setFieldError(nameError, e.getMessage()); }
+        try { validname = Authenticator.validateName(name.getText());  }
+        catch (InvalidInputException e) { MainController.setFieldError(nameError, e.getMessage());valid=false; }
 
-        try { validemail = Authenticator.validateEmail(email.getText()); cnt++; }
-        catch (InvalidInputException e) { MainController.setFieldError(emailError, e.getMessage()); }
+        try { validemail = Authenticator.validateEmail(email.getText());  }
+        catch (InvalidInputException e) { MainController.setFieldError(emailError, e.getMessage());valid=false; }
 
-        try { validPassword = Authenticator.validatePassword(password.getText()); cnt++; }
-        catch (InvalidInputException e) { MainController.setFieldError(passwordError, e.getMessage()); }
+        try { validPassword = Authenticator.validatePassword(password.getText());  }
+        catch (InvalidInputException e) {
+            MainController.setFieldError(passwordError, e.getMessage());
+            valid=false;}
 
-        if (genderCombo.getValue() != null) { gender = genderCombo.getValue(); cnt++; }
-        else MainController.setFieldError(genderEmpty, "Please select Gender");
+        if (genderCombo.getValue() != null) { gender = genderCombo.getValue(); }
+        else{
+            valid=false;
+            MainController.setFieldError(genderEmpty, "Please select Gender");
+        }
 
-        try { birthDate = Authenticator.validateBirthDate(dateOfBirth.getValue()); cnt++; }
-        catch (InvalidInputException e) { MainController.setFieldError(dateEmpty, e.getMessage()); }
+        try { birthDate = Authenticator.validateBirthDate(dateOfBirth.getValue()); }
+        catch (InvalidInputException e) { MainController.setFieldError(dateEmpty, e.getMessage()); valid=false;}
 
-        if (!address.getText().isEmpty()) { validAddress = address.getText(); cnt++; }
-        else MainController.setFieldError(addressEmpty, "Please enter Address");
+        if (!address.getText().isEmpty()) { validAddress = address.getText();  }
+        else {
+            valid=false;
+            MainController.setFieldError(addressEmpty, "Please enter Address");
+        }
 
-        if (!balance.getText().isEmpty()) { validBalance = Double.parseDouble(balance.getText()); cnt++; }
-        else MainController.setFieldError(balanceError, "Please enter Balance");
+        if (!balance.getText().isEmpty()) { validBalance = Double.parseDouble(balance.getText()); }
+        else{
+            valid=false;
+            MainController.setFieldError(balanceError, "Please enter Balance");
+        }
 
-        if (!prefFloor.getText().isEmpty()) { validFloor = Integer.parseInt(prefFloor.getText()); cnt++; }
-        else MainController.setFieldError(floorError, "Please enter a Floor");
+        if (!prefFloor.getText().isEmpty()) { validFloor = Integer.parseInt(prefFloor.getText()); }
+        else{
+            valid=false;
+            MainController.setFieldError(floorError, "Please enter a Floor");
+        }
 
-        if (prefView.getValue() != null) { view = prefView.getValue(); cnt++; }
-        else MainController.setFieldError(viewEmpty, "Please select a View");
+        if (prefView.getValue() != null) { view = prefView.getValue();  }
+        else{
+            valid=false;
+            MainController.setFieldError(viewEmpty, "Please select a View");
+        }
 
-        if (cnt == 10) {
+        if (valid) {
             Guest guest = new Guest();
             guest.Register(validname, validPassword, gender.toString(), validBalance,
                 birthDate, validAddress, new roomPreferences(validFloor, view),

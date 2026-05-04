@@ -141,8 +141,10 @@ public class AdminReceptionistsController implements SessionController {
         }
 
         LocalDate dob = fieldDob.getValue();
-        if (dob == null) {
-            MainController.setFieldError(dobError, "Please select a date of birth.");
+        try{
+            Authenticator.validateBirthDate(dob);
+        }catch (InvalidInputException e){
+            MainController.setFieldError(dobError, e.getMessage());
             valid = false;
         }
 
