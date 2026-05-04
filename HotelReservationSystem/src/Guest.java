@@ -122,14 +122,17 @@ public class Guest extends User {
         double total = 0;
         for (Reservation r : HotelDataBase.reservations) {
             if (r.getGuest() == this && r.getStatus() == Reservation.Status.CONFIRMED) {
-                confirmed.add(r);
+                if(!r.getCheckOutDate().isAfter(JumpInTime.now)){
+                    confirmed.add(r);
+                }
+
             }
         }
         if (confirmed.isEmpty()) {
             throw new InvalidInputException("You are not checked in");
         }
         for (Reservation r : confirmed){
-            if (!r.getCheckOutDate().equals(JumpInTime.now)){
+            if (r.getCheckOutDate().isAfter(JumpInTime.now)){
                 throw new InvalidInputException("You can't check out before your check out date");
             }
         }

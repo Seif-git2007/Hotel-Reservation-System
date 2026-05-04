@@ -76,6 +76,22 @@
             styleClass="sidebar-nav-btn"
             mnemonicParsing="false"/>
 
+    <Pane prefHeight="1" prefWidth="180"
+          style="-fx-background-color: rgba(201,168,76,0.25);">
+        <VBox.margin><Insets top="8" bottom="8" left="20" /></VBox.margin>
+    </Pane>
+
+    <Label styleClass="sidebar-section-label" text="TOOLS">
+        <VBox.margin><Insets bottom="4" left="20" /></VBox.margin>
+    </Label>
+
+    <Button fx:id="btnJumpInTime"
+            text="⏩  Jump In Time"
+            onAction="#goJumpInTime"
+            prefHeight="50" prefWidth="220"
+            styleClass="sidebar-nav-btn"
+            mnemonicParsing="false"/>
+
     <Pane VBox.vgrow="ALWAYS" />
     <Pane prefHeight="1" prefWidth="220"
           style="-fx-background-color: rgba(201,168,76,0.30);" />

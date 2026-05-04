@@ -1,5 +1,6 @@
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,7 +14,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 
-public class MainController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class MainController implements Initializable {
+
     public static void load(ActionEvent event , String file){
         try {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -218,5 +223,22 @@ public class MainController {
 
     public static void clearErrors(Label... labels) {
         for (Label l : labels) l.setVisible(false);
+    }
+    public static void cancelNoShows() {
+        for (Reservation r : HotelDataBase.reservations) {
+            if (r.getStatus() == Reservation.Status.PENDING
+                    && r.getCheckInDate().isBefore(JumpInTime.now)) {
+                r.setStatus(Reservation.Status.CANCELLED);
+                DataBaseManager.runAsync(() -> {
+                    DataBaseManager.updateReservationStatus(r);
+                    EventBus.fire(EventBus.Event.RESERVATION_CHANGED);
+                });
+            }
+        }
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        cancelNoShows();
     }
 }

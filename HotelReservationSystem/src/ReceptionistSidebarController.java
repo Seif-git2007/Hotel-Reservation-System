@@ -11,6 +11,7 @@ public class ReceptionistSidebarController implements SessionController {
     @FXML public Button btnGuests;
     @FXML public Button btnRooms;
     @FXML public Button btnLiveChat;
+    @FXML public Button btnJumpInTime;
 
     private AppSession session;
 
@@ -21,7 +22,7 @@ public class ReceptionistSidebarController implements SessionController {
 
     public void setActive(Button btn) {
         Button[] all = { btnDashboard, btnCheckIn, btnCheckOut,
-                btnReservations, btnGuests, btnRooms, btnLiveChat };
+                btnReservations, btnGuests, btnRooms, btnLiveChat, btnJumpInTime };
         for (Button b : all) b.getStyleClass().remove("sidebar-nav-btn-active");
         if (btn != null) btn.getStyleClass().add("sidebar-nav-btn-active");
     }
@@ -33,4 +34,5 @@ public class ReceptionistSidebarController implements SessionController {
     @FXML private void goGuests(ActionEvent e)       { MainController.navigate(e, "ReceptionistGuests.fxml"); }
     @FXML private void goRooms(ActionEvent e)        { MainController.navigate(e, "Receptionist_Rooms.fxml"); }
     @FXML private void goLiveChat(ActionEvent e)     { MainController.navigate(e, "ReceptionistChat.fxml"); }
+    @FXML private void goJumpInTime(ActionEvent e)   { MainController.navigate(e, "ReceptionistJumpInTime.fxml"); }
 }

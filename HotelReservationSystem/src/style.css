@@ -1266,3 +1266,319 @@
 .guests-list .list-cell:filled:hover:selected {
     -fx-background-color: #F5EFE0;
 }
+/* ═══════════════════════════════════════════════════════════════
+   INVOICE — RESERVATION BLOCKS (append to existing invoice CSS)
+═══════════════════════════════════════════════════════════════ */
+
+/* Stronger, more visible invoice-value override */
+.invoice-value {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 14px;
+    -fx-text-fill: #1A1A1A;
+    -fx-line-spacing: 3;
+}
+
+.invoice-meta-value {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 14px;
+    -fx-text-fill: #1A1A1A;
+    -fx-font-weight: bold;
+}
+
+/* Block wrapper for one reservation */
+.invoice-reservation-block {
+    -fx-padding: 14 0 14 0;
+    -fx-border-color: transparent transparent #E8DFC8 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.invoice-reservation-block:last-child {
+    -fx-border-width: 0;
+}
+
+.invoice-reservation-header {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0F2160;
+    -fx-letter-spacing: 0.05em;
+}
+
+.invoice-reservation-dates {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 12px;
+    -fx-text-fill: #6B6B6B;
+    -fx-font-style: italic;
+}
+
+.invoice-line-row {
+    -fx-padding: 4 0;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.invoice-line-label {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 13px;
+    -fx-text-fill: #2C2C2C;
+}
+
+.invoice-line-amount {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 13px;
+    -fx-text-fill: #1A1A1A;
+    -fx-font-weight: bold;
+}
+
+.invoice-line-label-late {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 13px;
+    -fx-text-fill: #B23B3B;
+    -fx-font-weight: bold;
+}
+
+.invoice-line-amount-late {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 13px;
+    -fx-text-fill: #B23B3B;
+    -fx-font-weight: bold;
+}
+
+.invoice-late-notice {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #B23B3B;
+    -fx-letter-spacing: 0.1em;
+    -fx-background-color: #FBEDEB;
+    -fx-border-color: #E5B3B0;
+    -fx-border-width: 1;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-padding: 8 12;
+}
+
+.invoice-line-bold {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.invoice-sub-divider {
+    -fx-background-color: #D4C5A0;
+    -fx-pref-height: 1;
+}
+/* ═══════════════════════════════════════════════════════════════
+   JUMP IN TIME — TEMPORAL CONTROL CONSOLE
+═══════════════════════════════════════════════════════════════ */
+
+.sci-stage {
+    -fx-background-color: #04060a;
+    -fx-effect: innershadow(gaussian, rgba(111,255,168,0.08), 40, 0, 0, 0);
+}
+
+.sci-scanline {
+    -fx-background-color: linear-gradient(to right,
+    transparent 0%,
+    rgba(111,255,168,0.0) 5%,
+    rgba(111,255,168,0.4) 50%,
+    rgba(111,255,168,0.0) 95%,
+    transparent 100%);
+    -fx-pref-height: 2;
+    -fx-max-width: Infinity;
+    -fx-effect: dropshadow(gaussian, rgba(111,255,168,0.6), 8, 0.5, 0, 0);
+}
+
+.sci-corner-row {
+    -fx-min-height: 20;
+    -fx-max-height: 20;
+}
+
+.sci-corner-tl { -fx-border-color: #6fffa8 transparent transparent #6fffa8; -fx-border-width: 2 0 0 2; }
+.sci-corner-tr { -fx-border-color: #6fffa8 #6fffa8 transparent transparent; -fx-border-width: 2 2 0 0; }
+.sci-corner-bl { -fx-border-color: transparent transparent #6fffa8 #6fffa8; -fx-border-width: 0 0 2 2; }
+.sci-corner-br { -fx-border-color: transparent #6fffa8 #6fffa8 transparent; -fx-border-width: 0 2 2 0; }
+
+.sci-rule {
+    -fx-background-color: #1f4d3a;
+    -fx-pref-height: 1;
+    -fx-max-width: Infinity;
+}
+
+.sci-title {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6fffa8;
+    -fx-effect: dropshadow(gaussian, rgba(111,255,168,0.7), 12, 0.5, 0, 0);
+}
+
+.sci-status-text {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 10px;
+    -fx-text-fill: #4a7a5e;
+    -fx-font-weight: bold;
+}
+
+.sci-pulse {
+    -fx-background-color: #6fffa8;
+    -fx-background-radius: 50%;
+    -fx-effect: dropshadow(gaussian, #6fffa8, 12, 0.8, 0, 0);
+}
+
+.sci-panel {
+    -fx-background-color: rgba(10, 14, 20, 0.85);
+    -fx-border-color: #1f4d3a;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-min-width: 260;
+}
+
+.sci-panel-label {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4a7a5e;
+}
+
+.sci-display-date {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6fffa8;
+    -fx-effect: dropshadow(gaussian, rgba(111,255,168,0.8), 16, 0.6, 0, 0);
+}
+
+.sci-display-meta {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 11px;
+    -fx-text-fill: #4a7a5e;
+    -fx-font-weight: bold;
+}
+
+.sci-display-meta-bright {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6fffa8;
+}
+
+.sci-arrow {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6fffa8;
+    -fx-effect: dropshadow(gaussian, rgba(111,255,168,0.9), 14, 0.7, 0, 0);
+    -fx-padding: 0 6;
+}
+
+.sci-date-picker {
+    -fx-background-color: #000000;
+    -fx-border-color: #2a4538;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.sci-date-picker .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6fffa8;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 16px;
+    -fx-padding: 10 14;
+}
+
+.sci-date-picker .text-field:focused {
+    -fx-effect: dropshadow(gaussian, rgba(111,255,168,0.6), 10, 0.5, 0, 0);
+}
+
+.sci-date-picker .arrow-button {
+    -fx-background-color: #1f4d3a;
+    -fx-background-radius: 0 4 4 0;
+}
+
+.sci-date-picker .arrow-button .arrow {
+    -fx-background-color: #6fffa8;
+}
+
+.sci-date-picker .arrow-button:hover {
+    -fx-background-color: #2a6b50;
+}
+
+.sci-date-picker > .date-picker-popup {
+    -fx-background-color: #04060a;
+    -fx-border-color: #6fffa8;
+    -fx-border-width: 1;
+}
+
+.sci-readout {
+    -fx-background-color: rgba(10, 14, 20, 0.85);
+    -fx-border-color: #1f4d3a;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.sci-readout-label {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 11px;
+    -fx-text-fill: #4a7a5e;
+    -fx-font-weight: bold;
+}
+
+.sci-readout-value {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6fffa8;
+    -fx-effect: dropshadow(gaussian, rgba(111,255,168,0.5), 6, 0.4, 0, 0);
+}
+
+.sci-error {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff6b6b;
+    -fx-background-color: rgba(80, 0, 0, 0.4);
+    -fx-border-color: #5a1818;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 12 16;
+    -fx-effect: dropshadow(gaussian, rgba(255,107,107,0.4), 10, 0.4, 0, 0);
+}
+
+.sci-execute-btn {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #04060a;
+    -fx-background-color: linear-gradient(to bottom, #6fffa8 0%, #2acc70 100%);
+    -fx-background-radius: 4;
+    -fx-padding: 14 0;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(111,255,168,0.6), 18, 0.5, 0, 0);
+}
+
+.sci-execute-btn:hover {
+    -fx-background-color: linear-gradient(to bottom, #8effbb 0%, #34dd80 100%);
+    -fx-effect: dropshadow(gaussian, rgba(111,255,168,0.9), 24, 0.7, 0, 0);
+}
+
+.sci-execute-btn:pressed {
+    -fx-background-color: linear-gradient(to bottom, #2acc70 0%, #1aa05a 100%);
+}
+
+.sci-execute-btn:disabled {
+    -fx-background-color: #1a3024;
+    -fx-text-fill: #4a7a5e;
+    -fx-effect: none;
+    -fx-cursor: default;
+    -fx-opacity: 1;
+}
+
+.sci-footer-text {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 9px;
+    -fx-text-fill: #2c4538;
+    -fx-font-weight: bold;
+}
