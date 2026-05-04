@@ -140,7 +140,7 @@ public class ViewReservationsController implements SessionController {
     }
     public void refresh(){
         reservationController.getChildren().clear();
-        renderReservations(HotelDataBase.getGuestReservation(session.getCurrentGuest()), reservationController);
+        renderReservations(HotelDataBase.getGuestReservation((Guest) session.getCurrentUser()), reservationController);
     }
 }
 

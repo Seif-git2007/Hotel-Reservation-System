@@ -35,7 +35,12 @@ public class MainController {
     public static void navigate(ActionEvent event, String file) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         AppSession session = (AppSession) stage.getUserData();
-        session.history.push(file);
+        if(session.history.isEmpty()) {
+            session.history.push(file);
+        }
+        else if(!session.history.peek().equals(file)){
+            session.history.push(file);
+        }
         load(event, file);
 
     }
