@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
 
 <AnchorPane prefHeight="660.0" prefWidth="900.0"
             style="-fx-background-color: #F0EDE4;"
@@ -30,7 +31,8 @@
               style="-fx-background-color: #F0EDE4;">
 
             <!-- Page header -->
-            <HBox alignment="CENTER_LEFT" prefWidth="680" spacing="12" styleClass="page-header-strip">
+            <HBox alignment="CENTER_LEFT" prefWidth="680" spacing="12"
+                  styleClass="page-header-strip">
                 <Pane prefHeight="32" prefWidth="4"
                       style="-fx-background-color: #C9A84C; -fx-background-radius: 2;" />
                 <VBox spacing="2">
@@ -40,12 +42,12 @@
                 </VBox>
                 <Pane HBox.hgrow="ALWAYS" />
                 <TextField fx:id="searchField"
-                           promptText="🔍  Search by name…"
+                           promptText="Search by name..."
                            styleClass="text-field"
                            prefHeight="36" prefWidth="160">
                     <HBox.margin><Insets right="12" /></HBox.margin>
                 </TextField>
-                <Button text="＋  Add Receptionist"
+                <Button text="+ Add Receptionist"
                         onAction="#openAddForm"
                         styleClass="btn-select-room"
                         mnemonicParsing="false">
@@ -58,22 +60,22 @@
                   style="-fx-background-color: #0F2160; -fx-padding: 10 20 10 20;">
                 <Label fx:id="lblTotalReceptionists"
                        style="-fx-text-fill: rgba(255,255,255,0.70);
-                              -fx-font-size: 12px; -fx-font-weight: bold;" />
+                              -fx-font-size: 12px;
+                              -fx-font-weight: bold;" />
                 <Pane HBox.hgrow="ALWAYS" />
                 <Label fx:id="lblTotalHours"
                        style="-fx-text-fill: #C9A84C;
-                              -fx-font-size: 12px; -fx-font-weight: bold;" />
+                              -fx-font-size: 12px;
+                              -fx-font-weight: bold;" />
             </HBox>
 
             <!-- Feedback label -->
-            <Label fx:id="feedbackLabel"
-                   text="" visible="false" wrapText="true">
+            <Label fx:id="feedbackLabel" text="" visible="false" wrapText="true">
                 <VBox.margin><Insets left="20" right="20" top="8" /></VBox.margin>
             </Label>
 
             <!-- Inline Add form -->
-            <VBox fx:id="formPanel"
-                  visible="false" managed="false"
+            <VBox fx:id="formPanel" visible="false" managed="false"
                   styleClass="section-card" spacing="0">
                 <VBox.margin><Insets top="12" left="20" right="20" /></VBox.margin>
 
@@ -93,15 +95,16 @@
                                   -fx-font-weight: bold;" />
                     <Pane HBox.hgrow="ALWAYS" />
                     <Button onAction="#closeForm"
+                            mnemonicParsing="false"
+                            text="X"
                             style="-fx-background-color: transparent;
                                    -fx-text-fill: rgba(255,255,255,0.55);
                                    -fx-font-size: 16px;
                                    -fx-cursor: hand;
-                                   -fx-padding: 0 4;"
-                            text="✕" />
+                                   -fx-padding: 0 4;" />
                 </HBox>
 
-                <!-- Form body: row 1 -->
+                <!-- Form body -->
                 <VBox spacing="14"
                       style="-fx-background-color: #FFFFFF;
                              -fx-background-radius: 0 0 10 10;
@@ -110,8 +113,9 @@
                              -fx-border-width: 0 0.5 0.5 0.5;
                              -fx-padding: 18 18 18 18;">
 
-                    <!-- Row 1: username, password, email -->
+                    <!-- Row 1: username / password / email -->
                     <HBox spacing="14">
+
                         <VBox spacing="6" HBox.hgrow="ALWAYS">
                             <Label text="USERNAME" styleClass="label-field" />
                             <TextField fx:id="fieldUsername"
@@ -121,15 +125,44 @@
                             <Label fx:id="usernameError" styleClass="label-error"
                                    text="" visible="false" />
                         </VBox>
+
+                        <!-- PASSWORD — identical structure to ForgetPassword.fxml -->
                         <VBox spacing="6" HBox.hgrow="ALWAYS">
                             <Label text="PASSWORD" styleClass="label-field" />
-                            <PasswordField fx:id="fieldPassword"
-                                           promptText="Enter password"
-                                           styleClass="password-field"
-                                           prefHeight="42" maxWidth="Infinity" />
+                            <HBox prefHeight="42" maxWidth="Infinity"
+                                  style="-fx-background-color: #FFFFFF;
+                                         -fx-border-color: #C9A84C;
+                                         -fx-border-radius: 5;
+                                         -fx-background-radius: 5;"
+                                  alignment="CENTER_LEFT">
+                                <StackPane HBox.hgrow="ALWAYS">
+                                    <PasswordField fx:id="fieldPassword"
+                                                   prefHeight="42"
+                                                   promptText="Min 9 characters"
+                                                   maxWidth="Infinity"
+                                                   style="-fx-background-color: transparent;
+                                                          -fx-border-color: transparent;" />
+                                    <TextField fx:id="fieldPasswordVisible"
+                                               prefHeight="42"
+                                               promptText="Min 9 characters"
+                                               maxWidth="Infinity"
+                                               visible="false" managed="false"
+                                               style="-fx-background-color: transparent;
+                                                      -fx-border-color: transparent;" />
+                                </StackPane>
+                                <Button fx:id="fieldEyeBtn"
+                                        text="Show"
+                                        mnemonicParsing="false"
+                                        style="-fx-background-color: transparent;
+                                               -fx-cursor: hand;
+                                               -fx-font-size: 12px;
+                                               -fx-padding: 0 8;"
+                                        onAction="#toggleFieldPassword" />
+                            </HBox>
                             <Label fx:id="passwordError" styleClass="label-error"
                                    text="" visible="false" />
                         </VBox>
+
                         <VBox spacing="6" HBox.hgrow="ALWAYS">
                             <Label text="EMAIL" styleClass="label-field" />
                             <TextField fx:id="fieldEmail"
@@ -139,10 +172,12 @@
                             <Label fx:id="emailError" styleClass="label-error"
                                    text="" visible="false" />
                         </VBox>
+
                     </HBox>
 
-                    <!-- Row 2: dob, gender, hours -->
+                    <!-- Row 2: dob / gender / hours -->
                     <HBox spacing="14">
+
                         <VBox spacing="6" HBox.hgrow="ALWAYS">
                             <Label text="DATE OF BIRTH" styleClass="label-field" />
                             <DatePicker fx:id="fieldDob"
@@ -152,6 +187,7 @@
                             <Label fx:id="dobError" styleClass="label-error"
                                    text="" visible="false" />
                         </VBox>
+
                         <VBox spacing="6" HBox.hgrow="ALWAYS">
                             <Label text="GENDER" styleClass="label-field" />
                             <ComboBox fx:id="fieldGender"
@@ -161,33 +197,44 @@
                             <Label fx:id="genderError" styleClass="label-error"
                                    text="" visible="false" />
                         </VBox>
+
                         <VBox spacing="6" HBox.hgrow="ALWAYS">
                             <Label text="WORKING HOURS / WEEK" styleClass="label-field" />
                             <TextField fx:id="fieldHours"
-                                       promptText="e.g. 40"
+                                       promptText="e.g. 8"
                                        styleClass="text-field"
                                        prefHeight="42" maxWidth="Infinity" />
                             <Label fx:id="hoursError" styleClass="label-error"
                                    text="" visible="false" />
                         </VBox>
+
                     </HBox>
 
-                    <!-- Buttons -->
+                    <!-- Action buttons -->
                     <HBox spacing="10" alignment="CENTER_RIGHT">
-                        <Button text="Cancel" onAction="#closeForm"
-                                styleClass="button-outline" prefHeight="40" />
-                        <Button fx:id="btnFormSubmit" text="Add Receptionist"
+                        <Button text="Cancel"
+                                onAction="#closeForm"
+                                styleClass="button-outline"
+                                prefHeight="40"
+                                mnemonicParsing="false" />
+                        <Button fx:id="btnFormSubmit"
+                                text="Add Receptionist"
                                 onAction="#submitForm"
-                                styleClass="button" prefHeight="40" prefWidth="160" />
+                                styleClass="button"
+                                prefHeight="40" prefWidth="160"
+                                mnemonicParsing="false" />
                     </HBox>
+
                 </VBox>
             </VBox>
 
             <!-- Receptionist list -->
             <VBox VBox.vgrow="ALWAYS" spacing="0">
                 <ScrollPane fitToWidth="true"
-                            style="-fx-background-color: transparent; -fx-background: #F0EDE4;"
-                            VBox.vgrow="ALWAYS" styleClass="register-scroll">
+                            style="-fx-background-color: transparent;
+                                   -fx-background: #F0EDE4;"
+                            VBox.vgrow="ALWAYS"
+                            styleClass="register-scroll">
                     <content>
                         <VBox fx:id="receptionistList" spacing="12"
                               style="-fx-background-color: #F0EDE4;">

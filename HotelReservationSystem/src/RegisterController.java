@@ -6,6 +6,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
+import javafx.scene.control.Button;
 
 public class RegisterController implements Initializable {
     @FXML private Label nameError, passwordError, emailError, genderEmpty,
@@ -16,6 +17,8 @@ public class RegisterController implements Initializable {
     @FXML private ComboBox<User.Gender>  genderCombo;
     @FXML private DatePicker            dateOfBirth;
     @FXML private ComboBox<Room.view>   prefView;
+    @FXML private TextField passwordVisible;
+    @FXML private Button    eyeBtn;
 
     private String     validDisplayName, validname, validemail, validPassword, validAddress;
     private User.Gender gender;
@@ -28,14 +31,19 @@ public class RegisterController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         UnaryOperator<TextFormatter.Change> decimalFilter = c ->
-            c.getControlNewText().matches("\\d*(\\.\\d{0,2})?") ? c : null;
+                c.getControlNewText().matches("\\d*(\\.\\d{0,2})?") ? c : null;
         UnaryOperator<TextFormatter.Change> integerFilter = c ->
-            c.getControlNewText().matches("\\d*") ? c : null;
+                c.getControlNewText().matches("\\d*") ? c : null;
 
         prefFloor.setTextFormatter(new TextFormatter<>(integerFilter));
         balance.setTextFormatter(new TextFormatter<>(decimalFilter));
         genderCombo.getItems().setAll(User.Gender.values());
         prefView.getItems().setAll(Room.view.values());
+
+        passwordVisible.textProperty().addListener((obs, o, n) -> password.setText(n));
+        password.textProperty().addListener((obs, o, n) -> {
+            if (!passwordVisible.isVisible()) passwordVisible.setText(n);
+        });
     }
 
     public void Register(ActionEvent event) {
@@ -79,6 +87,26 @@ public class RegisterController implements Initializable {
                 birthDate, validAddress, new roomPreferences(validFloor, view),
                 validDisplayName, validemail);
             MainController.navigate(event, "Login_Menu.fxml");
+        }
+    }
+
+
+    @FXML
+    private void togglePassword() {
+        if (!passwordVisible.isVisible()) {
+            passwordVisible.setText(password.getText());
+            password.setVisible(false);
+            password.setManaged(false);
+            passwordVisible.setVisible(true);
+            passwordVisible.setManaged(true);
+            eyeBtn.setText("🙈");
+        } else {
+            password.setText(passwordVisible.getText());
+            passwordVisible.setVisible(false);
+            passwordVisible.setManaged(false);
+            password.setVisible(true);
+            password.setManaged(true);
+            eyeBtn.setText("👁");
         }
     }
 

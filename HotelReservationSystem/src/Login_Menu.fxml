@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
 
 
 <AnchorPane prefHeight="580.0" prefWidth="900.0" style="-fx-background-color: #F0EDE4;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginController">
@@ -82,9 +83,30 @@
          <Label styleClass="label-field" text="PASSWORD">
             <VBox.margin><Insets bottom="6" /></VBox.margin>
          </Label>
-         <PasswordField fx:id="password" prefHeight="48" prefWidth="420" promptText="Enter your password" styleClass="password-field">
+         <HBox prefHeight="48" prefWidth="420"
+               style="-fx-background-color: #FFFFFF;
+             -fx-border-color: #C9A84C;
+             -fx-border-radius: 5;
+             -fx-background-radius: 5;"
+               alignment="CENTER_LEFT">
             <VBox.margin><Insets bottom="24" /></VBox.margin>
-         </PasswordField>
+            <StackPane HBox.hgrow="ALWAYS">
+               <PasswordField fx:id="password"
+                              prefHeight="48"
+                              promptText="Enter your password"
+                              maxWidth="Infinity"
+                              style="-fx-background-color: transparent; -fx-border-color: transparent;" />
+               <TextField fx:id="passwordVisible"
+                          prefHeight="48"
+                          promptText="Enter your password"
+                          maxWidth="Infinity"
+                          visible="false" managed="false"
+                          style="-fx-background-color: transparent; -fx-border-color: transparent;" />
+            </StackPane>
+            <Button fx:id="eyeBtn" text="👁"
+                    style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 14px; -fx-padding: 0 8;"
+                    onAction="#togglePassword" />
+         </HBox>
          <Hyperlink onAction="#forgetPassword" styleClass="hyperlink" text="Forgot Password?" />
          <Label fx:id="nameError" styleClass="label-error" visible="false" />
 

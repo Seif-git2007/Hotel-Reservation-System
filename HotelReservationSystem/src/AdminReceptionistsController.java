@@ -16,22 +16,24 @@ public class AdminReceptionistsController implements SessionController {
     @FXML private Label                  lblTotalReceptionists;
     @FXML private Label                  lblTotalHours;
 
-    // ── Form fields ──────────────────────────────────────────────────────────
-    @FXML private Label        feedbackLabel;
-    @FXML private VBox         formPanel;
-    @FXML private Label        formTitle;
-    @FXML private TextField    fieldUsername;
-    @FXML private PasswordField fieldPassword;
-    @FXML private TextField    fieldEmail;
-    @FXML private DatePicker   fieldDob;
+    @FXML private Label            feedbackLabel;
+    @FXML private VBox             formPanel;
+    @FXML private Label            formTitle;
+    @FXML private TextField        fieldUsername;
+    @FXML private PasswordField    fieldPassword;
+    @FXML private TextField        fieldEmail;
+    @FXML private DatePicker       fieldDob;
     @FXML private ComboBox<String> fieldGender;
-    @FXML private TextField    fieldHours;
-    @FXML private Label        usernameError;
-    @FXML private Label        passwordError;
-    @FXML private Label        emailError;
-    @FXML private Label        dobError;
-    @FXML private Label        genderError;
-    @FXML private Label        hoursError;
+    @FXML private TextField        fieldHours;
+    @FXML private Label            usernameError;
+    @FXML private Label            passwordError;
+    @FXML private Label            emailError;
+    @FXML private Label            dobError;
+    @FXML private Label            genderError;
+    @FXML private Label            hoursError;
+
+    @FXML private TextField fieldPasswordVisible;
+    @FXML private Button    fieldEyeBtn;
 
     private AppSession session;
     private Admin      admin;
@@ -46,6 +48,12 @@ public class AdminReceptionistsController implements SessionController {
         }
 
         fieldGender.getItems().addAll("MALE", "FEMALE");
+
+        fieldPasswordVisible.textProperty().addListener((obs, o, n) -> fieldPassword.setText(n));
+        fieldPassword.textProperty().addListener((obs, o, n) -> {
+            if (!fieldPasswordVisible.isVisible()) fieldPasswordVisible.setText(n);
+        });
+
         searchField.textProperty().addListener((obs, oldVal, newVal) -> renderList());
 
         updateStats();
@@ -58,14 +66,23 @@ public class AdminReceptionistsController implements SessionController {
     private void openAddForm() {
         fieldUsername.clear();
         fieldPassword.clear();
+        fieldPasswordVisible.clear();
         fieldEmail.clear();
         fieldDob.setValue(null);
         fieldGender.getSelectionModel().clearSelection();
         fieldHours.clear();
         clearErrors();
+
         formPanel.setVisible(true);
         formPanel.setManaged(true);
         feedbackLabel.setVisible(false);
+
+        // reset password toggle to hidden state — exactly like ForgetPassword
+        fieldPasswordVisible.setVisible(false);
+        fieldPasswordVisible.setManaged(false);
+        fieldPassword.setVisible(true);
+        fieldPassword.setManaged(true);
+        fieldEyeBtn.setText("Show");
     }
 
     @FXML
@@ -76,20 +93,39 @@ public class AdminReceptionistsController implements SessionController {
     }
 
     @FXML
+    private void toggleFieldPassword() {
+        if (!fieldPasswordVisible.isVisible()) {
+            // currently hidden → show it
+            fieldPasswordVisible.setText(fieldPassword.getText());
+            fieldPassword.setVisible(false);
+            fieldPassword.setManaged(false);
+            fieldPasswordVisible.setVisible(true);
+            fieldPasswordVisible.setManaged(true);
+            fieldEyeBtn.setText("Hide");
+        } else {
+            // currently visible → hide it
+            fieldPassword.setText(fieldPasswordVisible.getText());
+            fieldPasswordVisible.setVisible(false);
+            fieldPasswordVisible.setManaged(false);
+            fieldPassword.setVisible(true);
+            fieldPassword.setManaged(true);
+            fieldEyeBtn.setText("Show");
+        }
+    }
+
+    @FXML
     private void submitForm() {
         clearErrors();
         boolean valid = true;
 
-        // Username
         String username = fieldUsername.getText().trim();
-        try{
+        try {
             Authenticator.validateName(username);
-        }catch (InvalidInputException e){
+        } catch (InvalidInputException e) {
             MainController.setFieldError(usernameError, e.getMessage());
             valid = false;
         }
 
-        // Password
         String password = fieldPassword.getText();
         try {
             Authenticator.validatePassword(password);
@@ -98,28 +134,24 @@ public class AdminReceptionistsController implements SessionController {
             valid = false;
         }
 
-        // Email
         String email = fieldEmail.getText().trim();
         if (email.isEmpty()) {
             MainController.setFieldError(emailError, "Email cannot be empty.");
             valid = false;
         }
 
-        // DOB
         LocalDate dob = fieldDob.getValue();
         if (dob == null) {
             MainController.setFieldError(dobError, "Please select a date of birth.");
             valid = false;
         }
 
-        // Gender
         String gender = fieldGender.getValue();
         if (gender == null) {
             MainController.setFieldError(genderError, "Please select a gender.");
             valid = false;
         }
 
-        // Hours
         int hours = 0;
         try {
             hours = Integer.parseInt(fieldHours.getText().trim());
@@ -137,13 +169,13 @@ public class AdminReceptionistsController implements SessionController {
             closeForm();
             updateStats();
             renderList();
-            showFeedback("✔  Receptionist \"" + username + "\" added successfully.", false);
+            showFeedback("Receptionist \"" + username + "\" added successfully.", false);
         } catch (InvalidInputException e) {
-            showFeedback("❌  " + e.getMessage(), true);
+            showFeedback(e.getMessage(), true);
         }
     }
 
-    // ── Stats + list (unchanged) ─────────────────────────────────────────────
+    // ── Stats + list ──────────────────────────────────────────────────────────
 
     private void updateStats() {
         List<Receptionist> all = HotelDataBase.getReceptionists();
@@ -175,7 +207,7 @@ public class AdminReceptionistsController implements SessionController {
         }
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
+    // ── Helpers ───────────────────────────────────────────────────────────────
 
     private void showFeedback(String msg, boolean isError) {
         feedbackLabel.setText(msg);
@@ -192,7 +224,7 @@ public class AdminReceptionistsController implements SessionController {
         );
     }
 
-    // ── Card + detailCell (completely unchanged) ─────────────────────────────
+    // ── Card ──────────────────────────────────────────────────────────────────
 
     private HBox buildCard(Receptionist r) {
         HBox card = new HBox(0);
@@ -234,7 +266,7 @@ public class AdminReceptionistsController implements SessionController {
         avatarLabel.setMinSize(50, 50);
         avatarLabel.setAlignment(Pos.CENTER);
 
-        Label genderLabel = new Label(r.getGender() == User.Gender.MALE ? "♂" : "♀");
+        Label genderLabel = new Label(r.getGender() == User.Gender.MALE ? "M" : "F");
         genderLabel.setStyle(
                 "-fx-text-fill: rgba(255,255,255,0.40);" +
                         "-fx-font-size: 13px;" +
@@ -290,11 +322,11 @@ public class AdminReceptionistsController implements SessionController {
                         "-fx-background-radius: 0 0 10 0;"
         );
         details.getChildren().addAll(
-                detailCell("📅", "Date of Birth", r.getDateOfBirth().toString(), true),
-                detailCell("⚧", "Gender",
+                detailCell("DOB",    "Date of Birth",  r.getDateOfBirth().toString(),              true),
+                detailCell("Gender", "Gender",
                         r.getGender().toString().substring(0, 1).toUpperCase() +
-                                r.getGender().toString().substring(1).toLowerCase(), true),
-                detailCell("🕐", "Working Hours", r.getWorkingHours() + " hours per week", false)
+                                r.getGender().toString().substring(1).toLowerCase(),                       true),
+                detailCell("Hours",  "Working Hours",  r.getWorkingHours() + " hours per week",   false)
         );
 
         content.getChildren().addAll(contentHeader, divider, details);
