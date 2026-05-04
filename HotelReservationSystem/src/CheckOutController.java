@@ -8,6 +8,7 @@ import java.time.temporal.ChronoUnit;
 public class CheckOutController implements SessionController {
 
     @FXML private GuestSidebarController sidebarController;
+    private final Runnable refreshListener = this::refresh;
 
     @FXML private VBox errorPane, mainContent, visaForm, invoiceItems;
     @FXML private VBox balancePane, cashPane;
@@ -57,8 +58,24 @@ public class CheckOutController implements SessionController {
         } catch (InvalidInputException e) {
             showError(e.getMessage());
         }
-    }
+        EventBus.subscribe(EventBus.Event.TIME_JUMPED, refreshListener);
 
+        mainContent.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                EventBus.unsubscribe(EventBus.Event.TIME_JUMPED, refreshListener);
+
+            }
+        });
+    }
+    public void refresh() {
+        try {
+            currentInvoice = session.getCurrentGuest().checkOut();
+            errorPane.setVisible(false);    errorPane.setManaged(false);
+            showInvoice();
+        } catch (InvalidInputException e) {
+            showError(e.getMessage());
+        }
+    }
     private void showInvoice() {
         mainContent.setVisible(true);
         mainContent.setManaged(true);

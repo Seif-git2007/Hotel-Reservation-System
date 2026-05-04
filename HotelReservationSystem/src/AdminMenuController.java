@@ -5,22 +5,17 @@ import java.time.temporal.ChronoUnit;
 
 public class AdminMenuController extends MainController implements SessionController {
 
-    // ── Stat labels (fx:id must match Admin_Menu.fxml) ───────────────────────
     @FXML private Label labelUserCount;
     @FXML private Label labelBookingCount;
     @FXML private Label labelRevenue;
     @FXML private Label labelAvailableRooms;
 
-    // ── Sidebar ──────────────────────────────────────────────────────────────
     @FXML private AdminSidebarController sidebarController;
 
-    // ── Internal state ───────────────────────────────────────────────────────
     private AppSession session;
     private Admin      admin;
+    private final Runnable refreshListener = this::refresh;
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // SessionController entry point
-    // ─────────────────────────────────────────────────────────────────────────
     @Override
     public void initSession(AppSession session) {
         this.session = session;
@@ -31,13 +26,21 @@ public class AdminMenuController extends MainController implements SessionContro
             sidebarController.setActive(sidebarController.btnDashboard);
         }
 
-        refreshStats();
+        refresh();
+        EventBus.subscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+        EventBus.subscribe(EventBus.Event.USER_CHANGED, refreshListener);
+
+        labelBookingCount.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                EventBus.unsubscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+                EventBus.unsubscribe(EventBus.Event.USER_CHANGED, refreshListener);
+
+            }
+        });
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Stats
-    // ─────────────────────────────────────────────────────────────────────────
-    private void refreshStats() {
+
+    private void refresh() {
         // Total users
         if (labelUserCount != null)
             labelUserCount.setText(String.valueOf(HotelDataBase.getUsers().size()));

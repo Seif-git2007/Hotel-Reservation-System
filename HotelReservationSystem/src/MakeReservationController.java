@@ -14,6 +14,7 @@ public class MakeReservationController implements SessionController {
     @FXML DatePicker checkOutDate;
     @FXML VBox       roomContainer;
     @FXML Label      errorLabel;
+    private final Runnable refreshListener = this::refresh;
 
     private AppSession session;
 
@@ -24,8 +25,26 @@ public class MakeReservationController implements SessionController {
             sidebarController.initSession(session);
             sidebarController.btnMakeReservation.getStyleClass().add("sidebar-nav-btn-active");
         }
-    }
+        EventBus.subscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+        EventBus.subscribe(EventBus.Event.ROOMTYPE_CHANGED, refreshListener);
+        EventBus.subscribe(EventBus.Event.ROOM_CHANGED, refreshListener);
+        EventBus.subscribe(EventBus.Event.AMENITY_CHANGED, refreshListener);
+        EventBus.subscribe(EventBus.Event.TIME_JUMPED, refreshListener);
 
+        roomContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                EventBus.unsubscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+                EventBus.unsubscribe(EventBus.Event.TIME_JUMPED, refreshListener);
+                EventBus.unsubscribe(EventBus.Event.ROOMTYPE_CHANGED, refreshListener);
+                EventBus.unsubscribe(EventBus.Event.ROOM_CHANGED, refreshListener);
+                EventBus.unsubscribe(EventBus.Event.AMENITY_CHANGED, refreshListener);
+            }
+        });
+    }
+    public void refresh(){
+        roomContainer.getChildren().clear();
+        search(new ActionEvent());
+    }
     public void renderRooms(ArrayList<Room> rooms, VBox roomContainer, ActionEvent event) {
         roomContainer.getChildren().clear();
 

@@ -25,10 +25,13 @@ public class ReceptionistCheckOutController implements SessionController {
         refresh();
         EventBus.subscribe(EventBus.Event.USER_CHANGED, refreshListener);
         EventBus.subscribe(EventBus.Event.INVOICE_CHANGED, refreshListener);
+        EventBus.subscribe(EventBus.Event.TIME_JUMPED, refreshListener);
+
         checkOutContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene == null) {
                 EventBus.unsubscribe(EventBus.Event.USER_CHANGED, refreshListener);
                 EventBus.unsubscribe(EventBus.Event.INVOICE_CHANGED, refreshListener);
+                EventBus.unsubscribe(EventBus.Event.TIME_JUMPED, refreshListener);
             }
         });
     }

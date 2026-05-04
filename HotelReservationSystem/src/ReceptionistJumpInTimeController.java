@@ -34,6 +34,7 @@ public class ReceptionistJumpInTimeController implements SessionController {
     @FXML private Label      lblUplink;
 
     private AppSession session;
+    private final Runnable timeJumpListener = () -> renderCurrent();
 
     private Timeline pulseAnim;
     private Timeline scanlineAnim;
@@ -54,6 +55,13 @@ public class ReceptionistJumpInTimeController implements SessionController {
 
         datePicker.valueProperty().addListener((obs, oldVal, newVal) -> {
             validateAndUpdate(newVal);
+        });
+        EventBus.subscribe(EventBus.Event.TIME_JUMPED, timeJumpListener);
+
+        stage.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                EventBus.unsubscribe(EventBus.Event.TIME_JUMPED, timeJumpListener);
+            }
         });
 
         startPulse();
@@ -202,8 +210,9 @@ public class ReceptionistJumpInTimeController implements SessionController {
 
         combo.setOnFinished(e -> {
             JumpInTime.now = target;
+            System.out.println("date set");
             EventBus.fire(EventBus.Event.RESERVATION_CHANGED);
-
+            EventBus.fire(EventBus.Event.TIME_JUMPED);
             renderCurrent();
             datePicker.setValue(null);
             datePicker.setDisable(false);

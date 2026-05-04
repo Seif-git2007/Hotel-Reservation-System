@@ -15,6 +15,7 @@ public class ReceptionistGuestsController implements SessionController {
     @FXML private Label                         lblTotalBalance;
 
     private AppSession session;
+    private final Runnable refreshListener = this::refresh;
 
     @Override
     public void initSession(AppSession session) {
@@ -26,8 +27,18 @@ public class ReceptionistGuestsController implements SessionController {
         searchField.textProperty().addListener((obs, o, n) -> renderList());
         updateStats();
         renderList();
-    }
+        EventBus.subscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
 
+        guestList.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                EventBus.unsubscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+            }
+        });
+    }
+    public void refresh(){
+        updateStats();
+        renderList();
+    }
     private void updateStats() {
         List<Guest> guests = HotelDataBase.filterGuest();
         lblTotalGuests.setText("Total Guests: " + guests.size());

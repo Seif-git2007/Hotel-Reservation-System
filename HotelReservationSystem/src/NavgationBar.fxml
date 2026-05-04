@@ -7,8 +7,6 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-
-
 <VBox prefWidth="900.0" spacing="0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
 
 
@@ -33,7 +31,7 @@
         <Pane HBox.hgrow="ALWAYS" />
 
 
-        <Button fx:id="navBack" onAction="#back" prefHeight="68" styleClass="nav-action-button" text="◀ Back" translateX="55.0">
+        <Button fx:id="backbtn" onAction="#back" prefHeight="68" styleClass="nav-action-button" text="◀ Back" translateX="55.0">
             <HBox.margin><Insets right="4" /></HBox.margin>
         </Button>
 

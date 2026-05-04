@@ -11,6 +11,7 @@ public class ReceptionistMenuController implements SessionController {
 
     private AppSession   session;
     private Receptionist receptionist;
+    private final Runnable refreshListener = this::refresh;
 
     @Override
     public void initSession(AppSession session) {
@@ -23,10 +24,21 @@ public class ReceptionistMenuController implements SessionController {
         }
 
         welcomeName.setText(receptionist.getUsername());
-        refreshCounts();
+        refresh();
+        EventBus.subscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+        EventBus.subscribe(EventBus.Event.TIME_JUMPED, refreshListener);
+        lblCheckInCount.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                EventBus.unsubscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+                EventBus.unsubscribe(EventBus.Event.TIME_JUMPED, refreshListener);
+            }
+        });
+
+
+
     }
 
-    private void refreshCounts() {
+    private void refresh() {
         lblCheckInCount.setText(String.valueOf(HotelDataBase.getPendingGuests().size()));
         lblCheckOutCount.setText(String.valueOf(HotelDataBase.checktodayinvoices().size()));
         lblReservationCount.setText(String.valueOf(HotelDataBase.reservations.size()));

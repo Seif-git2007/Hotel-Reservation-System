@@ -12,7 +12,8 @@ public class EventBus {
         ROOM_CHANGED,
         ROOMTYPE_CHANGED,
         AMENITY_CHANGED,
-        INVOICE_CHANGED
+        INVOICE_CHANGED,
+        TIME_JUMPED
     }
 
     private static final Map<Event, List<Runnable>> listeners = new ConcurrentHashMap<>();

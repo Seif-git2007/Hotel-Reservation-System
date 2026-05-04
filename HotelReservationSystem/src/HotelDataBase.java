@@ -221,14 +221,13 @@ public class HotelDataBase {
 
     public static ArrayList<Guest> checktodayinvoices() {
         ArrayList<Guest> guests = new ArrayList<>();
-            for (Invoice inv : invoices){
-                for (Reservation r : inv.getReservation()){
-                    if (Receptionist.isToday(r.getCheckOutDate()) && !guests.contains(inv.getGuest()) && r.getStatus() != Reservation.Status.COMPLETED) {
-                        guests.add(inv.getGuest());
+                for (Reservation r : HotelDataBase.reservations){
+                    if (!r.getCheckOutDate().isAfter(JumpInTime.now) && !guests.contains(r.getGuest()) && r.getStatus() == Reservation.Status.AWAITING_CONFIRMATION) {
+                        guests.add(r.getGuest());
                         break;
                     }
                 }
-            }
+
         return guests;
     }
 

@@ -5,7 +5,7 @@ public class Reservation {
     private Room room;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
-    public enum Status{PENDING,CONFIRMED,AWAITING_CONFIRMATION,COMPLETED,CANCELLED}
+    public enum Status{PENDING,CONFIRMED,AWAITING_CONFIRMATION,COMPLETED,CANCELLED, UNPAID_FORCED }
     private Status status;
     private String specialRequests;
 

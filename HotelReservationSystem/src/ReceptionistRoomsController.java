@@ -11,6 +11,7 @@ public class ReceptionistRoomsController implements SessionController {
     @FXML private Label                         lblTotalRooms;
     @FXML private Label                         lblAvailableRooms;
     @FXML private Label                         lblOccupiedRooms;
+    private final Runnable refreshListener = this::refresh;
 
     private AppSession session;
 
@@ -21,10 +22,27 @@ public class ReceptionistRoomsController implements SessionController {
             sidebarController.initSession(session);
             sidebarController.setActive(sidebarController.btnRooms);
         }
+        refresh();
+        EventBus.subscribe(EventBus.Event.ROOM_CHANGED, refreshListener);
+        EventBus.subscribe(EventBus.Event.ROOMTYPE_CHANGED, refreshListener);
+        EventBus.subscribe(EventBus.Event.AMENITY_CHANGED, refreshListener);
+        EventBus.subscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+
+        roomGrid.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                EventBus.unsubscribe(EventBus.Event.ROOMTYPE_CHANGED, refreshListener);
+                EventBus.unsubscribe(EventBus.Event.ROOM_CHANGED, refreshListener);
+                EventBus.unsubscribe(EventBus.Event.AMENITY_CHANGED, refreshListener);
+                EventBus.unsubscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+
+            }
+        });
+
+    }
+    public void refresh(){
         updateStats();
         renderRooms();
     }
-
     private void updateStats() {
         long total    = HotelDataBase.getRooms().size();
         long occupied = HotelDataBase.getRooms().stream().filter(r ->

@@ -23,9 +23,13 @@ public class ViewReservationsController implements SessionController {
         }
         refresh();
         EventBus.subscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+        EventBus.subscribe(EventBus.Event.TIME_JUMPED, refreshListener);
+
         reservationController.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene == null) {
                 EventBus.unsubscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+                EventBus.unsubscribe(EventBus.Event.TIME_JUMPED, refreshListener);
+
             }
         });
 

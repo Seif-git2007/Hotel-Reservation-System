@@ -1,4 +1,5 @@
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -18,7 +19,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
-
     public static void load(ActionEvent event , String file){
         try {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -41,13 +41,14 @@ public class MainController implements Initializable {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         AppSession session = (AppSession) stage.getUserData();
         if(session.history.isEmpty()) {
+            if(!file.equals("Login_Menu.fxml")&&!file.equals("Register_Menu.fxml")&&!file.equals("Forget_Password.fxml")&&!file.equals("Main_Menu.fxml")){
             session.history.push(file);
+            }
         }
         else if(!session.history.peek().equals(file)){
             session.history.push(file);
         }
         load(event, file);
-
     }
 
 
@@ -178,7 +179,7 @@ public class MainController implements Initializable {
             navigate(event, "Admin_Menu.fxml");
         }
     }
-
+    @FXML
     public void back(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         AppSession session = (AppSession) stage.getUserData();
@@ -186,12 +187,7 @@ public class MainController implements Initializable {
         if(!session.history.isEmpty()){
             session.history.pop();
             if(!session.history.isEmpty()){
-                if(session.history.peek().equals("Login_Menu.fxml")) {
-                    load(event, "Login_Menu.fxml");
-                    session.logout();
-                }else {
                     load(event, session.history.peek());
-                }
             }
         }
 
