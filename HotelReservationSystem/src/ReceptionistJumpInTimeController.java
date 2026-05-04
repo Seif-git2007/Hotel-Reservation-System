@@ -177,7 +177,7 @@ public class ReceptionistJumpInTimeController implements SessionController {
             showError("ERR_TEMPORAL_CONFLICT // CANNOT JUMP BACKWARDS");
             return;
         }
-
+        MainController.cancelNoShows();
         playJumpAnimation(target);
     }
 
