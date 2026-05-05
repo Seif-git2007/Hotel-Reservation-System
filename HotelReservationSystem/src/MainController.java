@@ -232,9 +232,29 @@ public class MainController implements Initializable {
             }
         }
     }
+    public static void handleOverDue(AppSession session)  {
+        for(Reservation r:HotelDataBase.reservations){
+            if(r.getGuest()==session.getCurrentGuest()&&r.getStatus()== Reservation.Status.CONFIRMED&&r.getCheckOutDate().isBefore(JumpInTime.now)){
+                try {
+                    if(session.getDueInvoice()==null){
+                        session.setDueInvoice(r.getGuest().checkOut());
+                    }
+                    else if(!session.getDueInvoice().getReservation().contains(r)){
+                        session.getDueInvoice().getReservation().add(r);
+                    }
+                    System.out.println("i entered");
 
+                } catch (InvalidInputException e) {
+                }
+                r.setStatus(Reservation.Status.COMPLETED);
+                DataBaseManager.updateReservationStatus(r);
+                session.getCurrentGuest().setOverDue(true);
+            }
+        }
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         cancelNoShows();
+
     }
 }

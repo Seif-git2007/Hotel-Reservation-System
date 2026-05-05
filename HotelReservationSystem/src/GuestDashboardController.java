@@ -1,3 +1,4 @@
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
@@ -12,6 +13,9 @@ public class GuestDashboardController implements SessionController {
     public void initSession(AppSession session) {
         this.session = session;
         welcomeName.setText(session.getCurrentGuest().getDisplayname());
-        if (sidebarController != null) sidebarController.initSession(session);
+        if (sidebarController != null){
+            sidebarController.initSession(session);
+        }
     }
+
 }

@@ -52,12 +52,7 @@ public class CheckOutController implements SessionController {
             }
         });
 
-        try {
-            currentInvoice = session.getCurrentGuest().checkOut();
-            showInvoice();
-        } catch (InvalidInputException e) {
-            showError(e.getMessage());
-        }
+        refresh();
         EventBus.subscribe(EventBus.Event.TIME_JUMPED, refreshListener);
 
         mainContent.sceneProperty().addListener((obs, oldScene, newScene) -> {
@@ -69,8 +64,11 @@ public class CheckOutController implements SessionController {
     }
     public void refresh() {
         try {
-            currentInvoice = session.getCurrentGuest().checkOut();
-            errorPane.setVisible(false);    errorPane.setManaged(false);
+            if(session.getDueInvoice()!=null){
+                currentInvoice=session.getDueInvoice();
+            }else {
+                currentInvoice = session.getCurrentGuest().checkOut();
+            }
             showInvoice();
         } catch (InvalidInputException e) {
             showError(e.getMessage());
@@ -93,12 +91,8 @@ public class CheckOutController implements SessionController {
     }
 
     private VBox buildReservationBlock(Reservation r) {
-        long plannedNights = ChronoUnit.DAYS.between(r.getCheckInDate(), r.getCheckOutDate());
-        if (plannedNights == 0) {
-            plannedNights = 1;
-        }
-        long actualNights = ChronoUnit.DAYS.between(r.getCheckInDate(), JumpInTime.now);
-        long lateNights   = Math.max(0, actualNights - plannedNights);
+        long nights = ChronoUnit.DAYS.between(r.getCheckInDate(), r.getCheckOutDate());
+        if (nights == 0) nights = 1;
 
         double basePrice    = r.getRoom().getType().getBasePrice();
         double amenityTotal = 0;
@@ -106,9 +100,13 @@ public class CheckOutController implements SessionController {
             amenityTotal += a.getPrice();
         }
 
-        double normalCharge = plannedNights * basePrice;
-        double lateCharge   = lateNights * (basePrice + basePrice * 0.2);
-        double lineTotal    = normalCharge + amenityTotal + lateCharge;
+        double normalCharge = nights * basePrice;
+
+        // Late payment fee: 20% of total if checkout date has already passed
+        long daysLate = ChronoUnit.DAYS.between(r.getCheckOutDate(), JumpInTime.now);
+        boolean isLate = daysLate > 0;
+        double lateFee = isLate ? (normalCharge + amenityTotal) * 0.20 : 0;
+        double lineTotal = normalCharge + amenityTotal + lateFee;
 
         VBox block = new VBox(8);
         block.getStyleClass().add("invoice-reservation-block");
@@ -125,7 +123,7 @@ public class CheckOutController implements SessionController {
 
         block.getChildren().add(buildLineRow(
                 String.format("Room rate (%d night%s × $%.2f)",
-                        plannedNights, plannedNights == 1 ? "" : "s", basePrice),
+                        nights, nights == 1 ? "" : "s", basePrice),
                 String.format("$%.2f", normalCharge), false, false));
 
         if (amenityTotal > 0) {
@@ -133,19 +131,18 @@ public class CheckOutController implements SessionController {
                     "Amenities", String.format("$%.2f", amenityTotal), false, false));
         }
 
-        if (lateNights > 0) {
+        if (isLate) {
             Label lateNotice = new Label(String.format(
-                    "OVERSTAY: Checked out %s instead of %s (%d extra night%s)",
-                    JumpInTime.now, r.getCheckOutDate(),
-                    lateNights, lateNights == 1 ? "" : "s"));
+                    "LATE PAYMENT: Due on %s — %d day%s overdue",
+                    r.getCheckOutDate(),
+                    daysLate, daysLate == 1 ? "" : "s"));
             lateNotice.getStyleClass().add("invoice-late-notice");
             lateNotice.setWrapText(true);
             block.getChildren().add(lateNotice);
 
             block.getChildren().add(buildLineRow(
-                    String.format("Late fee (%d night%s × $%.2f + 20%%)",
-                            lateNights, lateNights == 1 ? "" : "s", basePrice),
-                    String.format("$%.2f", lateCharge), true, false));
+                    "Late payment fee (20% of total)",
+                    String.format("$%.2f", lateFee), true, false));
         }
 
         Pane subDivider = new Pane();
@@ -233,7 +230,8 @@ public class CheckOutController implements SessionController {
             }
 
             session.getCurrentGuest().pay(currentInvoice, method, validatedCard);
-
+            session.getCurrentGuest().setOverDue(false);
+            session.setDueInvoice(null);
             new Alert(Alert.AlertType.INFORMATION,
                     "Check-out complete. Thank you for staying with us.").showAndWait();
             MainController.navigate(event, "Guest_Dashboard.fxml");

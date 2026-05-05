@@ -1,3 +1,5 @@
+import javafx.event.ActionEvent;
+
 import java.util.Stack;
 
 public class AppSession {
@@ -8,6 +10,14 @@ public class AppSession {
     private Room      selectedRoom;
     private RoomType  selectedRoomType;
     private Amenity   selectedAmenity;
+    private Invoice dueInvoice;
+    public Invoice getDueInvoice() {
+        return dueInvoice;
+    }
+
+    public void setDueInvoice(Invoice dueInvoice) {
+        this.dueInvoice = dueInvoice;
+    }
 
     //for all dashboards
     public User getCurrentUser()          { return currentUser; }

@@ -106,16 +106,11 @@ public class Room {
     }
 
     public double calcTotal(LocalDate checkInDate, LocalDate checkOutDate) {
-        long plannedDays = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
-        long actualDays  = ChronoUnit.DAYS.between(checkInDate, JumpInTime.now);
-        long lateDays    = Math.max(0, actualDays - plannedDays);
-
+        long days = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
+        if (days == 0) days = 1;
         double amenityTotal = 0;
         for (Amenity a : amenities) amenityTotal += a.getPrice();
-
-        double normal = plannedDays * type.getBasePrice() + amenityTotal;
-        double late   = lateDays * (type.getBasePrice() + type.getBasePrice() * 0.2);
-        return normal + late;
+        return (days * type.getBasePrice()) + amenityTotal;
     }
 
     @Override

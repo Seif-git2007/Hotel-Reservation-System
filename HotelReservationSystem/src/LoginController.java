@@ -21,7 +21,10 @@ public class LoginController {
             AppSession session = (AppSession) stage.getUserData();
             session.setCurrentUser(user);
             if (!user.isLoggedIn()){
-                if (user instanceof Guest) MainController.navigate(event, "Guest_Dashboard.fxml");
+                if (user instanceof Guest){
+                    MainController.navigate(event, "Guest_Dashboard.fxml");
+
+                }
                 else if (user instanceof Receptionist) MainController.navigate(event, "Receptionist_Menu.fxml");
                 else if (user instanceof Admin) MainController.navigate(event, "Admin_Menu.fxml");
                 user.setLoggedIn(true);
@@ -38,6 +41,7 @@ public class LoginController {
         password.textProperty().addListener((obs, o, n) -> {
             if (!passwordVisible.isVisible()) passwordVisible.setText(n);
         });
+
     }
     @FXML
     private void togglePassword() {

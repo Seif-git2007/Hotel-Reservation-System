@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class Guest extends User {
@@ -6,7 +7,7 @@ public class Guest extends User {
     private roomPreferences prefered;
     private String address;
     private String displayname;
-
+    private boolean overDue;
     public Guest() {}
 
     public Guest(String username, String password, LocalDate dateOfBirth, double balance,
@@ -17,6 +18,14 @@ public class Guest extends User {
         this.prefered = prefered;
         this.address = address;
         this.displayname = displayName;
+    }
+
+    public boolean isOverDue() {
+        return overDue;
+    }
+
+    public void setOverDue(boolean overDue) {
+        this.overDue = overDue;
     }
 
     public String getDisplayname()              { return displayname; }
@@ -119,29 +128,32 @@ public class Guest extends User {
 
     public Invoice checkOut() throws InvalidInputException {
         ArrayList<Reservation> confirmed = new ArrayList<>();
-        double total = 0;
+        boolean flag=false;
         for (Reservation r : HotelDataBase.reservations) {
             if (r.getGuest() == this && r.getStatus() == Reservation.Status.CONFIRMED) {
                 if(!r.getCheckOutDate().isAfter(JumpInTime.now)){
                     confirmed.add(r);
+                    System.out.println(r);
                 }
+            }
+        }
+        if (confirmed.isEmpty()) throw new InvalidInputException("You Can't Check out now");
 
-            }
-        }
-        if (confirmed.isEmpty()) {
-            throw new InvalidInputException("You are not checked in");
-        }
-        for (Reservation r : confirmed){
-            if (r.getCheckOutDate().isAfter(JumpInTime.now)){
-                throw new InvalidInputException("You can't check out before your check out date");
-            }
-        }
-        for (Reservation r : confirmed){
-            total += r.getRoom().calcTotal(r.getCheckInDate(), r.getCheckOutDate());
+
+        double total = 0;
+        for (Reservation r : confirmed) {
+            long nights = ChronoUnit.DAYS.between(r.getCheckInDate(), r.getCheckOutDate());
+            if (nights == 0) nights = 1;
+            double basePrice    = r.getRoom().getType().getBasePrice();
+            double amenityTotal = 0;
+            for (Amenity a : r.getRoom().getAmenities()) amenityTotal += a.getPrice();
+            double normalCharge = nights * basePrice;
+            long   daysLate     = ChronoUnit.DAYS.between(r.getCheckOutDate(), JumpInTime.now);
+            double lateFee      = daysLate > 0 ? (normalCharge + amenityTotal) * 0.20 : 0;
+            total += normalCharge + amenityTotal + lateFee;
         }
 
         Invoice invoice = new Invoice(this, confirmed, total);
-
         System.out.println(invoice.toSummary());
         return invoice;
     }

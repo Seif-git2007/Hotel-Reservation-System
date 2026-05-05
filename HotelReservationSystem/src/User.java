@@ -7,7 +7,7 @@ public abstract class User {
     private String    email;
     public enum Gender { MALE, FEMALE }
     Gender gender;
-    boolean loggedIn=false;
+    private boolean loggedIn=false;
     User() {}
 
     public User(String username, String password, LocalDate dateOfBirth, Gender gender, String email) {
