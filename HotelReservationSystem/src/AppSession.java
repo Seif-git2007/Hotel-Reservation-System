@@ -19,7 +19,6 @@ public class AppSession {
         this.dueInvoice = dueInvoice;
     }
 
-    //for all dashboards
     public User getCurrentUser()          { return currentUser; }
     public void setCurrentUser(User u)    { currentUser = u; }
     //for guest only

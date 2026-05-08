@@ -98,7 +98,6 @@ public class AdminReservationsController implements SessionController {
                         "-fx-effect: dropshadow(three-pass-box, rgba(15,33,96,0.06), 8, 0, 0, 2);"
         );
 
-        // ── Navy header ───────────────────────────────────────────────────
         HBox header = new HBox(0);
         header.setAlignment(Pos.CENTER_LEFT);
         header.setStyle(
@@ -107,14 +106,12 @@ public class AdminReservationsController implements SessionController {
                         "-fx-padding: 10 16 10 16;"
         );
 
-        // Gold top accent
         Pane accent = new Pane();
         accent.setPrefWidth(4);
         accent.setPrefHeight(32);
         accent.setStyle("-fx-background-color: #C9A84C; -fx-background-radius: 2;");
         HBox.setMargin(accent, new javafx.geometry.Insets(0, 12, 0, 0));
 
-        // Guest name + room
         VBox headerLeft = new VBox(2);
         Label guestLabel = new Label(res.getGuest().getDisplayname());
         guestLabel.setStyle(
@@ -135,7 +132,6 @@ public class AdminReservationsController implements SessionController {
         Pane spacer = new Pane();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // Status badge
         Label statusBadge = new Label(res.getStatus().toString().toUpperCase());
         statusBadge.getStyleClass().addAll(
                 "status-badge",
@@ -144,11 +140,9 @@ public class AdminReservationsController implements SessionController {
 
         header.getChildren().addAll(accent, headerLeft, spacer, statusBadge);
 
-        // ── Body ──────────────────────────────────────────────────────────
         HBox body = new HBox(0);
         body.setStyle("-fx-padding: 14 16 14 16;");
 
-        // Dates block
         long nights = ChronoUnit.DAYS.between(res.getCheckInDate(), res.getCheckOutDate());
         if (nights == 0) nights = 1;
 
@@ -180,7 +174,6 @@ public class AdminReservationsController implements SessionController {
 
         datesBlock.getChildren().addAll(dateLabel, detailsLabel, amenLabel);
 
-        // Price block
         double total = nights * res.getRoom().getType().getBasePrice();
         VBox priceBlock = new VBox(2);
         priceBlock.setAlignment(Pos.CENTER_RIGHT);
@@ -200,7 +193,6 @@ public class AdminReservationsController implements SessionController {
 
         body.getChildren().addAll(datesBlock, priceBlock);
 
-        // ── Special requests (only if present) ───────────────────────────
         if (res.getSpecialRequests() != null && !res.getSpecialRequests().isBlank()) {
             Pane divider = new Pane();
             divider.setPrefHeight(1);

@@ -19,7 +19,6 @@ public class AdminSidebarController implements SessionController {
         this.session = session;
     }
 
-    /** Call this from the host controller to highlight the active page button. */
     public void setActive(Button btn) {
         clearActive();
         if (btn != null) btn.getStyleClass().add("sidebar-nav-btn-active");

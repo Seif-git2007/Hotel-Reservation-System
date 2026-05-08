@@ -56,14 +56,12 @@ public class ReceptionistReservationsController implements SessionController {
             HBox header = new HBox();
             header.setAlignment(Pos.CENTER_LEFT);
 
-            // Guest name as title
             Label guestLabel = new Label(res.getGuest().getDisplayname());
             guestLabel.getStyleClass().add("room-card-title");
 
             Pane spacer = new Pane();
             HBox.setHgrow(spacer, Priority.ALWAYS);
 
-            // Status badge — reuses the existing status-* CSS classes from style.css
             Label statusBadge = new Label(res.getStatus().toString().toUpperCase());
             statusBadge.getStyleClass().addAll("status-badge",
                     "status-" + res.getStatus().toString().toLowerCase());

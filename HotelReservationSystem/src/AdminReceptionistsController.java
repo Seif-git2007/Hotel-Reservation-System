@@ -60,7 +60,6 @@ public class AdminReceptionistsController implements SessionController {
         renderList();
     }
 
-    // ── Form ─────────────────────────────────────────────────────────────────
 
     @FXML
     private void openAddForm() {
@@ -77,7 +76,6 @@ public class AdminReceptionistsController implements SessionController {
         formPanel.setManaged(true);
         feedbackLabel.setVisible(false);
 
-        // reset password toggle to hidden state — exactly like ForgetPassword
         fieldPasswordVisible.setVisible(false);
         fieldPasswordVisible.setManaged(false);
         fieldPassword.setVisible(true);
@@ -95,7 +93,6 @@ public class AdminReceptionistsController implements SessionController {
     @FXML
     private void toggleFieldPassword() {
         if (!fieldPasswordVisible.isVisible()) {
-            // currently hidden → show it
             fieldPasswordVisible.setText(fieldPassword.getText());
             fieldPassword.setVisible(false);
             fieldPassword.setManaged(false);
@@ -103,7 +100,6 @@ public class AdminReceptionistsController implements SessionController {
             fieldPasswordVisible.setManaged(true);
             fieldEyeBtn.setText("Hide");
         } else {
-            // currently visible → hide it
             fieldPassword.setText(fieldPasswordVisible.getText());
             fieldPasswordVisible.setVisible(false);
             fieldPasswordVisible.setManaged(false);
@@ -177,7 +173,6 @@ public class AdminReceptionistsController implements SessionController {
         }
     }
 
-    // ── Stats + list ──────────────────────────────────────────────────────────
 
     private void updateStats() {
         List<Receptionist> all = HotelDataBase.getReceptionists();
@@ -209,7 +204,6 @@ public class AdminReceptionistsController implements SessionController {
         }
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
 
     private void showFeedback(String msg, boolean isError) {
         feedbackLabel.setText(msg);
@@ -226,7 +220,6 @@ public class AdminReceptionistsController implements SessionController {
         );
     }
 
-    // ── Card ──────────────────────────────────────────────────────────────────
 
     private HBox buildCard(Receptionist r) {
         HBox card = new HBox(0);

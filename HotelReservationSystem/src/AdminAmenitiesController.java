@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 public class AdminAmenitiesController implements SessionController {
 
-    // ── FXML injections ──────────────────────────────────────────────────────
     @FXML private AdminSidebarController sidebarController;
 
     @FXML private Label     feedbackLabel;
@@ -22,13 +21,11 @@ public class AdminAmenitiesController implements SessionController {
     @FXML private Button    btnFormSubmit;
     @FXML private FlowPane  amenityGrid;
 
-    // ── State ────────────────────────────────────────────────────────────────
     private AppSession session;
     private Admin      admin;
 
     private Amenity editingAmenity = null;
 
-    // ── SessionController ────────────────────────────────────────────────────
     @Override
     public void initSession(AppSession session) {
         this.session = session;
@@ -42,7 +39,6 @@ public class AdminAmenitiesController implements SessionController {
         renderCards();
     }
 
-    // ── Card rendering ────────────────────────────────────────────────────────
     private void renderCards() {
         amenityGrid.getChildren().clear();
 
@@ -121,7 +117,6 @@ public class AdminAmenitiesController implements SessionController {
         }
     }
 
-    // ── Form ──────────────────────────────────────────────────────────────────
     @FXML
     private void openAddForm() {
         editingAmenity = null;
@@ -196,7 +191,6 @@ public class AdminAmenitiesController implements SessionController {
         }
     }
 
-    // ── Delete ────────────────────────────────────────────────────────────────
     private void handleDelete(Amenity amenity) {
         boolean inUse = HotelDataBase.reservations.stream()
                 .anyMatch(r -> r.getRoom().getAmenities().contains(amenity) &&
@@ -277,7 +271,6 @@ public class AdminAmenitiesController implements SessionController {
         });
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
     private void showForm() {
         formPanel.setVisible(true);
         formPanel.setManaged(true);

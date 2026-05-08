@@ -87,7 +87,6 @@ public class AdminGuestsController implements SessionController {
                         "-fx-effect: dropshadow(three-pass-box, rgba(15,33,96,0.06), 8, 0, 0, 2);"
         );
 
-        // ── Left navy avatar panel ────────────────────────────────────────
         VBox avatarPanel = new VBox(0);
         avatarPanel.setAlignment(Pos.CENTER);
         avatarPanel.setMinWidth(80);
@@ -98,12 +97,10 @@ public class AdminGuestsController implements SessionController {
                         "-fx-padding: 0 0 0 0;"
         );
 
-        // Gold top accent
         Pane topAccent = new Pane();
         topAccent.setPrefHeight(4);
         topAccent.setStyle("-fx-background-color: #C9A84C; -fx-background-radius: 10 0 0 0;");
 
-        // Avatar circle with initial
         Label avatarLabel = new Label(
                 guest.getDisplayname().substring(0, 1).toUpperCase()
         );
@@ -122,7 +119,6 @@ public class AdminGuestsController implements SessionController {
         avatarLabel.setMinSize(50, 50);
         avatarLabel.setAlignment(Pos.CENTER);
 
-        // Gender label
         Label genderLabel = new Label(
                 guest.getGender() == User.Gender.MALE ? "♂" : "♀"
         );
@@ -138,11 +134,9 @@ public class AdminGuestsController implements SessionController {
 
         avatarPanel.getChildren().addAll(topAccent, avatarContent);
 
-        // ── Right content panel ───────────────────────────────────────────
         VBox content = new VBox(0);
         HBox.setHgrow(content, Priority.ALWAYS);
 
-        // Content header
         HBox contentHeader = new HBox(0);
         contentHeader.setAlignment(Pos.CENTER_LEFT);
         contentHeader.setStyle("-fx-padding: 12 16 8 16;");
@@ -164,7 +158,6 @@ public class AdminGuestsController implements SessionController {
         );
         nameBlock.getChildren().addAll(displayName, userName);
 
-        // Balance chip
         Label balanceChip = new Label(String.format("$%.0f", guest.getBalance()));
         balanceChip.setStyle(
                 "-fx-text-fill: #0F2160;" +
@@ -177,12 +170,10 @@ public class AdminGuestsController implements SessionController {
 
         contentHeader.getChildren().addAll(nameBlock, balanceChip);
 
-        // Divider
         Pane divider = new Pane();
         divider.setPrefHeight(1);
         divider.setStyle("-fx-background-color: #F0EDE4;");
 
-        // Details row
         HBox details = new HBox(0);
         details.setStyle("-fx-padding: 10 16 12 16; -fx-background-color: #FDFAF4; -fx-background-radius: 0 0 10 0;");
 
@@ -194,7 +185,6 @@ public class AdminGuestsController implements SessionController {
                                 "  •  " + guest.getPrefered().getView() + " view", false)
         );
 
-        // Reservation summary chip
         long totalRes = HotelDataBase.reservations.stream()
                 .filter(r -> r.getGuest() == guest).count();
         long activeRes = HotelDataBase.reservations.stream()
@@ -225,7 +215,6 @@ public class AdminGuestsController implements SessionController {
         content.getChildren().addAll(contentHeader, divider, details, resChip);
         card.getChildren().addAll(avatarPanel, content);
 
-        // Hover
         card.setOnMouseEntered(e ->
                 card.setStyle(card.getStyle()
                         .replace("-fx-border-color: #E0DAD0;", "-fx-border-color: #C9A84C;")

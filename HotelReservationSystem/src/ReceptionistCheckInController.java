@@ -56,7 +56,6 @@ public class ReceptionistCheckInController implements SessionController {
             VBox card = new VBox(10);
             card.getStyleClass().add("room-card");
 
-            // Header row — name left, email right
             HBox header = new HBox();
             header.setAlignment(Pos.CENTER_LEFT);
 
@@ -71,7 +70,6 @@ public class ReceptionistCheckInController implements SessionController {
 
             header.getChildren().addAll(nameLabel, spacer, emailLabel);
 
-            // Pending reservations for today
             ArrayList<Reservation> pending =
                     HotelDataBase.receptionistGetGuestPendingReservation(guest);
 

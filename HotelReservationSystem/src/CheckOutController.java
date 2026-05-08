@@ -102,7 +102,6 @@ public class CheckOutController implements SessionController {
 
         double normalCharge = nights * basePrice;
 
-        // Late payment fee: 20% of total if checkout date has already passed
         long daysLate = ChronoUnit.DAYS.between(r.getCheckOutDate(), JumpInTime.now);
         boolean isLate = daysLate > 0;
         double lateFee = isLate ? (normalCharge + amenityTotal) * 0.20 : 0;

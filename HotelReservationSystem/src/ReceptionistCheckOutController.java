@@ -73,7 +73,6 @@ public class ReceptionistCheckOutController implements SessionController {
 
             header.getChildren().addAll(nameLabel, spacer, emailLabel);
 
-            // Show the reservations about to complete
             for (Reservation res : HotelDataBase.getGuestReservation(guest)) {
                 if (res.getStatus().equals(Reservation.Status.AWAITING_CONFIRMATION) ) {
                     long nights = java.time.temporal.ChronoUnit.DAYS.between(

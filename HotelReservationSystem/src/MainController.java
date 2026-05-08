@@ -68,7 +68,6 @@ public class MainController implements Initializable {
                         "-fx-background-radius: 8;"
         );
 
-        // Content
         VBox content = new VBox(10);
         content.setAlignment(javafx.geometry.Pos.CENTER);
         content.setStyle("-fx-padding: 20 28 10 28;");
@@ -154,7 +153,6 @@ public class MainController implements Initializable {
                             .replace("-fx-background-color: rgba(201,168,76,0.10);",
                                     "-fx-background-color: transparent;")));
 
-            // Style the button bar background
             pane.lookup(".button-bar").setStyle("-fx-background-color: #0F2160; -fx-padding: 10 20 18 20;");
         });
 

@@ -111,7 +111,7 @@
          <Label fx:id="nameError" styleClass="label-error" visible="false" />
 
 
-         <Button onAction="#login" prefHeight="50" prefWidth="420" styleClass="button" text="SIGN IN">
+         <Button onAction="#login" defaultButton="true" prefHeight="50" prefWidth="420" styleClass="button" text="SIGN IN">
             <VBox.margin><Insets bottom="18" /></VBox.margin>
          </Button>
 

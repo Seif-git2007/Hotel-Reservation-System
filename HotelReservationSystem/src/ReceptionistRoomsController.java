@@ -91,7 +91,6 @@ public class ReceptionistRoomsController implements SessionController {
                         "-fx-effect: dropshadow(three-pass-box, rgba(15,33,96,0.06), 8, 0, 0, 2);"
         );
 
-        // ── Left navy panel ───────────────────────────────────────────────
         VBox leftPanel = new VBox(0);
         leftPanel.setMinWidth(160);
         leftPanel.setPrefWidth(160);
@@ -140,12 +139,10 @@ public class ReceptionistRoomsController implements SessionController {
 
         leftPanel.getChildren().addAll(accentBar, roomNo, titleLabel, chipRow);
 
-        // ── Right content panel ───────────────────────────────────────────
         VBox rightPanel = new VBox(10);
         rightPanel.setStyle("-fx-padding: 14 16 14 16;");
         HBox.setHgrow(rightPanel, Priority.ALWAYS);
 
-        // Meta row
         HBox metaRow = new HBox(0);
         metaRow.setStyle(
                 "-fx-background-color: #F8F5EF;" +
@@ -160,7 +157,6 @@ public class ReceptionistRoomsController implements SessionController {
                 metaCell("RATE",     String.format("$%.0f / night", room.getType().getBasePrice()), false)
         );
 
-        // Amenity pills
         FlowPane pills = new FlowPane(5, 5);
         if (room.getAmenities().isEmpty()) {
             Label none = new Label("No amenities");
@@ -184,7 +180,6 @@ public class ReceptionistRoomsController implements SessionController {
             }
         }
 
-        // Status badge only — no edit/delete buttons
         HBox footer = new HBox(8);
         footer.setAlignment(Pos.CENTER_LEFT);
         footer.setStyle(

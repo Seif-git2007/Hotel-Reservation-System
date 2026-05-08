@@ -41,11 +41,9 @@ public class AdminMenuController extends MainController implements SessionContro
 
 
     private void refresh() {
-        // Total users
         if (labelUserCount != null)
             labelUserCount.setText(String.valueOf(HotelDataBase.getUsers().size()));
 
-        // Active bookings (PENDING + CONFIRMED)
         long activeBookings = HotelDataBase.reservations.stream()
                 .filter(r -> r.getStatus() == Reservation.Status.PENDING
                         || r.getStatus() == Reservation.Status.CONFIRMED)
@@ -53,7 +51,6 @@ public class AdminMenuController extends MainController implements SessionContro
         if (labelBookingCount != null)
             labelBookingCount.setText(String.valueOf(activeBookings));
 
-        // Total revenue (CONFIRMED + COMPLETED)
         double totalRevenue = HotelDataBase.reservations.stream()
                 .filter(r -> r.getStatus() == Reservation.Status.COMPLETED
                         || r.getStatus() == Reservation.Status.CONFIRMED)
@@ -66,7 +63,6 @@ public class AdminMenuController extends MainController implements SessionContro
         if (labelRevenue != null)
             labelRevenue.setText(String.format("$%.0f", totalRevenue));
 
-        // Available rooms
         long occupied = HotelDataBase.reservations.stream()
                 .filter(r -> r.getStatus() == Reservation.Status.CONFIRMED
                         || r.getStatus() == Reservation.Status.PENDING)

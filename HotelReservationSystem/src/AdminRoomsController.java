@@ -12,32 +12,27 @@ import java.util.ArrayList;
 
 public class AdminRoomsController extends MainController implements SessionController {
 
-    // ── FXML ─────────────────────────────────────────────────────────────────
     @FXML private Pane     sidebarPlaceholder;
     @FXML private FlowPane cardGrid;
     @FXML private Label    lblStatus;
 
-    // Inline form
     @FXML private VBox   formPanel;
     @FXML private VBox   formBody;
     @FXML private Label  formTitle;
     @FXML private Button btnSave;
 
-    // ── State ─────────────────────────────────────────────────────────────────
     private AppSession             session;
     private Admin                  admin;
     private AdminSidebarController sidebarController;
     private Room                   selectedRoom;   // card currently highlighted
     private Room                   editingRoom;    // room being added/edited in form
 
-    // Form field references (built dynamically, kept for onSave)
     private TextField           tfNumber;
     private TextField           tfFloor;
     private ComboBox<Room.view> cbView;
     private ComboBox<RoomType>  cbType;
     private FlowPane            amenityTagsPane;
 
-    // ── Init ──────────────────────────────────────────────────────────────────
 
     @Override
     public void initSession(AppSession session) {
@@ -60,7 +55,6 @@ public class AdminRoomsController extends MainController implements SessionContr
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    // ── Card grid ─────────────────────────────────────────────────────────────
 
     private void refresh() {
         selectedRoom = null;
@@ -82,7 +76,6 @@ public class AdminRoomsController extends MainController implements SessionContr
                         "-fx-effect: dropshadow(three-pass-box, rgba(15,33,96,0.06), 8, 0, 0, 2);"
         );
 
-        // ── Left navy panel ───────────────────────────────────────────────────
         VBox leftPanel = new VBox(0);
         leftPanel.setMinWidth(160);
         leftPanel.setPrefWidth(160);
@@ -132,12 +125,10 @@ public class AdminRoomsController extends MainController implements SessionContr
 
         leftPanel.getChildren().addAll(accentBar, roomNo, titleLabel, chipRow);
 
-        // ── Right content panel ───────────────────────────────────────────────
         VBox rightPanel = new VBox(10);
         rightPanel.setStyle("-fx-padding: 14 16 14 16;");
         HBox.setHgrow(rightPanel, Priority.ALWAYS);
 
-        // Meta row
         HBox metaRow = new HBox(0);
         metaRow.setStyle(
                 "-fx-background-color: #F8F5EF;" +
@@ -152,7 +143,6 @@ public class AdminRoomsController extends MainController implements SessionContr
                 metaCell("RATE",     String.format("$%.0f / night", room.getType().getBasePrice()), false)
         );
 
-        // Amenity pills
         FlowPane pills = new FlowPane(5, 5);
         if (room.getAmenities().isEmpty()) {
             Label none = new Label("No amenities");
@@ -163,7 +153,6 @@ public class AdminRoomsController extends MainController implements SessionContr
                 pills.getChildren().add(amenityPill(a.getName()));
         }
 
-        // Footer: status badge + edit/delete buttons
         HBox footer = new HBox(8);
         footer.setAlignment(Pos.CENTER_LEFT);
         footer.setStyle(
@@ -228,9 +217,7 @@ public class AdminRoomsController extends MainController implements SessionContr
         selectedRoom = room;
     }
 
-    // ── Inline form ───────────────────────────────────────────────────────────
 
-    /** Opens the form panel pre-filled for editing, or blank for adding. */
     private void openForm(Room existing) {
         editingRoom = existing;
         boolean adding = existing == null;
@@ -238,18 +225,15 @@ public class AdminRoomsController extends MainController implements SessionContr
         formTitle.setText(adding ? "Add Room" : "Edit Room #" + existing.getRoomNumber());
         formBody.getChildren().clear();
 
-        // Room number
         tfNumber = new TextField(adding ? "" : String.valueOf(existing.getRoomNumber()));
         tfNumber.setPromptText("e.g. 201");
         tfNumber.setDisable(!adding);
         formBody.getChildren().addAll(fieldLabel("Room Number"), tfNumber);
 
-        // Floor
         tfFloor = new TextField(adding ? "" : String.valueOf(existing.getFloor()));
         tfFloor.setPromptText("e.g. 2");
         formBody.getChildren().addAll(fieldLabel("Floor"), tfFloor);
 
-        // View
         cbView = new ComboBox<>();
         cbView.getItems().setAll(Room.view.values());
         cbView.setValue(adding ? Room.view.SEA : existing.getView());
@@ -257,7 +241,6 @@ public class AdminRoomsController extends MainController implements SessionContr
         cbView.getStyleClass().add("filter-combo");
         formBody.getChildren().addAll(fieldLabel("View"), cbView);
 
-        // Room type
         cbType = new ComboBox<>();
         cbType.getItems().setAll(HotelDataBase.getRoomTypes());
         cbType.setConverter(new javafx.util.StringConverter<>() {
@@ -269,7 +252,6 @@ public class AdminRoomsController extends MainController implements SessionContr
         cbType.getStyleClass().add("filter-combo");
         formBody.getChildren().addAll(fieldLabel("Room Type"), cbType);
 
-        // Amenities — clickable toggle tags
         amenityTagsPane = new FlowPane(8, 8);
         amenityTagsPane.setStyle("-fx-padding: 4 0 0 0;");
         for (Amenity a : HotelDataBase.getAmenities()) {
@@ -288,7 +270,6 @@ public class AdminRoomsController extends MainController implements SessionContr
         }
         formBody.getChildren().addAll(fieldLabel("Amenities"), amenityTagsPane);
 
-        // Show panel
         formPanel.setVisible(true);
         formPanel.setManaged(true);
     }
@@ -409,7 +390,6 @@ public class AdminRoomsController extends MainController implements SessionContr
         });
     }
 
-    // ── UI helpers ────────────────────────────────────────────────────────────
 
     private Label fieldLabel(String text) {
         Label l = new Label(text.toUpperCase());

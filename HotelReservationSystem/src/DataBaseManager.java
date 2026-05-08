@@ -211,7 +211,6 @@ public class DataBaseManager {
     }
 
     private static void saveRoomAmenities(Connection c, Room room) throws SQLException {
-        // Clear existing links then re-insert fresh
         try (PreparedStatement del = c.prepareStatement(
                 "DELETE FROM room_amenities WHERE room_number = ?")) {
             del.setInt(1, room.getRoomNumber());
@@ -231,7 +230,6 @@ public class DataBaseManager {
 
     public static void deleteRoom(Room room) {
         try (Connection c = connect()) {
-            // Delete amenity links first (FK constraint)
             try (PreparedStatement ps = c.prepareStatement(
                     "DELETE FROM room_amenities WHERE room_number = ?")) {
                 ps.setInt(1, room.getRoomNumber());
@@ -246,7 +244,6 @@ public class DataBaseManager {
         EventBus.fire(EventBus.Event.ROOM_CHANGED);
     }
 
-    // ─── User ─────────────────────────────────────────────────────────────────
 
     public static void saveUser(User user) {
         String sql = """
@@ -329,9 +326,7 @@ public class DataBaseManager {
         EventBus.fire(EventBus.Event.RESERVATION_CHANGED);
     }
 
-    // ─── Invoice ──────────────────────────────────────────────────────────────
-    // db_id is AUTO_INCREMENT and only used internally here to link invoice_reservations
-    // Java's Invoice object never stores or sees it
+
 
     public static void saveInvoice(Invoice inv) {
         String sql = """
@@ -357,7 +352,6 @@ public class DataBaseManager {
             else
                 ps.setNull(5, Types.DATE);
 
-            // VisaCard fields — only filled when method is CREDIT
             if (inv.getMethod() == Invoice.paymentMethod.CREDIT && inv.getCardInfo() != null) {
                 ps.setString(6, inv.getCardInfo().getCardHolderName());
                 ps.setString(7, inv.getCardInfo().getCardNumber());
@@ -372,7 +366,6 @@ public class DataBaseManager {
 
             ps.executeUpdate();
 
-            // Grab the AUTO_INCREMENT db_id to link invoice_reservations
             ResultSet keys = ps.getGeneratedKeys();
             if (keys.next()) {
                 int dbId = keys.getInt(1);
@@ -384,7 +377,6 @@ public class DataBaseManager {
     }
 
     public static void updateInvoicePayment(Invoice inv) {
-        // Finds the invoice by guest + total + unpaid, then updates it
         String sql = """
             UPDATE invoices
             SET is_paid=?, payment_method=?, payment_date=?,

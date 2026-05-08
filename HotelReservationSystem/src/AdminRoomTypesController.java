@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 public class AdminRoomTypesController implements SessionController {
 
-    // ── FXML injections ──────────────────────────────────────────────────────
     @FXML private AdminSidebarController sidebarController;
 
     @FXML private Label    feedbackLabel;
@@ -23,14 +22,11 @@ public class AdminRoomTypesController implements SessionController {
     @FXML private Button   btnFormSubmit;
     @FXML private FlowPane roomTypeGrid;
 
-    // ── State ────────────────────────────────────────────────────────────────
     private AppSession session;
     private Admin      admin;
 
-    /** null = Add mode, non-null = Edit mode */
     private RoomType editingRoomType = null;
 
-    // ── SessionController ────────────────────────────────────────────────────
     @Override
     public void initSession(AppSession session) {
         this.session = session;
@@ -43,7 +39,6 @@ public class AdminRoomTypesController implements SessionController {
         renderCards();
     }
 
-    // ── Card rendering ───────────────────────────────────────────────────────
 
     private void renderCards() {
         roomTypeGrid.getChildren().clear();
@@ -68,17 +63,14 @@ public class AdminRoomTypesController implements SessionController {
         card.setPrefWidth(196);
         card.setMaxWidth(196);
 
-        // ── Gold accent top bar ───────────────────────────────────────────
         Pane topBar = new Pane();
         topBar.setPrefHeight(5);
         topBar.setStyle("-fx-background-color: #C9A84C; -fx-background-radius: 10 10 0 0;");
 
-        // ── Navy header panel ─────────────────────────────────────────────
         VBox header = new VBox(4);
         header.setAlignment(Pos.CENTER_LEFT);
         header.setStyle("-fx-background-color: #0F2160; -fx-padding: 14 16 14 16;");
 
-        // Size icon — pick a luxury emoji by capacity
         Label iconLabel = new Label(roomTypeIcon(rt.getSize(), rt.getCapacity()));
         iconLabel.setStyle("-fx-font-size: 30px; -fx-padding: 0 0 4 0;");
 
@@ -91,7 +83,6 @@ public class AdminRoomTypesController implements SessionController {
                         "-fx-letter-spacing: 0.06em;"
         );
 
-        // Capacity chip
         Label capacityChip = new Label(
                 rt.getCapacity() + (rt.getCapacity() == 1 ? " Guest" : " Guests")
         );
@@ -109,7 +100,6 @@ public class AdminRoomTypesController implements SessionController {
 
         header.getChildren().addAll(iconLabel, nameLabel, chipRow);
 
-        // ── White body ────────────────────────────────────────────────────
         VBox body = new VBox(10);
         body.setAlignment(Pos.CENTER_LEFT);
         body.setStyle(
@@ -117,7 +107,6 @@ public class AdminRoomTypesController implements SessionController {
                         "-fx-padding: 14 16 14 16;"
         );
 
-        // Price display
         Label priceLabel = new Label(String.format("$%.0f", rt.getBasePrice()));
         priceLabel.setStyle(
                 "-fx-text-fill: #0F2160;" +
@@ -135,7 +124,6 @@ public class AdminRoomTypesController implements SessionController {
         VBox priceBlock = new VBox(0, priceLabel, perNightLabel);
         priceBlock.setAlignment(Pos.CENTER_LEFT);
 
-        // Usage indicator — how many rooms use this type
         long roomCount = HotelDataBase.getRooms().stream()
                 .filter(r -> r.getType().getSize().equals(rt.getSize()))
                 .count();
@@ -149,7 +137,6 @@ public class AdminRoomTypesController implements SessionController {
 
         body.getChildren().addAll(priceBlock, usageLabel);
 
-        // ── Footer with Edit / Delete ─────────────────────────────────────
         Pane divider = new Pane();
         divider.setPrefHeight(1);
         divider.setStyle("-fx-background-color: #E0DAD0;");
@@ -204,7 +191,6 @@ public class AdminRoomTypesController implements SessionController {
 
         card.getChildren().addAll(topBar, header, body, divider, actions);
 
-        // Hover shadow
         card.setStyle(
                 "-fx-background-color: transparent;" +
                         "-fx-background-radius: 10;" +
@@ -225,7 +211,6 @@ public class AdminRoomTypesController implements SessionController {
         return card;
     }
 
-    // ── Form logic ───────────────────────────────────────────────────────────
 
     @FXML
     private void openAddForm() {
@@ -262,14 +247,12 @@ public class AdminRoomTypesController implements SessionController {
         clearErrors();
         boolean valid = true;
 
-        // ── Validate size ─────────────────────────────────────────────────
         String size = fieldSize.getText().trim();
         if (size.isEmpty()) {
             MainController.setFieldError(sizeError, "Name cannot be empty.");
             valid = false;
         }
 
-        // ── Validate price ────────────────────────────────────────────────
         double price = 0;
         try {
             price = Double.parseDouble(fieldPrice.getText().trim());
@@ -279,7 +262,6 @@ public class AdminRoomTypesController implements SessionController {
             valid = false;
         }
 
-        // ── Validate capacity ─────────────────────────────────────────────
         int capacity = 0;
         try {
             capacity = Integer.parseInt(fieldCapacity.getText().trim());
@@ -325,7 +307,6 @@ public class AdminRoomTypesController implements SessionController {
             return;
         }
 
-        // Check if in use before even showing dialog
         boolean inUse = HotelDataBase.reservations.stream()
                 .anyMatch(r -> r.getRoom().getType().getSize().equalsIgnoreCase(rt.getSize())
                         && (r.getStatus() == Reservation.Status.PENDING
@@ -336,7 +317,6 @@ public class AdminRoomTypesController implements SessionController {
             return;
         }
 
-        // Themed dialog
         Alert confirm = new Alert(Alert.AlertType.NONE);
         confirm.setTitle("Delete Room Type");
         confirm.setHeaderText(null);
@@ -363,7 +343,6 @@ public class AdminRoomTypesController implements SessionController {
         ButtonType btnCancel  = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         confirm.getButtonTypes().setAll(btnConfirm, btnCancel);
 
-        // Style the buttons after dialog is shown
         confirm.setOnShown(ev -> {
             Button deleteButton = (Button) pane.lookupButton(btnConfirm);
             deleteButton.setStyle(
@@ -402,7 +381,6 @@ public class AdminRoomTypesController implements SessionController {
         });
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
 
     private void showForm() {
         formPanel.setVisible(true);
@@ -422,10 +400,7 @@ public class AdminRoomTypesController implements SessionController {
         feedbackLabel.setVisible(false);
     }
 
-    /**
-     * Returns a luxury emoji that hints at the room tier,
-     * based on common size names or capacity.
-     */
+
     private String roomTypeIcon(String size, int capacity) {
         String s = size.toLowerCase();
         if (s.contains("presidential") || s.contains("royal")) return "\uD83C\uDFDB"; // 🏛
