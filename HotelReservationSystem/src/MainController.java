@@ -6,6 +6,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.DialogPane;
@@ -14,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.stage.StageStyle;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -57,115 +60,73 @@ public class MainController implements Initializable {
 
         Alert confirm = new Alert(Alert.AlertType.NONE);
         confirm.setTitle("Sign Out");
-        confirm.setHeaderText(null);
-
         DialogPane pane = confirm.getDialogPane();
-        pane.setStyle(
-                "-fx-background-color: #0F2160;" +
-                        "-fx-border-color: #C9A84C;" +
-                        "-fx-border-width: 1.5;" +
-                        "-fx-border-radius: 8;" +
-                        "-fx-background-radius: 8;"
-        );
+        pane.getButtonTypes().clear();
+        pane.setStyle("-fx-background-color: #0F2160; -fx-border-color: #C9A84C; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-radius: 8;");
+        pane.setPrefWidth(380);
 
-        VBox content = new VBox(10);
+        VBox content = new VBox(20);
         content.setAlignment(javafx.geometry.Pos.CENTER);
-        content.setStyle("-fx-padding: 20 28 10 28;");
+        content.setFillWidth(true);
+        content.setStyle("-fx-padding: 30;");
 
         Label icon = new Label("✦");
-        icon.setStyle(
-                "-fx-text-fill: #C9A84C;" +
-                        "-fx-font-size: 28px;"
-        );
+        icon.setStyle("-fx-text-fill: #C9A84C; -fx-font-size: 28px;");
 
         Label title = new Label("Leaving So Soon?");
-        title.setStyle(
-                "-fx-text-fill: #FFFFFF;" +
-                        "-fx-font-family: 'Georgia', serif;" +
-                        "-fx-font-size: 18px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-font-style: italic;"
-        );
+        title.setStyle("-fx-text-fill: #FFFFFF; -fx-font-family: 'Georgia', serif; -fx-font-size: 18px; -fx-font-weight: bold; -fx-font-style: italic;");
 
         Label subtitle = new Label("Are you sure you want to sign out\nof your Kempinski account?");
-        subtitle.setStyle(
-                "-fx-text-fill: rgba(255,255,255,0.60);" +
-                        "-fx-font-size: 12px;" +
-                        "-fx-text-alignment: center;" +
-                        "-fx-alignment: center;"
-        );
+        subtitle.setStyle("-fx-text-fill: rgba(255,255,255,0.60); -fx-font-size: 12px; -fx-text-alignment: center;");
         subtitle.setAlignment(javafx.geometry.Pos.CENTER);
 
         Pane rule = new Pane();
         rule.setPrefHeight(1);
-        rule.setPrefWidth(200);
         rule.setStyle("-fx-background-color: rgba(201,168,76,0.35);");
-        rule.setMaxWidth(Double.MAX_VALUE);
+        rule.setMaxWidth(220);
 
-        content.getChildren().addAll(icon, title, subtitle, rule);
-        pane.setContent(content);
+        HBox buttonContainer = new HBox(15);
+        buttonContainer.setAlignment(javafx.geometry.Pos.CENTER);
 
-        ButtonType btnYes = new ButtonType("Sign Out", ButtonBar.ButtonData.OK_DONE);
-        ButtonType btnNo  = new ButtonType("Stay",     ButtonBar.ButtonData.CANCEL_CLOSE);
-        confirm.getButtonTypes().setAll(btnYes, btnNo);
+        Button yesButton = new Button("Sign Out");
+        Button noButton = new Button("Stay");
 
-        confirm.setOnShown(ev -> {
-            Button yesButton = (Button) pane.lookupButton(btnYes);
-            yesButton.setStyle(
-                    "-fx-background-color: #B00020;" +
-                            "-fx-text-fill: #FFFFFF;" +
-                            "-fx-font-weight: bold;" +
-                            "-fx-font-size: 13px;" +
-                            "-fx-padding: 10 32;" +
-                            "-fx-background-radius: 6;" +
-                            "-fx-cursor: hand;" +
-                            "-fx-border-color: transparent;" +
-                            "-fx-border-width: 0;"
-            );
-            yesButton.setMinWidth(100);
-            yesButton.setOnMouseEntered(e ->
-                    yesButton.setStyle(yesButton.getStyle()
-                            .replace("-fx-background-color: #B00020;",
-                                    "-fx-background-color: #8B0018;")));
-            yesButton.setOnMouseExited(e ->
-                    yesButton.setStyle(yesButton.getStyle()
-                            .replace("-fx-background-color: #8B0018;",
-                                    "-fx-background-color: #B00020;")));
+        String baseBtnStyle = "-fx-font-weight: bold; -fx-font-size: 13px; -fx-padding: 10 0; -fx-background-radius: 6; -fx-cursor: hand;";
+        yesButton.setStyle("-fx-background-color: #B00020; -fx-text-fill: #FFFFFF; " + baseBtnStyle);
+        noButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #C9A84C; -fx-border-color: #C9A84C; -fx-border-width: 1.5; -fx-border-radius: 6; " + baseBtnStyle);
 
-            Button noButton = (Button) pane.lookupButton(btnNo);
-            noButton.setStyle(
-                    "-fx-background-color: transparent;" +
-                            "-fx-text-fill: #C9A84C;" +
-                            "-fx-font-weight: bold;" +
-                            "-fx-font-size: 13px;" +
-                            "-fx-padding: 10 32;" +
-                            "-fx-border-color: #C9A84C;" +
-                            "-fx-border-radius: 6;" +
-                            "-fx-border-width: 1.5;" +
-                            "-fx-cursor: hand;"
-            );
-            noButton.setOnMouseEntered(e ->
-                    noButton.setStyle(noButton.getStyle()
-                            .replace("-fx-background-color: transparent;",
-                                    "-fx-background-color: rgba(201,168,76,0.10);")));
-            noButton.setOnMouseExited(e ->
-                    noButton.setStyle(noButton.getStyle()
-                            .replace("-fx-background-color: rgba(201,168,76,0.10);",
-                                    "-fx-background-color: transparent;")));
+        yesButton.setPrefWidth(125);
+        noButton.setPrefWidth(125);
 
-            pane.lookup(".button-bar").setStyle("-fx-background-color: #0F2160; -fx-padding: 10 20 18 20;");
-        });
-
-        confirm.showAndWait().ifPresent(btn -> {
-            if (btn != btnYes) return;
+        yesButton.setOnAction(e -> {
             AppSession session = (AppSession) stage.getUserData();
-            if (session.getCurrentUser() != null) {
+            if (session != null && session.getCurrentUser() != null) {
                 session.getCurrentUser().setLoggedIn(false);
                 DataBaseManager.updateLoggedIn(session.getCurrentUser(), false);
+                session.logout();
             }
-            session.logout();
+            confirm.setResult(ButtonType.OK);
+            confirm.close();
             navigate(event, "Main_Menu.fxml");
         });
+
+        noButton.setOnAction(e -> {
+            confirm.setResult(ButtonType.CANCEL);
+            confirm.close();
+        });
+
+        yesButton.setOnMouseEntered(e -> yesButton.setStyle(yesButton.getStyle().replace("-fx-background-color: #B00020;", "-fx-background-color: #8B0018;")));
+        yesButton.setOnMouseExited(e -> yesButton.setStyle(yesButton.getStyle().replace("-fx-background-color: #8B0018;", "-fx-background-color: #B00020;")));
+        noButton.setOnMouseEntered(e -> noButton.setStyle(noButton.getStyle().replace("-fx-background-color: transparent;", "-fx-background-color: rgba(201,168,76,0.10);")));
+        noButton.setOnMouseExited(e -> noButton.setStyle(noButton.getStyle().replace("-fx-background-color: rgba(201,168,76,0.10);", "-fx-background-color: transparent;")));
+
+        buttonContainer.getChildren().addAll(yesButton, noButton);
+        content.getChildren().addAll(icon, title, subtitle, rule, buttonContainer);
+
+        javafx.scene.layout.StackPane root = new javafx.scene.layout.StackPane(content);
+        pane.setContent(root);
+
+        confirm.showAndWait();
     }
 
     public void home(ActionEvent event) {
