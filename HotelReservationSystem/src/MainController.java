@@ -45,7 +45,7 @@ public class MainController implements Initializable {
             session.history.push(file);
             }
         }
-        else if(!session.history.peek().equals(file)){
+        else if(!session.history.peek().equals(file)&&!file.equals("Guest_Profile.fxml")&&!file.equals("Staff_Profile.fxml")){
             session.history.push(file);
         }
         load(event, file);
@@ -158,7 +158,12 @@ public class MainController implements Initializable {
 
         confirm.showAndWait().ifPresent(btn -> {
             if (btn != btnYes) return;
-            ((AppSession) stage.getUserData()).logout();
+            AppSession session = (AppSession) stage.getUserData();
+            if (session.getCurrentUser() != null) {
+                session.getCurrentUser().setLoggedIn(false);
+                DataBaseManager.updateLoggedIn(session.getCurrentUser(), false);
+            }
+            session.logout();
             navigate(event, "Main_Menu.fxml");
         });
     }

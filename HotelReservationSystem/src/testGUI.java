@@ -26,6 +26,7 @@ public class testGUI extends Application {
         primaryStage.setTitle("Kempinski Hotel - User 1");
         primaryStage.getIcons().add(new Image("icon.png"));
         primaryStage.setScene(loadingScene);
+        primaryStage.setResizable(false);
         primaryStage.show();
         primaryStage.setX(200);
 
@@ -34,6 +35,9 @@ public class testGUI extends Application {
             protected Void call() {
                 updateMessage("Loading hotel data from database...");
                 try {
+                    DataBaseManager.resetAllLoggedIn();
+                    DataBaseManager.resetCurrentDate();
+                    JumpInTime.now = java.time.LocalDate.now();
                     DataBaseManager.loadAll();
                     System.out.println("Database loaded successfully");
                 } catch (Exception ex) {
@@ -54,6 +58,8 @@ public class testGUI extends Application {
             try {
                 status.textProperty().unbind();
 
+                SyncService.start();
+
                 Parent root = FXMLLoader.load(getClass().getResource("Main_Menu.fxml"));
                 Scene scene = new Scene(root);
                 scene.getStylesheets().add(
@@ -69,7 +75,8 @@ public class testGUI extends Application {
                 stage2.setTitle("Kempinski Hotel - User 2");
                 stage2.setScene(scene2);
                 stage2.getIcons().add(new Image("icon.png"));
-                stage2.show();
+                stage2.setResizable(false);
+//                stage2.show();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

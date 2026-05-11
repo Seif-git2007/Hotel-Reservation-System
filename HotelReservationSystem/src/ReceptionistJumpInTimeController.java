@@ -210,6 +210,7 @@ public class ReceptionistJumpInTimeController implements SessionController {
 
         combo.setOnFinished(e -> {
             JumpInTime.now = target;
+            DataBaseManager.saveCurrentDate();
             System.out.println("date set");
             EventBus.fire(EventBus.Event.RESERVATION_CHANGED);
             EventBus.fire(EventBus.Event.TIME_JUMPED);

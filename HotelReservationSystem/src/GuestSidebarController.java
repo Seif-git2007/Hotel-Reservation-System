@@ -31,7 +31,9 @@ public class GuestSidebarController implements SessionController {
         });
     }
     public void disable() {
+        if(session.getCurrentGuest()==null) return;
         MainController.handleOverDue(session);
+
         if (!session.getCurrentGuest().isOverDue()) return;
 
         btnLiveChat.setDisable(true);

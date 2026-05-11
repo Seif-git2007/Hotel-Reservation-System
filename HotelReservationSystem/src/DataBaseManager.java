@@ -427,17 +427,6 @@ public class DataBaseManager {
         EventBus.fire(EventBus.Event.INVOICE_CHANGED);
     }
 
-
-    public static void saveChatMessage(String sender, String receiver, String message) {
-        String sql = "INSERT INTO chat_messages (sender, receiver, message) VALUES (?, ?, ?)";
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setString(1, sender);
-            ps.setString(2, receiver);
-            ps.setString(3, message);
-            ps.executeUpdate();
-        } catch (SQLException e) {  }
-    }
-
     public static void seedFromHotelDataBase() {
         for (RoomType  rt : HotelDataBase.getRoomTypes())  saveRoomType(rt);
         for (Amenity   a  : HotelDataBase.getAmenities())  saveAmenity(a);
@@ -447,5 +436,151 @@ public class DataBaseManager {
             for (Reservation r : HotelDataBase.reservations) saveReservation(r);
         }
         System.out.println("Seed complete.");
+    }
+
+
+    public static void reloadReservations() {
+        try (Connection c = connect();
+             Statement  s = c.createStatement();
+             ResultSet  r = s.executeQuery("SELECT * FROM reservations")) {
+            while (r.next()) {
+                Guest guest = (Guest) HotelDataBase.searchUserByName(r.getString("guest_username"));
+                Room  room  = HotelDataBase.findRoom(r.getInt("room_number"));
+                if (guest == null || room == null) continue;
+                Reservation res = new Reservation(guest, room,
+                        r.getDate("check_in").toLocalDate(),
+                        r.getDate("check_out").toLocalDate());
+                res.setStatus(Reservation.Status.valueOf(r.getString("status")));
+                res.setSpecialRequests(r.getString("special_requests"));
+                HotelDataBase.reservations.add(res);
+            }
+        } catch (SQLException e) { }
+    }
+
+    public static void reloadUsers() {
+        try (Connection c = connect();
+             Statement  s = c.createStatement();
+             ResultSet  r = s.executeQuery("SELECT * FROM users")) {
+            while (r.next()) {
+                String      type   = r.getString("type");
+                User.Gender gender = User.Gender.valueOf(r.getString("gender"));
+                String      uname  = r.getString("username");
+                String      pass   = r.getString("password");
+                String      email  = r.getString("email");
+                java.time.LocalDate dob = r.getDate("date_of_birth").toLocalDate();
+                User user = switch (type) {
+                    case "GUEST" -> {
+                        Guest g = new Guest(uname, pass, dob, r.getDouble("balance"),
+                                new roomPreferences(r.getInt("pref_floor"),
+                                        Room.view.valueOf(r.getString("pref_view"))),
+                                r.getString("address"), gender,
+                                r.getString("display_name"), email);
+                        g.setOverDue(r.getBoolean("over_due"));
+                        g.setLoggedIn(r.getBoolean("logged_in"));
+                        yield g;
+                    }
+                    case "RECEPTIONIST" -> {
+                        Receptionist rec = new Receptionist(uname, pass, dob,
+                                r.getInt("working_hours"), gender, email);
+                        rec.setLoggedIn(r.getBoolean("logged_in"));
+                        yield rec;
+                    }
+                    case "ADMIN" -> {
+                        Admin adm = new Admin(uname, pass, dob,
+                                r.getInt("working_hours"), gender, email);
+                        adm.setLoggedIn(r.getBoolean("logged_in"));
+                        yield adm;
+                    }
+                    default -> null;
+                };
+                if (user != null) HotelDataBase.users.add(user);
+            }
+        } catch (SQLException e) { }
+    }
+
+    public static void reloadRooms() {
+        try (Connection c = connect();
+             Statement  s = c.createStatement();
+             ResultSet  r = s.executeQuery("SELECT * FROM room_types")) {
+            while (r.next()) {
+                HotelDataBase.roomTypes.add(new RoomType(r.getString("size"),
+                        r.getDouble("base_price"), r.getInt("capacity")));
+            }
+        } catch (SQLException e) { }
+        try (Connection c = connect();
+             Statement  s = c.createStatement();
+             ResultSet  r = s.executeQuery("SELECT * FROM amenities")) {
+            while (r.next()) {
+                HotelDataBase.amenities.add(new Amenity(r.getString("name"), r.getDouble("price")));
+            }
+        } catch (SQLException e) { }
+        try (Connection c = connect();
+             Statement  s = c.createStatement();
+             ResultSet  r = s.executeQuery("SELECT * FROM rooms")) {
+            while (r.next()) {
+                int       num   = r.getInt("room_number");
+                int       floor = r.getInt("floor");
+                Room.view view  = Room.view.valueOf(r.getString("view"));
+                RoomType  type  = HotelDataBase.findRoomType(r.getString("room_type"));
+                try {
+                    ArrayList<Amenity> amenities = loadRoomAmenitiesPublic(num);
+                    HotelDataBase.rooms.add(new Room(type, amenities, num, floor, view));
+                } catch (SQLException ex) { }
+            }
+        } catch (SQLException e) { }
+    }
+
+    private static java.util.ArrayList<Amenity> loadRoomAmenitiesPublic(int roomNumber) throws SQLException {
+        java.util.ArrayList<Amenity> list = new java.util.ArrayList<>();
+        try (Connection c = connect();
+             PreparedStatement ps = c.prepareStatement(
+                     "SELECT amenity_name FROM room_amenities WHERE room_number = ?")) {
+            ps.setInt(1, roomNumber);
+            ResultSet r = ps.executeQuery();
+            while (r.next()) {
+                Amenity a = HotelDataBase.findAmenity(r.getString("amenity_name"));
+                if (a != null) list.add(a);
+            }
+        }
+        return list;
+    }
+    public static boolean isLoggedIn(User user) {
+        String sql = "SELECT logged_in FROM users WHERE username = ?";
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, user.getUsername());
+            ResultSet r = ps.executeQuery();
+            if (r.next()) return r.getBoolean("logged_in");
+        } catch (SQLException e) { }
+        return false;
+    }
+    public static void updateLoggedIn(User user, boolean loggedIn) {
+        String sql = "UPDATE users SET logged_in = ? WHERE username = ?";
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setBoolean(1, loggedIn);
+            ps.setString (2, user.getUsername());
+            ps.executeUpdate();
+        } catch (SQLException e) { }
+    }
+
+    public static void saveCurrentDate() {
+        String sql = "INSERT INTO settings (key_name, value) VALUES ('current_date', ?) ON DUPLICATE KEY UPDATE value = VALUES(value)";
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, JumpInTime.now.toString());
+            ps.executeUpdate();
+        } catch (SQLException e) { }
+    }
+
+    public static void resetCurrentDate() {
+        String sql = "INSERT INTO settings (key_name, value) VALUES ('current_date', ?) ON DUPLICATE KEY UPDATE value = VALUES(value)";
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, java.time.LocalDate.now().toString());
+            ps.executeUpdate();
+        } catch (SQLException e) { }
+    }
+
+    public static void resetAllLoggedIn() {
+        try (Connection c = connect(); Statement s = c.createStatement()) {
+            s.executeUpdate("UPDATE users SET logged_in = FALSE");
+        } catch (SQLException e) { }
     }
 }

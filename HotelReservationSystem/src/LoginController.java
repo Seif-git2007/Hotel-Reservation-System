@@ -20,14 +20,14 @@ public class LoginController {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             AppSession session = (AppSession) stage.getUserData();
             session.setCurrentUser(user);
-            if (!user.isLoggedIn()){
+            if (!DataBaseManager.isLoggedIn(user)){
                 if (user instanceof Guest){
                     MainController.navigate(event, "Guest_Dashboard.fxml");
-
                 }
                 else if (user instanceof Receptionist) MainController.navigate(event, "Receptionist_Menu.fxml");
                 else if (user instanceof Admin) MainController.navigate(event, "Admin_Menu.fxml");
                 user.setLoggedIn(true);
+                DataBaseManager.updateLoggedIn(user, true);
             }else {
                 MainController.setFieldError(nameError, "User is already logged in");
             }
