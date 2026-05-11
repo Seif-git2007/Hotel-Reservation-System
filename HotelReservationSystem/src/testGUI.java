@@ -27,6 +27,13 @@ public class testGUI extends Application {
         primaryStage.getIcons().add(new Image("icon.png"));
         primaryStage.setScene(loadingScene);
         primaryStage.setResizable(false);
+        primaryStage.setOnCloseRequest(event -> {
+            AppSession session = (AppSession) primaryStage.getUserData();
+            if (session.getCurrentUser() != null) {
+                session.getCurrentUser().setLoggedIn(false);
+                DataBaseManager.updateLoggedIn(session.getCurrentUser(), false);
+            }
+        });
         primaryStage.show();
         primaryStage.setX(200);
 
@@ -35,7 +42,6 @@ public class testGUI extends Application {
             protected Void call() {
                 updateMessage("Loading hotel data from database...");
                 try {
-                    DataBaseManager.resetAllLoggedIn();
                     DataBaseManager.resetCurrentDate();
                     JumpInTime.now = java.time.LocalDate.now();
                     DataBaseManager.loadAll();

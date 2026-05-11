@@ -16,7 +16,7 @@ public class SyncService {
     private static String lastDateSnapshot        = "";
 
     public static void start() {
-        pollTimer = new Timeline(new KeyFrame(Duration.seconds(3), e -> poll()));
+        pollTimer = new Timeline(new KeyFrame(Duration.seconds(0.1), e -> poll()));
         pollTimer.setCycleCount(Timeline.INDEFINITE);
         pollTimer.play();
     }
