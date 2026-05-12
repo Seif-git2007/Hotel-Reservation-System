@@ -1,10 +1,8 @@
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GuestChatController implements SessionController {
 
@@ -16,9 +14,6 @@ public class GuestChatController implements SessionController {
     @FXML private Label      lblStatus;
 
     private AppSession session;
-    private ChatClient client;
-    private String     receptionistUsername = null;
-    private final List<String> pendingMessages = new ArrayList<>();
 
     @Override
     public void initSession(AppSession session) {
@@ -26,12 +21,24 @@ public class GuestChatController implements SessionController {
 
         if (sidebarController != null) {
             sidebarController.initSession(session);
-            if (sidebarController.btnLiveChat != null){
+            if (sidebarController.btnLiveChat != null) {
                 sidebarController.btnLiveChat.getStyleClass().add("sidebar-nav-btn-active");
             }
         }
 
-        client = new ChatClient();
+        restoreMessages();
+
+        if (session.getChatClientLocal() != null && session.getChatClientLocal().isConnected()) {
+            session.getChatClientLocal().setOnMessage(this::handleIncoming);
+            if (session.getReceptionistUsername() != null) {
+                lblStatus.setText("Connected with " + session.getReceptionistUsername());
+            } else {
+                lblStatus.setText("Waiting for a receptionist to respond...");
+            }
+            return;
+        }
+
+        ChatClient client = new ChatClient();
         boolean ok = client.connect(session.getCurrentGuest().getUsername(), "GUEST");
         if (!ok) {
             lblStatus.setText("Could not reach front desk");
@@ -40,6 +47,7 @@ public class GuestChatController implements SessionController {
             return;
         }
 
+        session.setChatClientLocal(client);
         lblStatus.setText("Waiting for a receptionist to respond...");
         client.setOnMessage(this::handleIncoming);
 
@@ -53,10 +61,19 @@ public class GuestChatController implements SessionController {
         addSystemMessage("You are connected. A receptionist will be with you shortly.");
     }
 
+    private void restoreMessages() {
+        messagesBox.getChildren().clear();
+        for (Node node : session.getGuestChatMessages()) {
+            messagesBox.getChildren().add(node);
+        }
+        messagesScroll.layout();
+        messagesScroll.setVvalue(1.0);
+    }
+
     private void handleIncoming(ChatMessage msg) {
         switch (msg.getType()) {
             case CLAIM -> {
-                receptionistUsername = msg.getFromUsername();
+                session.setReceptionistUsername(msg.getFromUsername());
                 lblStatus.setText("Connected with " + msg.getFromUsername());
                 addSystemMessage(msg.getFromUsername() + " has joined the chat.");
                 flushPendingMessages();
@@ -69,25 +86,25 @@ public class GuestChatController implements SessionController {
     }
 
     private void flushPendingMessages() {
-        for (String text : pendingMessages) {
+        for (String text : session.getPendingMessages()) {
             ChatMessage msg = new ChatMessage(
                     ChatMessage.Type.TEXT,
                     session.getCurrentGuest().getUsername(),
                     session.getCurrentGuest().getDisplayname(),
-                    receptionistUsername, text);
-            client.send(msg);
+                    session.getReceptionistUsername(), text);
+            session.getChatClientLocal().send(msg);
         }
-        pendingMessages.clear();
+        session.getPendingMessages().clear();
     }
 
     @FXML
     private void handleSend() {
         String text = txtMessage.getText().trim();
-        if (text.isEmpty()){
+        if (text.isEmpty()) {
             return;
         }
-        if (receptionistUsername == null) {
-            pendingMessages.add(text);
+        if (session.getReceptionistUsername() == null) {
+            session.getPendingMessages().add(text);
             addMessage("You", text, true);
             addSystemMessage("(will be delivered when a receptionist joins)");
             txtMessage.clear();
@@ -97,8 +114,8 @@ public class GuestChatController implements SessionController {
                 ChatMessage.Type.TEXT,
                 session.getCurrentGuest().getUsername(),
                 session.getCurrentGuest().getDisplayname(),
-                receptionistUsername, text);
-        client.send(msg);
+                session.getReceptionistUsername(), text);
+        session.getChatClientLocal().send(msg);
         addMessage("You", text, true);
         txtMessage.clear();
     }
@@ -118,6 +135,8 @@ public class GuestChatController implements SessionController {
 
         HBox row = new HBox(bubble);
         row.setAlignment(fromMe ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
+
+        session.getGuestChatMessages().add(row);
         messagesBox.getChildren().add(row);
         messagesScroll.layout();
         messagesScroll.setVvalue(1.0);
@@ -129,6 +148,7 @@ public class GuestChatController implements SessionController {
         l.setWrapText(true);
         l.setMaxWidth(Double.MAX_VALUE);
         l.setAlignment(Pos.CENTER);
+        session.getGuestChatMessages().add(l);
         messagesBox.getChildren().add(l);
     }
 }

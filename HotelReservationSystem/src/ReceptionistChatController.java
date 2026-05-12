@@ -3,9 +3,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ReceptionistChatController implements SessionController {
 
     @FXML private ReceptionistSidebarController sidebarController;
@@ -17,10 +14,6 @@ public class ReceptionistChatController implements SessionController {
     @FXML private ListView<String> guestsList;
 
     private AppSession session;
-    private ChatClient client;
-    private String     activeGuest = null;
-
-    private final Map<String, VBox> conversationsCache = new HashMap<>();
 
     @Override
     public void initSession(AppSession session) {
@@ -28,12 +21,26 @@ public class ReceptionistChatController implements SessionController {
 
         if (sidebarController != null) {
             sidebarController.initSession(session);
-            if (sidebarController.btnLiveChat != null){
+            if (sidebarController.btnLiveChat != null) {
                 sidebarController.btnLiveChat.getStyleClass().add("sidebar-nav-btn-active");
             }
         }
 
-        client = new ChatClient();
+        restoreGuestList();
+
+        if (session.getActiveChatGuest() != null) {
+            lblActiveGuest.setText("Chat with " + session.getActiveChatGuest());
+            showConversation(session.getActiveChatGuest());
+        }
+
+        if (session.getChatClientLocal() != null && session.getChatClientLocal().isConnected()) {
+            session.getChatClientLocal().setOnMessage(this::handleIncoming);
+            lblStatus.setText("Connected. Pick a guest to start chatting.");
+            attachListListener();
+            return;
+        }
+
+        ChatClient client = new ChatClient();
         boolean ok = client.connect(session.getCurrentReceptionist().getUsername(), "RECEPTIONIST");
         if (!ok) {
             lblStatus.setText("Could not connect to chat server");
@@ -41,15 +48,20 @@ public class ReceptionistChatController implements SessionController {
             btnSend.setDisable(true);
             return;
         }
+
+        session.setChatClientLocal(client);
         lblStatus.setText("Connected. Pick a guest to start chatting.");
         client.setOnMessage(this::handleIncoming);
+        attachListListener();
+    }
 
+    private void attachListListener() {
         guestsList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal == null){
+            if (newVal == null) {
                 return;
             }
             String guestUsername = parseUsername(newVal);
-            if (guestUsername == null){
+            if (guestUsername == null) {
                 return;
             }
             String state = parseState(newVal);
@@ -58,7 +70,7 @@ public class ReceptionistChatController implements SessionController {
                         ChatMessage.Type.CLAIM,
                         session.getCurrentReceptionist().getUsername(), "",
                         guestUsername, "");
-                client.send(claim);
+                session.getChatClientLocal().send(claim);
             }
             if (state.equals("WAITING") || state.equals(session.getCurrentReceptionist().getUsername())) {
                 openConversation(guestUsername);
@@ -66,9 +78,14 @@ public class ReceptionistChatController implements SessionController {
         });
     }
 
+    private void restoreGuestList() {
+        guestsList.getItems().clear();
+        guestsList.getItems().addAll(session.getGuestListItems());
+    }
+
     private String parseUsername(String listItem) {
         int sep = listItem.indexOf("  ·  ");
-        if (sep < 0){
+        if (sep < 0) {
             return listItem;
         }
         return listItem.substring(0, sep);
@@ -76,7 +93,7 @@ public class ReceptionistChatController implements SessionController {
 
     private String parseState(String listItem) {
         int sep = listItem.indexOf("  ·  ");
-        if (sep < 0){
+        if (sep < 0) {
             return "";
         }
         return listItem.substring(sep + 5);
@@ -89,10 +106,10 @@ public class ReceptionistChatController implements SessionController {
             }
             case TEXT -> {
                 String guest = msg.getFromUsername();
-                HBox row = buildMessageRow(msg.getFromUsername(), msg.getContent(), false);
-                getConversation(guest).getChildren().add(row);
-                if (guest.equals(activeGuest)) {
-                    HBox liveRow = buildMessageRow(msg.getFromUsername(), msg.getContent(), false);
+                HBox cacheRow = buildMessageRow(guest, msg.getContent(), false);
+                getConversation(guest).getChildren().add(cacheRow);
+                if (guest.equals(session.getActiveChatGuest())) {
+                    HBox liveRow = buildMessageRow(guest, msg.getContent(), false);
                     messagesBox.getChildren().add(liveRow);
                     messagesScroll.layout();
                     messagesScroll.setVvalue(1.0);
@@ -100,7 +117,7 @@ public class ReceptionistChatController implements SessionController {
             }
             case GUEST_LEFT -> {
                 String guest = msg.getFromUsername();
-                if (guest.equals(activeGuest)) {
+                if (guest.equals(session.getActiveChatGuest())) {
                     addSystemMessage("Guest has left the chat.");
                 }
             }
@@ -110,16 +127,17 @@ public class ReceptionistChatController implements SessionController {
 
     private void refreshGuestList(String payload) {
         guestsList.getItems().clear();
-        if (payload == null || payload.isEmpty()){
+        session.getGuestListItems().clear();
+        if (payload == null || payload.isEmpty()) {
             return;
         }
         String[] entries = payload.split(";");
         for (String entry : entries) {
-            if (entry.isEmpty()){
+            if (entry.isEmpty()) {
                 continue;
             }
             String[] parts = entry.split("\\|");
-            if (parts.length < 2){
+            if (parts.length < 2) {
                 continue;
             }
             String guest = parts[0];
@@ -133,17 +151,18 @@ public class ReceptionistChatController implements SessionController {
                 continue;
             }
             guestsList.getItems().add(label);
+            session.getGuestListItems().add(label);
         }
     }
 
     private void openConversation(String guest) {
-        activeGuest = guest;
+        session.setActiveChatGuest(guest);
         lblActiveGuest.setText("Chat with " + guest);
         showConversation(guest);
     }
 
     private VBox getConversation(String guest) {
-        return conversationsCache.computeIfAbsent(guest, k -> new VBox(10));
+        return session.getConversationsCache().computeIfAbsent(guest, k -> new VBox(10));
     }
 
     private void showConversation(String guest) {
@@ -166,17 +185,17 @@ public class ReceptionistChatController implements SessionController {
     @FXML
     private void handleSend() {
         String text = txtMessage.getText().trim();
-        if (text.isEmpty() || activeGuest == null){
+        if (text.isEmpty() || session.getActiveChatGuest() == null) {
             return;
         }
         ChatMessage msg = new ChatMessage(
                 ChatMessage.Type.TEXT,
                 session.getCurrentReceptionist().getUsername(), "",
-                activeGuest, text);
-        client.send(msg);
+                session.getActiveChatGuest(), text);
+        session.getChatClientLocal().send(msg);
 
         HBox cacheRow = buildMessageRow("You", text, true);
-        getConversation(activeGuest).getChildren().add(cacheRow);
+        getConversation(session.getActiveChatGuest()).getChildren().add(cacheRow);
         HBox liveRow = buildMessageRow("You", text, true);
         messagesBox.getChildren().add(liveRow);
         messagesScroll.layout();
