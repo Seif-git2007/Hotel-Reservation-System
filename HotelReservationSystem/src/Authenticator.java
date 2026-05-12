@@ -91,6 +91,19 @@ public class Authenticator {
         if(checkOutDate.isBefore(checkInDate)){
             throw new AuthenticationException("Check out date can't be before Check in date");
         }
-
+    }
+    public static void validateVisaCard(String name, String number, String expiry, String cvv) throws InvalidInputException {
+        if (name == null || name.trim().isEmpty()){
+            throw new AuthenticationException("Card holder name is required.");
+        }
+        if (number == null || !number.matches("\\d{16}")){
+            throw new AuthenticationException("Invalid card number. Must be 16 digits.");
+        }
+        if (expiry == null || !expiry.matches("(0[1-9]|1[0-2])/([2-9][0-9])")){
+            throw new AuthenticationException("Invalid expiry date. Use MM/YY format.");
+        }
+        if (cvv == null || !cvv.matches("\\d{3}")){
+            throw new AuthenticationException("Invalid CVV. Must be 3 digits.");
+        }
     }
 }

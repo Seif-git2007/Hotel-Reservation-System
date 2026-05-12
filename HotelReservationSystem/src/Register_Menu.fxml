@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.StackPane?>
 
 
 
@@ -115,11 +116,30 @@
                <Insets bottom="6" />
             </VBox.margin>
             </Label>
-            <PasswordField fx:id="password" prefHeight="46" prefWidth="460" promptText="Create a password" styleClass="password-field">
-                <VBox.margin>
-               <Insets bottom="14" />
-            </VBox.margin>
-            </PasswordField>
+                     <HBox prefHeight="46" prefWidth="460"
+                           style="-fx-background-color: #FFFFFF;
+             -fx-border-color: #C9A84C;
+             -fx-border-radius: 5;
+             -fx-background-radius: 5;"
+                           alignment="CENTER_LEFT">
+                         <VBox.margin><Insets bottom="14" /></VBox.margin>
+                         <StackPane HBox.hgrow="ALWAYS">
+                             <PasswordField fx:id="password"
+                                            prefHeight="46"
+                                            promptText="Create a password"
+                                            maxWidth="Infinity"
+                                            style="-fx-background-color: transparent; -fx-border-color: transparent;" />
+                             <TextField fx:id="passwordVisible"
+                                        prefHeight="46"
+                                        promptText="Create a password"
+                                        maxWidth="Infinity"
+                                        visible="false" managed="false"
+                                        style="-fx-background-color: transparent; -fx-border-color: transparent;" />
+                         </StackPane>
+                         <Button fx:id="eyeBtn" text="👁"
+                                 style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 14px; -fx-padding: 0 8;"
+                                 onAction="#togglePassword" />
+                     </HBox>
          <Label fx:id="passwordError" styleClass="label-error" text="passwordError" translateY="-5.0" visible="false" />
    
 

@@ -1,28 +1,49 @@
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 
 import java.util.ArrayList;
 
-public class MakeReservationController {
+public class MakeReservationController implements SessionController {
 
     @FXML private GuestSidebarController sidebarController;
     @FXML DatePicker checkInDate;
     @FXML DatePicker checkOutDate;
-    @FXML VBox roomContainer;
-    @FXML Label errorLabel;
+    @FXML VBox       roomContainer;
+    @FXML Label      errorLabel;
+    private final Runnable refreshListener = this::refresh;
 
-    @FXML
-    public void initialize() {
-        if (sidebarController != null)
+    private AppSession session;
+
+    @Override
+    public void initSession(AppSession session) {
+        this.session = session;
+        if (sidebarController != null) {
+            sidebarController.initSession(session);
             sidebarController.btnMakeReservation.getStyleClass().add("sidebar-nav-btn-active");
+        }
+        EventBus.subscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+        EventBus.subscribe(EventBus.Event.ROOMTYPE_CHANGED, refreshListener);
+        EventBus.subscribe(EventBus.Event.ROOM_CHANGED, refreshListener);
+        EventBus.subscribe(EventBus.Event.AMENITY_CHANGED, refreshListener);
+        EventBus.subscribe(EventBus.Event.TIME_JUMPED, refreshListener);
+
+        roomContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                EventBus.unsubscribe(EventBus.Event.RESERVATION_CHANGED, refreshListener);
+                EventBus.unsubscribe(EventBus.Event.TIME_JUMPED, refreshListener);
+                EventBus.unsubscribe(EventBus.Event.ROOMTYPE_CHANGED, refreshListener);
+                EventBus.unsubscribe(EventBus.Event.ROOM_CHANGED, refreshListener);
+                EventBus.unsubscribe(EventBus.Event.AMENITY_CHANGED, refreshListener);
+            }
+        });
+    }
+    public void refresh(){
+        roomContainer.getChildren().clear();
+        search(new ActionEvent());
     }
     public void renderRooms(ArrayList<Room> rooms, VBox roomContainer, ActionEvent event) {
         roomContainer.getChildren().clear();
@@ -53,9 +74,8 @@ public class MakeReservationController {
             header.getChildren().addAll(typeLabel, spacer, viewLabel);
 
             Label detailsLabel = new Label(String.format(
-                    "Room %d • Floor %d • Capacity: %d Guests",
-                    room.getRoomNumber(), room.getFloor(), room.getType().getCapacity()
-            ));
+                "Room %d • Floor %d • Capacity: %d Guests",
+                room.getRoomNumber(), room.getFloor(), room.getType().getCapacity()));
             detailsLabel.getStyleClass().add("room-card-price");
             detailsLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #2C2C2C;");
 
@@ -69,23 +89,55 @@ public class MakeReservationController {
             selectBtn.getStyleClass().add("btn-select-room");
             selectBtn.setMaxWidth(Double.MAX_VALUE);
             selectBtn.setOnAction(e -> {
-                System.out.println("Selected Room: " + room.getRoomNumber());
-                MainController.setReservationContext(room, checkInDate.getValue(), checkOutDate.getValue());
-                MainController.navigate(event,"Reservation_Form.fxml");
+                ReservationContext ctx = session.getReservationContext();
+                ctx.setSelectedRoom(room);
+                ctx.setCheckInDate(checkInDate.getValue());
+                ctx.setCheckOutDate(checkOutDate.getValue());
+                MainController.navigate(event, "Reservation_Form.fxml");
             });
+
             card.getChildren().addAll(header, detailsLabel, priceLabel, amenitiesLabel, selectBtn);
             roomContainer.getChildren().add(card);
         }
     }
+
     public void search(ActionEvent event) {
         MainController.clearErrors(errorLabel);
-
-        try{
-            Authenticator.validateReservationDates(checkInDate.getValue(),checkOutDate.getValue());
-            renderRooms(HotelDataBase.getAvailableRooms(checkInDate.getValue(), checkOutDate.getValue()), roomContainer,event);
-
+        try {
+            Authenticator.validateReservationDates(checkInDate.getValue(), checkOutDate.getValue());
         } catch (InvalidInputException e) {
-            MainController.setFieldError(errorLabel,e.getMessage());
+            MainController.setFieldError(errorLabel, e.getMessage());
+            return;
         }
+
+        roomContainer.getChildren().clear();
+        ProgressIndicator spinner = new ProgressIndicator();
+        spinner.setMaxSize(60, 60);
+        VBox loadingBox = new VBox(spinner);
+        loadingBox.setAlignment(Pos.CENTER);
+        loadingBox.setStyle("-fx-padding: 60;");
+        roomContainer.getChildren().add(loadingBox);
+
+        Task<ArrayList<Room>> task = new Task<>() {
+            @Override
+            protected ArrayList<Room> call() {
+                return HotelDataBase.getAvailableRooms(checkInDate.getValue(), checkOutDate.getValue());
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            roomContainer.getChildren().remove(loadingBox);
+            renderRooms(task.getValue(), roomContainer, event);
+        });
+
+        task.setOnFailed(e -> {
+            roomContainer.getChildren().remove(loadingBox);
+            MainController.setFieldError(errorLabel, "Search failed");
+            task.getException().printStackTrace();
+        });
+
+        Thread t = new Thread(task, "Room-Search");
+        t.setDaemon(true);
+        t.start();
     }
 }

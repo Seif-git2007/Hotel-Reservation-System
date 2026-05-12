@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="660.0" prefWidth="900.0"
+            style="-fx-background-color: #F0EDE4;"
+            stylesheets="@style.css"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="AdminRoomTypesController">
+
+    <fx:include fx:id="navBar" layoutX="0" layoutY="0" source="NavgationBar.fxml" />
+
+    <HBox layoutX="0" layoutY="71" prefHeight="589" prefWidth="900" spacing="0">
+
+        <fx:include fx:id="sidebar" source="AdminSidebar.fxml" />
+
+        <VBox prefWidth="680" prefHeight="589" spacing="0"
+              style="-fx-background-color: #F0EDE4;">
+
+            <!-- Page header -->
+            <HBox alignment="CENTER_LEFT" prefWidth="680" spacing="12" styleClass="page-header-strip">
+                <Pane prefHeight="32" prefWidth="4"
+                      style="-fx-background-color: #C9A84C; -fx-background-radius: 2;" />
+                <VBox spacing="2">
+                    <Label styleClass="label-dashboard-title" text="Room Types" />
+                    <Label styleClass="label-dashboard-sub"
+                           text="Define categories, nightly rates, and guest capacity" />
+                </VBox>
+                <Pane HBox.hgrow="ALWAYS" />
+                <Button text="＋  Add Room Type"
+                        onAction="#openAddForm"
+                        styleClass="btn-select-room"
+                        mnemonicParsing="false">
+                    <HBox.margin><Insets right="20" /></HBox.margin>
+                </Button>
+            </HBox>
+
+            <!-- Feedback label -->
+            <Label fx:id="feedbackLabel"
+                   text="" visible="false" wrapText="true">
+                <VBox.margin><Insets left="20" right="20" top="8" /></VBox.margin>
+            </Label>
+
+            <!-- Inline Add / Edit form -->
+            <VBox fx:id="formPanel"
+                  visible="false" managed="false"
+                  styleClass="section-card" spacing="0">
+                <VBox.margin><Insets top="12" left="20" right="20" /></VBox.margin>
+
+                <!-- Navy form header bar -->
+                <HBox alignment="CENTER_LEFT" spacing="0"
+                      style="-fx-background-color: #0F2160;
+                             -fx-background-radius: 10 10 0 0;
+                             -fx-padding: 14 18 14 18;">
+                    <Pane prefWidth="3" prefHeight="16"
+                          style="-fx-background-color: #C9A84C; -fx-background-radius: 2;">
+                        <HBox.margin><Insets right="12" /></HBox.margin>
+                    </Pane>
+                    <Label fx:id="formTitle" text="Add Room Type"
+                           style="-fx-text-fill: #FFFFFF;
+                                  -fx-font-family: 'Georgia', serif;
+                                  -fx-font-size: 15px;
+                                  -fx-font-weight: bold;" />
+                    <Pane HBox.hgrow="ALWAYS" />
+                    <Button onAction="#closeForm"
+                            style="-fx-background-color: transparent;
+                                   -fx-text-fill: rgba(255,255,255,0.55);
+                                   -fx-font-size: 16px;
+                                   -fx-cursor: hand;
+                                   -fx-padding: 0 4;"
+                            text="✕" />
+                </HBox>
+
+                <!-- Form body: three fields + buttons in one horizontal row -->
+                <HBox spacing="20"
+                      style="-fx-background-color: #FFFFFF;
+                             -fx-background-radius: 0 0 10 10;
+                             -fx-border-color: transparent #E0DAD0 #E0DAD0 #E0DAD0;
+                             -fx-border-radius: 0 0 10 10;
+                             -fx-border-width: 0 0.5 0.5 0.5;
+                             -fx-padding: 20 18 20 18;">
+
+                    <!-- Size -->
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="SIZE / NAME" styleClass="label-field" />
+                        <TextField fx:id="fieldSize"
+                                   promptText="e.g. Single, Suite…"
+                                   styleClass="text-field"
+                                   prefHeight="44" maxWidth="Infinity" />
+                        <Label fx:id="sizeError" styleClass="label-error"
+                               text="" visible="false" />
+                    </VBox>
+
+                    <!-- Price -->
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="BASE PRICE ($ / night)" styleClass="label-field" />
+                        <TextField fx:id="fieldPrice"
+                                   promptText="e.g. 350"
+                                   styleClass="text-field"
+                                   prefHeight="44" maxWidth="Infinity" />
+                        <Label fx:id="priceError" styleClass="label-error"
+                               text="" visible="false" />
+                    </VBox>
+
+                    <!-- Capacity -->
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="GUEST CAPACITY" styleClass="label-field" />
+                        <TextField fx:id="fieldCapacity"
+                                   promptText="e.g. 2"
+                                   styleClass="text-field"
+                                   prefHeight="44" maxWidth="Infinity" />
+                        <Label fx:id="capacityError" styleClass="label-error"
+                               text="" visible="false" />
+                    </VBox>
+
+                    <!-- Buttons -->
+                    <VBox spacing="8" alignment="BOTTOM_RIGHT" minWidth="140">
+                        <Pane VBox.vgrow="ALWAYS" />
+                        <Button fx:id="btnFormSubmit" text="Save Room Type"
+                                onAction="#submitForm"
+                                styleClass="button"
+                                prefHeight="44" maxWidth="Infinity" />
+                        <Button text="Cancel" onAction="#closeForm"
+                                styleClass="button-outline"
+                                prefHeight="36" maxWidth="Infinity" />
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Room type card grid -->
+            <VBox VBox.vgrow="ALWAYS" spacing="0">
+                <ScrollPane fitToWidth="true"
+                            style="-fx-background-color: transparent; -fx-background: #F0EDE4;"
+                            VBox.vgrow="ALWAYS" styleClass="register-scroll">
+                    <content>
+                        <FlowPane fx:id="roomTypeGrid"
+                                  hgap="16" vgap="16"
+                                  style="-fx-background-color: #F0EDE4;">
+                            <padding>
+                                <Insets bottom="24" left="20" right="20" top="20" />
+                            </padding>
+                        </FlowPane>
+                    </content>
+                </ScrollPane>
+            </VBox>
+
+        </VBox>
+    </HBox>
+</AnchorPane>

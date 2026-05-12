@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="660.0" prefWidth="900.0"
+            style="-fx-background-color: #F0EDE4;"
+            stylesheets="@style.css"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ViewRoomsController">
+
+    <fx:include fx:id="navBar" layoutX="0" layoutY="0" source="NavgationBar.fxml" />
+
+    <HBox layoutX="0" layoutY="71" prefHeight="589" prefWidth="900" spacing="0">
+
+        <fx:include fx:id="sidebar" source="GuestSidebar.fxml" />
+
+        <!-- Content: 680x589 -->
+        <VBox prefWidth="680" prefHeight="589" spacing="0"
+              style="-fx-background-color: #F0EDE4;">
+
+            <!-- Page header -->
+            <HBox alignment="CENTER_LEFT" prefWidth="680" spacing="12" styleClass="page-header-strip">
+                <Pane prefHeight="32" prefWidth="4"
+                      style="-fx-background-color: #C9A84C; -fx-background-radius: 2;" />
+                <VBox spacing="2">
+                    <Label styleClass="label-dashboard-title" text="View Rooms" />
+                    <Label styleClass="label-dashboard-sub" text="Browse all available rooms" />
+                </VBox>
+                <Pane HBox.hgrow="ALWAYS" />
+                <Button fx:id="btnToggleFilter" text="⚙  Filters"
+                        onAction="#toggleFilterBar"
+                        styleClass="button-secondary" prefHeight="36">
+                    <HBox.margin><Insets right="8" /></HBox.margin>
+                </Button>
+            </HBox>
+
+            <!-- Filter bar -->
+            <HBox fx:id="filterBar" spacing="20" alignment="CENTER_LEFT"
+                  managed="false" visible="false"
+                  style="-fx-background-color: #FFFFFF;
+                         -fx-border-color: transparent transparent #E0DAD0 transparent;
+                         -fx-border-width: 0 0 1 0;
+                         -fx-padding: 10 20 10 20;">
+                <VBox spacing="5" minWidth="140" prefWidth="160">
+                    <Label styleClass="label-field" text="Filter By" />
+                    <ComboBox fx:id="filterCategory" prefHeight="40" prefWidth="160"
+                              promptText="Select Category" styleClass="filter-combo" />
+                </VBox>
+                <Pane prefHeight="40" prefWidth="1"
+                      style="-fx-background-color: rgba(201,168,76,0.3);" />
+                <StackPane fx:id="filterToolsStack" prefWidth="260" minWidth="260">
+                    <HBox fx:id="toolPrice" spacing="12" alignment="CENTER_LEFT"
+                          visible="false" managed="false">
+                        <Slider fx:id="priceSlider" max="5000" min="0" value="2500"
+                                prefWidth="200" styleClass="luxury-slider" />
+                        <Label fx:id="lblPriceValue" text="2500$" minWidth="50"
+                               styleClass="price-display-text" />
+                    </HBox>
+                    <FlowPane fx:id="toolAmenities" hgap="8" vgap="6" prefWidth="260"
+                              alignment="CENTER_LEFT" visible="false" managed="false" />
+                    <FlowPane fx:id="toolRoomType" hgap="8" vgap="6" prefWidth="260"
+                              alignment="CENTER_LEFT" visible="false" managed="false" />
+                </StackPane>
+                <Pane HBox.hgrow="ALWAYS" />
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <Button fx:id="btnApplyFilter" text="Apply" onAction="#applyFilter"
+                            styleClass="filter-btn-solid" prefWidth="90" prefHeight="36" />
+                    <Button fx:id="btnResetFilter" text="Reset" onAction="#handleResetFilter"
+                            styleClass="filter-btn-outline" prefWidth="90" prefHeight="36" />
+                </HBox>
+            </HBox>
+
+            <!-- Room list -->
+            <VBox VBox.vgrow="ALWAYS" spacing="0">
+                <ScrollPane fitToWidth="true"
+                            style="-fx-background-color: transparent; -fx-background: #F0EDE4;"
+                            VBox.vgrow="ALWAYS" styleClass="register-scroll">
+                    <content>
+                        <VBox fx:id="roomContainer" spacing="15"
+                              style="-fx-background-color: #F0EDE4;">
+                            <padding>
+                                <Insets bottom="20" left="20" right="20" top="20" />
+                            </padding>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </VBox>
+
+        </VBox>
+    </HBox>
+</AnchorPane>

@@ -1,41 +1,33 @@
 import java.time.LocalDate;
 
-public abstract class Staff extends User{
+public abstract class Staff extends User {
     private int workingHours;
-    enum Role {ADMIN ,RECEPTIONIST}
+    enum Role { ADMIN, RECEPTIONIST }
     Role role;
-    public Staff(){}
-    public Staff(String name, String password, LocalDate date,User.Gender gender,String email){
-        super(name,password,date,gender,email);
+
+    public Staff() {}
+
+    public Staff(String name, String password, LocalDate date, User.Gender gender, String email) {
+        super(name, password, date, gender, email);
     }
 
-    public int getWorkingHours() {
-        return workingHours;
-    }
+    public int getWorkingHours()        { return workingHours; }
+    public void setWorkingHours(int h)  { workingHours = h; }
 
-    public void setWorkingHours(int workingHours) {
-        this.workingHours = workingHours;
-    }
-    public void viewReservations(){
-        int cnt=1;
-        System.out.println("Reservations: ");
-        for(Reservation r:HotelDataBase.reservations){
-                System.out.println(cnt+"."+r);
-                cnt++;
+    public void viewReservations() {
+        int cnt = 1;
+        System.out.println("Reservations:");
+        synchronized (HotelDataBase.reservations) {
+            for (Reservation r : HotelDataBase.reservations)
+                System.out.println(cnt++ + ". " + r);
         }
         System.out.println();
     }
-    public void viewGuest(){
-        int cnt=1;
-        for(Guest u:HotelDataBase.filterGuest()){
-                System.out.println(cnt+"."+u);
-                cnt++;
-            }
+
+    public void viewGuest() {
+        int cnt = 1;
+        for (Guest u : HotelDataBase.filterGuest())
+            System.out.println(cnt++ + ". " + u);
         System.out.println();
-
     }
-
-
-
-
 }

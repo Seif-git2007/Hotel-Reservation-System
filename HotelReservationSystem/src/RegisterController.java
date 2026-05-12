@@ -1,150 +1,135 @@
-import com.sun.tools.javac.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
 import javafx.fxml.Initializable;
+import javafx.scene.control.*;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
+import javafx.scene.control.Button;
 
 public class RegisterController implements Initializable {
-    @FXML private Label nameError;
-    @FXML private Label passwordError;
-    @FXML private Label emailError;
-    @FXML private Label genderEmpty;
-    @FXML private Label dateEmpty;
-    @FXML private Label addressEmpty;
-    @FXML private Label balanceError;
-    @FXML private Label floorError;
-    @FXML private Label viewEmpty;
-    @FXML private Label displayNameEmpty;
-    @FXML private TextField displayName;
-    @FXML private TextField name;
-    @FXML private TextField email;
+    @FXML private Label nameError, passwordError, emailError, genderEmpty,
+                        dateEmpty, addressEmpty, balanceError, floorError,
+                        viewEmpty, displayNameEmpty;
+    @FXML private TextField     displayName, name, email, address, balance, prefFloor;
     @FXML private PasswordField password;
-    @FXML private ComboBox<User.Gender> genderCombo;
-    @FXML private DatePicker dateOfBirth;
-    @FXML private TextField address;
-    @FXML private TextField balance;
-    @FXML private TextField prefFloor;
-    @FXML private ComboBox<Room.view> prefView;
-    private String validDisplayName;
-    private String validname;
-    private String validemail;
-    private String validPassword;
-    User.Gender gender;
-    LocalDate birthDate;
-    String validAddress;
-    double validBalance;
-    int validFloor;
-    Room.view view;
-    int cnt=0;
+    @FXML private ComboBox<User.Gender>  genderCombo;
+    @FXML private DatePicker            dateOfBirth;
+    @FXML private ComboBox<Room.view>   prefView;
+    @FXML private TextField passwordVisible;
+    @FXML private Button    eyeBtn;
+
+    private String     validDisplayName, validname, validemail, validPassword, validAddress;
+    private User.Gender gender;
+    private LocalDate   birthDate;
+    private double      validBalance;
+    private int         validFloor;
+    private Room.view   view;
     @Override
-    public void initialize(URL location, ResourceBundle resources){
-        UnaryOperator<TextFormatter.Change> decimalFilter = change -> {
-            String newText = change.getControlNewText();
-            if (newText.matches("\\d*(\\.\\d{0,2})?")) {
-                return change;
-            }
-            return null;
-        };
-        UnaryOperator<TextFormatter.Change> integerFilter = change -> {
-            String newText = change.getControlNewText();
-            if (newText.matches("\\d*")) {
-                return change;
-            }
-            return null;
-        };
+    public void initialize(URL location, ResourceBundle resources) {
+        UnaryOperator<TextFormatter.Change> decimalFilter = c ->
+                c.getControlNewText().matches("\\d*(\\.\\d{0,2})?") ? c : null;
+        UnaryOperator<TextFormatter.Change> integerFilter = c ->
+                c.getControlNewText().matches("\\d*") ? c : null;
 
-        TextFormatter<String> textFormatter = new TextFormatter<>(integerFilter);
-        prefFloor.setTextFormatter(textFormatter);
-
-        TextFormatter<String> formatter = new TextFormatter<>(decimalFilter);
-        balance.setTextFormatter(formatter);
-
+        prefFloor.setTextFormatter(new TextFormatter<>(integerFilter));
+        balance.setTextFormatter(new TextFormatter<>(decimalFilter));
         genderCombo.getItems().setAll(User.Gender.values());
         prefView.getItems().setAll(Room.view.values());
+
+        passwordVisible.textProperty().addListener((obs, o, n) -> password.setText(n));
+        password.textProperty().addListener((obs, o, n) -> {
+            if (!passwordVisible.isVisible()) passwordVisible.setText(n);
+        });
     }
 
-    public void Register(ActionEvent event){
-        MainController.clearErrors(nameError,passwordError,genderEmpty,dateEmpty,addressEmpty,balanceError,floorError,viewEmpty,displayNameEmpty,emailError);
-        if(!displayName.getText().isEmpty()){
-            validDisplayName=displayName.getText();
-            cnt++;
-        }else {
-            MainController.setFieldError(displayNameEmpty,"Please enter Display Name");
-        }
-        try{
-            validname=Authenticator.validateName(name.getText());
-            cnt++;
-        }catch (InvalidInputException e){
-            MainController.setFieldError(nameError, e.getMessage());
-        }
-        try{
-            validemail=Authenticator.validateEmail(email.getText());
-            cnt++;
-        }catch (InvalidInputException e){
-            MainController.setFieldError(emailError, e.getMessage());
-        }
-        try{
-            validPassword=Authenticator.validatePassword(password.getText());
-            cnt++;
-        }catch (InvalidInputException e){
-            MainController.setFieldError(passwordError, e.getMessage());
+    public void Register(ActionEvent event) {
+
+        MainController.clearErrors(nameError, passwordError, genderEmpty, dateEmpty,
+            addressEmpty, balanceError, floorError, viewEmpty, displayNameEmpty, emailError);
+        boolean valid=true;
+
+        if (!displayName.getText().isEmpty()) { validDisplayName = displayName.getText(); }
+        else{
+            valid=false;
+            MainController.setFieldError(displayNameEmpty, "Please enter Display Name");
         }
 
-        if(genderCombo.getValue()!=null) {
-            gender = genderCombo.getValue();
-            cnt++;
-        }else {
+        try { validname = Authenticator.validateName(name.getText());  }
+        catch (InvalidInputException e) { MainController.setFieldError(nameError, e.getMessage());valid=false; }
+
+        try { validemail = Authenticator.validateEmail(email.getText());  }
+        catch (InvalidInputException e) { MainController.setFieldError(emailError, e.getMessage());valid=false; }
+
+        try { validPassword = Authenticator.validatePassword(password.getText());  }
+        catch (InvalidInputException e) {
+            MainController.setFieldError(passwordError, e.getMessage());
+            valid=false;}
+
+        if (genderCombo.getValue() != null) { gender = genderCombo.getValue(); }
+        else{
+            valid=false;
             MainController.setFieldError(genderEmpty, "Please select Gender");
         }
-        try{
-            birthDate=Authenticator.validateBirthDate(dateOfBirth.getValue());
-            cnt++;
-        }catch (InvalidInputException e){
-            MainController.setFieldError(dateEmpty, e.getMessage());
+
+        try { birthDate = Authenticator.validateBirthDate(dateOfBirth.getValue()); }
+        catch (InvalidInputException e) { MainController.setFieldError(dateEmpty, e.getMessage()); valid=false;}
+
+        if (!address.getText().isEmpty()) { validAddress = address.getText();  }
+        else {
+            valid=false;
+            MainController.setFieldError(addressEmpty, "Please enter Address");
         }
 
-
-        if(!address.getText().isEmpty()){
-            validAddress=address.getText();
-            cnt++;
-        }else {
-            MainController.setFieldError(addressEmpty,"Please enter Address");
+        if (!balance.getText().isEmpty()) { validBalance = Double.parseDouble(balance.getText()); }
+        else{
+            valid=false;
+            MainController.setFieldError(balanceError, "Please enter Balance");
         }
 
-        if(!balance.getText().isEmpty()){
-            validBalance = Double.parseDouble(balance.getText());
-            cnt++;
-        }else {
-            MainController.setFieldError(balanceError,"Please enter Balance");
-        }
-        if(!prefFloor.getText().isEmpty()){
-            validFloor =Integer.parseInt(prefFloor.getText());
-            cnt++;
-        }else {
-            MainController.setFieldError(floorError,"Please enter a Floor");
+        if (!prefFloor.getText().isEmpty()) { validFloor = Integer.parseInt(prefFloor.getText()); }
+        else{
+            valid=false;
+            MainController.setFieldError(floorError, "Please enter a Floor");
         }
 
-        if(prefView.getValue()!=null) {
-            view=prefView.getValue();
-            cnt++;
-        }else {
+        if (prefView.getValue() != null) { view = prefView.getValue();  }
+        else{
+            valid=false;
             MainController.setFieldError(viewEmpty, "Please select a View");
         }
-        if(cnt==10){
-            Guest guest=new Guest();
-            roomPreferences r=new roomPreferences(validFloor,view);
-            guest.Register(validname,validPassword,gender.toString(),validBalance,birthDate,validAddress,r,validDisplayName,validemail);
-            System.out.println("I registered");
+
+        if (valid) {
+            Guest guest = new Guest();
+            guest.Register(validname, validPassword, gender.toString(), validBalance,
+                birthDate, validAddress, new roomPreferences(validFloor, view),
+                validDisplayName, validemail);
             MainController.navigate(event, "Login_Menu.fxml");
         }
-         cnt=0;
-    }
-    public void toLogin(ActionEvent event){
-        MainController.navigate(event,"Login_Menu.fxml");
     }
 
+
+    @FXML
+    private void togglePassword() {
+        if (!passwordVisible.isVisible()) {
+            passwordVisible.setText(password.getText());
+            password.setVisible(false);
+            password.setManaged(false);
+            passwordVisible.setVisible(true);
+            passwordVisible.setManaged(true);
+            eyeBtn.setText("🙈");
+        } else {
+            password.setText(passwordVisible.getText());
+            passwordVisible.setVisible(false);
+            passwordVisible.setManaged(false);
+            password.setVisible(true);
+            password.setManaged(true);
+            eyeBtn.setText("👁");
+        }
+    }
+
+    public void toLogin(ActionEvent event) {
+        MainController.navigate(event, "Login_Menu.fxml");
+    }
 }

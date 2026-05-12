@@ -274,7 +274,7 @@ public class test {
                                 method = Invoice.paymentMethod.ONLINE;
                             }
 
-                            guest.pay(invoice, method);
+                            guest.pay(invoice, method,null);
                             break;
                         } catch (InvalidInputException e) {
                             System.out.println(e.getMessage());
@@ -982,7 +982,7 @@ public class test {
         while(true) {
             System.out.println("1.Register\n2.Login\n0.Exit");
             int choice;
-            while (true){//validate choice
+            while (true){
                 try {
                     System.out.println("Enter choice: ");
                     choice = Authenticator.validateInteger(input.nextLine());
@@ -1020,4 +1020,3 @@ public class test {
         }
     }
 }
-//trial one gui
