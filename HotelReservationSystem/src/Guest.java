@@ -164,6 +164,11 @@ public class Guest extends User {
                 throw new InvalidInputException("Insufficient balance, please choose another method");
             }
             this.balance -= invoice.getTotal();
+            DataBaseManager.runAsync(() -> {
+                DataBaseManager.saveUser(this);
+                EventBus.fire(EventBus.Event.USER_CHANGED);
+            });
+
         }
         if (method == Invoice.paymentMethod.CREDIT) {
             invoice.setCardInfo(cardinfo);
