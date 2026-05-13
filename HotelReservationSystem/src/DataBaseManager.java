@@ -159,6 +159,16 @@ public class DataBaseManager {
         } catch (SQLException e) {  }
         EventBus.fire(EventBus.Event.ROOMTYPE_CHANGED);
     }
+    public static void updateRoomTypeName(String oldSize, RoomType rt) {
+        String sql = "UPDATE room_types SET size = ?, base_price = ?, capacity = ? WHERE size = ?";
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, rt.getSize());
+            ps.setDouble(2, rt.getBasePrice());
+            ps.setInt   (3, rt.getCapacity());
+            ps.setString(4, oldSize);
+            ps.executeUpdate();
+        } catch (SQLException e) { }
+    }
 
     public static void deleteRoomType(RoomType rt) {
         try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(
@@ -181,6 +191,15 @@ public class DataBaseManager {
             ps.executeUpdate();
         } catch (SQLException e) {  }
         EventBus.fire(EventBus.Event.AMENITY_CHANGED);
+    }
+    public static void updateAmenityName(String oldName, Amenity amenity) {
+        String sql = "UPDATE amenities SET name = ?, price = ? WHERE name = ?";
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, amenity.getName());
+            ps.setDouble(2, amenity.getPrice());
+            ps.setString(3, oldName);
+            ps.executeUpdate();
+        } catch (SQLException e) { }
     }
 
     public static void deleteAmenity(Amenity a) {

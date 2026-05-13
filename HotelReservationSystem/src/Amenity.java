@@ -52,10 +52,11 @@ public class Amenity {
                 throw new RoomInUseException("No Modifications Are Performed");
             }
         }
+        String oldName=this.name;
         this.name = modifiedAmenity.getName();
         this.price = modifiedAmenity.getPrice();
         DataBaseManager.runAsync(() -> {
-            DataBaseManager.saveAmenity(this);
+            DataBaseManager.updateAmenityName (oldName,this);
             EventBus.fire(EventBus.Event.AMENITY_CHANGED);
         });
         System.out.println("Amenity updated to: " + name + ", $" + price);

@@ -33,7 +33,7 @@ public class SyncService {
                 checkRooms();
                 checkDate();
             } catch (Exception ex) {
-                System.out.println("Sync poll error: " + ex.getMessage());
+//                System.out.println("Sync poll error: " + ex.getMessage());
             }
         }, "Sync-Poller").start();
     }
