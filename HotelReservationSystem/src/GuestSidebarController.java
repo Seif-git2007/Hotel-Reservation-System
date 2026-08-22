@@ -31,7 +31,7 @@ public class GuestSidebarController implements SessionController {
         });
     }
     public void disable() {
-        if(session.getCurrentGuest()==null) return;
+        if (!(session.getCurrentUser() instanceof Guest)) return;
         MainController.handleOverDue(session);
 
         if (!session.getCurrentGuest().isOverDue()) return;
@@ -52,18 +52,30 @@ public class GuestSidebarController implements SessionController {
 
     private void whenAttached(Runnable action) {
         if (btnViewRooms.getScene() != null && btnViewRooms.getScene().getWindow() != null) {
-            javafx.application.Platform.runLater(action);
+            javafx.application.Platform.runLater(() -> {
+                if (session.getCurrentUser() == null) return;
+                if (!(session.getCurrentUser() instanceof Guest)) return;
+                action.run();
+            });
             return;
         }
         btnViewRooms.sceneProperty().addListener((sObs, oldS, newS) -> {
             if (newS == null) return;
             if (newS.getWindow() != null) {
-                javafx.application.Platform.runLater(action);
+                javafx.application.Platform.runLater(() -> {
+                    if (session.getCurrentUser() == null) return;
+                    if (!(session.getCurrentUser() instanceof Guest)) return;
+                    action.run();
+                });
                 return;
             }
             newS.windowProperty().addListener((wObs, oldW, newW) -> {
                 if (newW != null) {
-                    javafx.application.Platform.runLater(action);
+                    javafx.application.Platform.runLater(() -> {
+                        if (session.getCurrentUser() == null) return;
+                        if (!(session.getCurrentUser() instanceof Guest)) return;
+                        action.run();
+                    });
                 }
             });
         });

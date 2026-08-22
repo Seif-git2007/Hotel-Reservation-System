@@ -50,11 +50,12 @@ public class RoomType {
                 throw new RoomInUseException("Can't Modify RoomType While It's In Use");
             }
         }
+        String oldsize=this.size;
         this.basePrice = modifiedRoomType.getBasePrice();
         this.capacity  = modifiedRoomType.getCapacity();
         this.size      = modifiedRoomType.getSize();
         DataBaseManager.runAsync(() -> {
-            DataBaseManager.saveRoomType(this);
+            DataBaseManager.updateRoomTypeName(oldsize,this);
             EventBus.fire(EventBus.Event.ROOMTYPE_CHANGED);
         });
         System.out.println("RoomType Has Been Modified Successfully");

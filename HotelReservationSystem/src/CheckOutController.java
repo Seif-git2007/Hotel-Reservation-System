@@ -63,6 +63,8 @@ public class CheckOutController implements SessionController {
         });
     }
     public void refresh() {
+        errorPane.setVisible(false);
+        errorPane.setManaged(false);
         try {
             if(session.getDueInvoice()!=null){
                 currentInvoice=session.getDueInvoice();
